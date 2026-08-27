@@ -99,18 +99,24 @@ export default function KitVisualizer({
       color = "#FFFFFF";
     }
 
-    const size = showLogo || isSold ? Math.max(pos.size, 36) : pos.size;
+    const size = showLogo || isSold ? Math.max(pos.size, 52) : pos.size;
     const shellStyle: CSSProperties = {
       left: pos.left,
       top: pos.top,
-      width: showLogo ? size : isSold ? size + 10 : size,
+      width: showLogo ? size : isSold ? size + 14 : size,
       height: size,
       background: bg,
       borderColor: border,
       color,
-      boxShadow: isHovered ? "0 0 0 4px rgba(5,150,105,0.18)" : undefined,
-      zIndex: isHovered ? 20 : 10,
-      transform: `translate(-50%, -50%) scale(${isHovered ? 1.08 : 1})`,
+      boxShadow: isHovered
+        ? isSelected
+          ? "0 0 0 6px rgba(5,150,105,0.28)"
+          : "0 0 0 6px rgba(5,150,105,0.18)"
+        : isSelected
+          ? "0 0 0 3px rgba(5,150,105,0.22)"
+          : undefined,
+      zIndex: isHovered || isSelected ? 20 : 10,
+      transform: `translate(-50%, -50%) scale(${isHovered ? 1.06 : 1})`,
     };
 
     const title =
@@ -128,13 +134,13 @@ export default function KitVisualizer({
         <img
           src={logoUrl}
           alt={slot.sponsor_name ?? `${slot.slot_name} sponsor`}
-          className="h-full w-full rounded-full object-cover"
+          className="box-border h-full w-full rounded-full object-contain p-[12%]"
           draggable={false}
         />
       );
 
       const shellClass =
-        "absolute block overflow-hidden rounded-full border-[1.5px] transition-all duration-150";
+        "absolute block overflow-hidden rounded-full border-2 transition-all duration-150";
 
       if (sponsorHref) {
         return (
@@ -181,14 +187,14 @@ export default function KitVisualizer({
         onClick={() => available && onToggle(slot)}
         onMouseEnter={() => onHover(id)}
         onMouseLeave={() => onHover(null)}
-        className="absolute flex items-center justify-center rounded-full border-[1.5px] font-mono text-[10px] font-medium transition-all duration-150"
+        className="absolute flex items-center justify-center rounded-full border-2 font-mono text-xs font-medium transition-all duration-150"
         style={{
           ...shellStyle,
           cursor: available ? "pointer" : "not-allowed",
         }}
       >
         {isSold ? (
-          <span className="px-0.5 text-[8px] font-semibold tracking-wide">
+          <span className="px-0.5 text-[10px] font-semibold tracking-wide">
             SOLD
           </span>
         ) : (
@@ -199,8 +205,8 @@ export default function KitVisualizer({
   }
 
   return (
-    <div className="flex h-full flex-col rounded-xl border border-[#E4E4E7] bg-white p-6 sm:p-8">
-      <div className="mb-6">
+    <div className="flex h-full flex-col rounded-xl border border-[#E4E4E7] bg-white p-5 sm:p-7">
+      <div className="mb-5">
         <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
           Race-day kit
         </p>
@@ -210,7 +216,7 @@ export default function KitVisualizer({
       </div>
 
       {/* Title Sponsor / Whole Shirt — only when every position is open */}
-      <div className="mb-6">
+      <div className="mb-5">
         <button
           type="button"
           disabled={titleDisabled}
@@ -267,9 +273,9 @@ export default function KitVisualizer({
         </button>
       </div>
 
-      <div className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center gap-8">
+      <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center gap-6 sm:gap-8">
         {/* Uniform block: shirts then shorts directly underneath */}
-        <div className="grid grid-cols-2 gap-x-8 gap-y-6">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-5 sm:gap-x-10 sm:gap-y-7">
           <GarmentPanel label="SHIRT • FRONT">
             <ShirtFront />
             {node("chest_center")}
@@ -286,7 +292,7 @@ export default function KitVisualizer({
 
           <GarmentPanel
             label="SHORTS"
-            className="col-span-2 mx-auto w-full max-w-[200px]"
+            className="col-span-2 mx-auto w-full max-w-[300px]"
           >
             <Shorts />
             {node("shorts_right")}
@@ -295,7 +301,7 @@ export default function KitVisualizer({
         </div>
 
         {/* Accessories */}
-        <div className="grid grid-cols-2 gap-x-8 gap-y-6">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-5 sm:gap-x-10 sm:gap-y-7">
           <GarmentPanel label="CAP">
             <Cap />
             {node("cap_front")}
@@ -309,8 +315,8 @@ export default function KitVisualizer({
         </div>
       </div>
 
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-6 border-t border-zinc-100 pt-5 text-xs text-zinc-500">
-        <Legend swatch="border border-zinc-900 bg-white" text="Available" />
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-6 border-t border-zinc-100 pt-5 text-xs text-zinc-500">
+        <Legend swatch="border-2 border-zinc-900 bg-white" text="Available" />
         <Legend swatch="bg-[#059669]" text="Selected" />
         <Legend swatch="bg-[#3F3F46]" text="Sold" />
       </div>
@@ -340,7 +346,7 @@ function GarmentPanel({
 function Legend({ swatch, text }: { swatch: string; text: string }) {
   return (
     <div className="flex items-center gap-2">
-      <span className={`block h-3.5 w-3.5 rounded-full ${swatch}`} />
+      <span className={`block h-4 w-4 rounded-full ${swatch}`} />
       {text}
     </div>
   );
@@ -372,9 +378,9 @@ function AdZone({
       height={h}
       fill="rgba(255,255,255,0.35)"
       stroke={ZONE}
-      strokeWidth="1.25"
-      strokeDasharray="4 3"
-      rx="3"
+      strokeWidth="1.5"
+      strokeDasharray="5 3.5"
+      rx="4"
     />
   );
 }
@@ -408,11 +414,11 @@ function ShirtFront() {
         opacity="0.7"
       />
 
-      {/* Placement zones */}
-      <AdZone x={98} y={112} w={44} h={36} />
-      <AdZone x={142} y={100} w={28} h={24} />
-      <AdZone x={22} y={48} w={34} h={28} />
-      <AdZone x={184} y={48} w={34} h={28} />
+      {/* Placement zones (~1.5× prior, recentered) */}
+      <AdZone x={87} y={103} w={66} h={54} />
+      <AdZone x={135} y={94} w={42} h={36} />
+      <AdZone x={14} y={41} w={50} h={42} />
+      <AdZone x={176} y={41} w={50} h={42} />
     </svg>
   );
 }
@@ -438,8 +444,8 @@ function ShirtBack() {
         opacity="0.7"
       />
 
-      <AdZone x={88} y={92} w={64} h={32} />
-      <AdZone x={88} y={148} w={64} h={36} />
+      <AdZone x={72} y={84} w={96} h={48} />
+      <AdZone x={72} y={139} w={96} h={54} />
     </svg>
   );
 }
@@ -462,7 +468,7 @@ function Cap() {
         strokeLinejoin="round"
       />
       {/* Front crown panel */}
-      <AdZone x={78} y={28} w={44} h={32} />
+      <AdZone x={67} y={20} w={66} h={48} />
     </svg>
   );
 }
@@ -484,8 +490,8 @@ function Socks() {
         strokeWidth="2"
         strokeLinejoin="round"
       />
-      <AdZone x={38} y={28} w={24} h={36} />
-      <AdZone x={138} y={28} w={24} h={36} />
+      <AdZone x={32} y={19} w={36} h={54} />
+      <AdZone x={132} y={19} w={36} h={54} />
     </svg>
   );
 }
@@ -514,8 +520,8 @@ function Shorts() {
         strokeWidth="1.75"
         fill="none"
       />
-      <AdZone x={48} y={58} w={36} h={48} />
-      <AdZone x={116} y={58} w={36} h={48} />
+      <AdZone x={39} y={46} w={54} h={72} />
+      <AdZone x={107} y={46} w={54} h={72} />
     </svg>
   );
 }

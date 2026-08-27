@@ -25,22 +25,22 @@ export const MARKER_POS: Record<
   ZoneId,
   { left: string; top: string; size: number }
 > = {
-  // Tuned to Lucide shirt silhouette (viewBox 240×240)
-  chest_center: { left: "50%", top: "54%", size: 34 },
+  // Tuned to Lucide shirt silhouette (viewBox 240×240); sizes ~1.45× prior
+  chest_center: { left: "50%", top: "54%", size: 50 },
   // Wearer's left chest (heart) = viewer's right
-  left_chest: { left: "65%", top: "46%", size: 28 },
+  left_chest: { left: "65%", top: "46%", size: 42 },
   // Wearer's right sleeve = left of graphic
-  right_sleeve: { left: "16%", top: "28%", size: 28 },
-  left_sleeve: { left: "84%", top: "28%", size: 28 },
-  upper_back: { left: "50%", top: "42%", size: 32 },
-  lower_back: { left: "50%", top: "66%", size: 32 },
+  right_sleeve: { left: "16%", top: "28%", size: 42 },
+  left_sleeve: { left: "84%", top: "28%", size: 42 },
+  upper_back: { left: "50%", top: "42%", size: 48 },
+  lower_back: { left: "50%", top: "66%", size: 48 },
   // Cap crown panel (above brim)
-  cap_front: { left: "50%", top: "36%", size: 30 },
+  cap_front: { left: "50%", top: "36%", size: 44 },
   // Wearer's left leg = viewer's right; right leg = viewer's left
-  shorts_left: { left: "67%", top: "52%", size: 28 },
-  shorts_right: { left: "33%", top: "52%", size: 28 },
-  left_sock: { left: "25%", top: "32%", size: 26 },
-  right_sock: { left: "75%", top: "32%", size: 26 },
+  shorts_left: { left: "67%", top: "52%", size: 42 },
+  shorts_right: { left: "33%", top: "52%", size: 42 },
+  left_sock: { left: "25%", top: "32%", size: 40 },
+  right_sock: { left: "75%", top: "32%", size: 40 },
 };
 
 export function orderSlots(slots: SponsorshipSlot[]) {

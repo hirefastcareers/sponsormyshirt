@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test:webhook": "node scripts/test-webhook.mjs",
-    "seed:dodo": "node --env-file=.env.local scripts/seed-dodo-products.js"
+    "seed:dodo": "node --env-file=.env.local scripts/seed-dodo-products.js",
+    "sync:dodo": "node --env-file=.env.local scripts/sync-dodo-catalogue.js"
   },
   "dependencies": {
     "@dodopayments/nextjs": "^0.3.9",
