@@ -142,22 +142,26 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
   return (
     <div className="space-y-16 sm:space-y-20">
       {/* Positions */}
-      <section aria-labelledby="positions-heading">
+      <section
+        id="positions"
+        aria-labelledby="positions-heading"
+        className="scroll-mt-24"
+      >
         <SectionLabel>Inventory</SectionLabel>
         <SectionHeading>
           <span id="positions-heading">Positions</span>
         </SectionHeading>
-        <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-zinc-500">
+        <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-zinc-500">
           Physical kit visibility, priced so small brands can buy real race-day
           exposure — not a vague “partnership.”
         </p>
 
         <div className="mt-8 overflow-hidden rounded-xl border border-[#E4E4E7] bg-white">
-          <div className="hidden grid-cols-[4rem_1fr_8rem_1fr] gap-4 border-b border-zinc-100 px-5 py-3 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400 sm:grid sm:px-6">
-            <span>#</span>
-            <span>Placement</span>
-            <span>Size</span>
-            <span>Visibility</span>
+          <div className="hidden grid-cols-12 gap-4 border-b border-zinc-100 px-5 py-3 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400 sm:grid sm:px-6 lg:px-8">
+            <span className="col-span-1">#</span>
+            <span className="col-span-4">Placement</span>
+            <span className="col-span-2">Size</span>
+            <span className="col-span-5">Visibility</span>
           </div>
           <ul className="divide-y divide-zinc-100">
             {ZONE_META.map((zone) => {
@@ -168,12 +172,12 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
               return (
                 <li
                   key={zone.id}
-                  className="grid gap-2 px-5 py-4 sm:grid-cols-[4rem_1fr_8rem_1fr] sm:items-center sm:gap-4 sm:px-6"
+                  className="grid gap-2 px-5 py-4 sm:grid-cols-12 sm:items-center sm:gap-4 sm:px-6 lg:px-8"
                 >
-                  <span className="font-mono text-xs tabular-nums text-zinc-400">
+                  <span className="font-mono text-xs tabular-nums text-zinc-400 sm:col-span-1">
                     {zone.num}
                   </span>
-                  <div>
+                  <div className="sm:col-span-4">
                     <p className="text-sm font-medium text-zinc-900">
                       {meta.slot_name}
                     </p>
@@ -193,10 +197,10 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
                       </span>
                     </p>
                   </div>
-                  <p className="font-mono text-xs tabular-nums text-zinc-600">
+                  <p className="font-mono text-xs tabular-nums text-zinc-600 sm:col-span-2">
                     {detail.dimensions}
                   </p>
-                  <p className="text-sm leading-snug text-zinc-500">
+                  <p className="text-sm leading-snug text-zinc-500 sm:col-span-5">
                     {detail.perk}
                   </p>
                 </li>
@@ -212,14 +216,14 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
         <SectionHeading>
           <span id="divided-heading">How it&apos;s divided</span>
         </SectionHeading>
-        <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-zinc-500">
+        <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-zinc-500">
           Placements map to how cameras and crowds actually see a runner —
           chest for broadcast, back for tracking, sleeves for profile, lower
           kit for action.
         </p>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          <div className="rounded-xl border border-[#E4E4E7] bg-white px-5 py-6 sm:px-6">
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-12">
+          <div className="rounded-xl border border-[#E4E4E7] bg-white px-5 py-6 sm:px-6 lg:col-span-6 lg:px-8">
             <p className="flex items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-emerald-700">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-600" />
               High visibility
@@ -233,7 +237,7 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
               eye-level finish shots. The placements that earn the most frames.
             </p>
           </div>
-          <div className="rounded-xl border border-[#E4E4E7] bg-white px-5 py-6 sm:px-6">
+          <div className="rounded-xl border border-[#E4E4E7] bg-white px-5 py-6 sm:px-6 lg:col-span-6 lg:px-8">
             <p className="flex items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-zinc-400" />
               Secondary
@@ -251,18 +255,22 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
       </section>
 
       {/* How it works */}
-      <section aria-labelledby="works-heading">
+      <section
+        id="how-it-works"
+        aria-labelledby="works-heading"
+        className="scroll-mt-24"
+      >
         <SectionLabel>Process</SectionLabel>
         <SectionHeading>
           <span id="works-heading">How it works</span>
         </SectionHeading>
-        <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-zinc-500">
+        <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-zinc-500">
           Pick a spot, pay once, get your logo printed on the race-day kit —
           built for indie projects and small businesses that want clear,
           physical visibility.
         </p>
 
-        <ol className="mt-8 grid gap-4 sm:grid-cols-3">
+        <ol className="mt-8 grid gap-4 sm:grid-cols-3 lg:grid-cols-12">
           {STEPS.map((step, i) => (
             <li
               key={step.num}
@@ -289,47 +297,57 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
       </section>
 
       {/* The Race */}
-      <section aria-labelledby="race-heading">
+      <section
+        id="the-race"
+        aria-labelledby="race-heading"
+        className="scroll-mt-24"
+      >
         <SectionLabel>Event</SectionLabel>
         <SectionHeading>
           <span id="race-heading">The race</span>
         </SectionHeading>
-        <div className="mt-8 rounded-xl border border-[#E4E4E7] bg-white px-5 py-8 sm:px-8 sm:py-10">
-          <p className="max-w-2xl text-[15px] leading-relaxed text-zinc-500 sm:text-base">
-            The Great North Run is the world’s biggest half marathon —{" "}
-            <span className="font-medium text-zinc-800">60,000+ runners</span>,
-            televised coverage, and thousands of spectators lining the{" "}
-            <span className="font-medium text-zinc-800">13.1-mile</span>{" "}
-            Newcastle-to-South-Shields route. Target finish around{" "}
-            <span className="font-medium text-zinc-800">~2:05</span> — your logo
-            on course for the full broadcast window.
-          </p>
-          <dl className="mt-8 grid gap-6 sm:grid-cols-3">
-            {[
-              { label: "Field", value: "60,000+ runners" },
-              { label: "Route", value: "Newcastle → South Shields" },
-              { label: "Target time", value: "~2:05" },
-            ].map((stat) => (
-              <div key={stat.label}>
-                <dt className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
-                  {stat.label}
-                </dt>
-                <dd className="mt-1.5 text-lg font-medium tracking-tight text-zinc-900">
-                  {stat.value}
-                </dd>
-              </div>
-            ))}
-          </dl>
+        <div className="mt-8 rounded-xl border border-[#E4E4E7] bg-white px-5 py-8 sm:px-8 sm:py-10 lg:px-10">
+          <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
+            <p className="text-[15px] leading-relaxed text-zinc-500 sm:text-base lg:col-span-7">
+              The Great North Run is the world’s biggest half marathon —{" "}
+              <span className="font-medium text-zinc-800">60,000+ runners</span>,
+              televised coverage, and thousands of spectators lining the{" "}
+              <span className="font-medium text-zinc-800">13.1-mile</span>{" "}
+              Newcastle-to-South-Shields route. Target finish around{" "}
+              <span className="font-medium text-zinc-800">~2:05</span> — your logo
+              on course for the full broadcast window.
+            </p>
+            <dl className="grid gap-6 sm:grid-cols-3 lg:col-span-5 lg:grid-cols-1 lg:gap-5">
+              {[
+                { label: "Field", value: "60,000+ runners" },
+                { label: "Route", value: "Newcastle → South Shields" },
+                { label: "Target time", value: "~2:05" },
+              ].map((stat) => (
+                <div key={stat.label}>
+                  <dt className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
+                    {stat.label}
+                  </dt>
+                  <dd className="mt-1.5 text-lg font-medium tracking-tight text-zinc-900">
+                    {stat.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </div>
       </section>
 
       {/* FAQ */}
-      <section aria-labelledby="faq-heading">
+      <section
+        id="faq"
+        aria-labelledby="faq-heading"
+        className="scroll-mt-24"
+      >
         <SectionLabel>Support</SectionLabel>
         <SectionHeading>
           <span id="faq-heading">FAQ</span>
         </SectionHeading>
-        <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-zinc-500">
+        <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-zinc-500">
           Straight answers on artwork, print deadlines, payment, and add-ons —
           before you spend a pound.
         </p>
@@ -353,7 +371,7 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
                     aria-expanded={open}
                     aria-controls={panelId}
                     onClick={() => setOpenFaq(open ? null : index)}
-                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition hover:bg-zinc-50/80 sm:px-6"
+                    className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition hover:bg-zinc-50/80 sm:px-6 lg:px-8"
                   >
                     <span className="text-sm font-medium text-zinc-900 sm:text-[15px]">
                       {item.q}
@@ -373,9 +391,9 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
                   role="region"
                   aria-labelledby={buttonId}
                   hidden={!open}
-                  className="px-5 pb-5 sm:px-6"
+                  className="px-5 pb-5 sm:px-6 lg:px-8"
                 >
-                  <p className="max-w-2xl text-sm leading-relaxed text-zinc-500">
+                  <p className="max-w-3xl text-sm leading-relaxed text-zinc-500">
                     {item.a}
                   </p>
                 </div>
