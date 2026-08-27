@@ -20,9 +20,39 @@ export const ZONE_META = [
 
 export type ZoneId = (typeof ZONE_META)[number]["id"];
 
-/** Zones whose placements are currently active (excludes `active: false`). */
-export function getActiveZones() {
-  return ZONE_META.filter((zone) => isPositionActive(zone.id));
+export type ActiveZone = {
+  id: ZoneId;
+  /** Contiguous display index among active slots only (01, 02, …). */
+  num: string;
+  garment: string;
+};
+
+/** Zero-based index → padded badge label ("01", "02", …). */
+export function formatDisplayIndex(index: number): string {
+  return String(index + 1).padStart(2, "0");
+}
+
+/**
+ * Active zones with contiguous UI numbers (gaps from inactive slots removed).
+ * Remaps `num` for badges/labels only — zone `id` stays the permanent key
+ * (e.g. shorts_left) used by checkout / Dodo / Supabase.
+ * e.g. with cap disabled: shorts_left displays as "04", but id remains "shorts_left".
+ */
+export function getActiveZones(): ActiveZone[] {
+  return ZONE_META.filter((zone) => isPositionActive(zone.id)).map(
+    (zone, index) => ({
+      id: zone.id,
+      garment: zone.garment,
+      num: formatDisplayIndex(index),
+    }),
+  );
+}
+
+/** Map of active zone id → contiguous display number. */
+export function getActiveDisplayNums(): Record<string, string> {
+  return Object.fromEntries(
+    getActiveZones().map((zone) => [zone.id, zone.num]),
+  );
 }
 
 /** Marker positions as % of each garment panel (tuned to SVG viewBoxes). */
@@ -55,11 +85,7 @@ export function orderSlots(slots: SponsorshipSlot[]) {
       return slot ? { zone, slot } : null;
     })
     .filter(
-      (
-        row,
-      ): row is {
-        zone: (typeof ZONE_META)[number];
-        slot: SponsorshipSlot;
-      } => row !== null,
+      (row): row is { zone: ActiveZone; slot: SponsorshipSlot } =>
+        row !== null,
     );
 }

@@ -104,6 +104,7 @@ export default function SponsorshipModal({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          // Permanent DB/config id (e.g. "shorts_left") — not the UI badge number
           slotId: slot.id,
           sponsorName: sponsorName.trim(),
           sponsorUrl: sponsorUrl.trim(),

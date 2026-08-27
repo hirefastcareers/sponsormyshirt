@@ -2,10 +2,12 @@
  * POST /api/checkout
  *
  * Flow:
- *  1. Validate body + load slot; reject if sold (no Dodo session)
- *  2. Title takeover: require 100% of positions available, hold ALL rows
+ *  1. Validate body + load slot by permanent DB id (`slotId`, e.g. "shorts_left");
+ *     UI display badges ("01"–"09") are never used for lookup or Dodo metadata
+ *  2. Title takeover: require 100% of active positions available, hold ALL rows
  *  3. Otherwise lock the single slot as `pending` (optimistic hold)
- *  4. Create a Dodo Payments checkout session with sponsor metadata + add-on line items
+ *  4. Create a Dodo Payments checkout session with that row's `dodo_product_id`
+ *     + sponsor metadata + add-on line items
  *  5. Return { checkout_url } for client redirect
  *
  * On payment success the webhook flips status → `sold`
@@ -57,7 +59,7 @@ export async function POST(request: Request) {
 
     const admin = getSupabaseAdmin();
 
-    // Load slot — must be available and have a configured Dodo product
+    // Load by permanent sponsorship_slots.id — not the remapped UI badge number
     const { data: slot, error: fetchError } = await admin
       .from("sponsorship_slots")
       .select("*")

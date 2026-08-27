@@ -32,6 +32,10 @@ export interface SponsorshipSlot {
 
 /** Payload from the sponsorship modal → /api/checkout */
 export interface CheckoutRequestBody {
+  /**
+   * Permanent sponsorship_slots.id (e.g. "shorts_left", "chest_center").
+   * Never the UI display badge ("01"–"09") — those are view-only.
+   */
   slotId: string;
   sponsorName: string;
   sponsorUrl: string;

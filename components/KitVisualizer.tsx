@@ -17,7 +17,7 @@ import {
   normalizeSponsorUrl,
   resolveSponsorLogoUrl,
 } from "@/lib/sponsor-display";
-import { MARKER_POS, ZONE_META, type ZoneId } from "@/lib/zones";
+import { MARKER_POS, getActiveDisplayNums, type ZoneId } from "@/lib/zones";
 
 const FILL = "#EFEFEA";
 const STROKE = "#D4D4D8";
@@ -62,13 +62,14 @@ export default function KitVisualizer({
   const anySold = hasAnySoldPosition(slots);
   const titleSelected = selectedIds.has(TITLE_TAKEOVER_ID);
   const titleDisabled = !takeoverOpen || titleSlot.status !== "available";
+  const displayNums = getActiveDisplayNums();
 
   function node(id: ZoneId) {
     if (!isPositionActive(id)) return null;
     const slot = byId.get(id);
-    const meta = ZONE_META.find((z) => z.id === id);
+    const displayNum = displayNums[id];
     const pos = MARKER_POS[id];
-    if (!slot || !meta || !pos) return null;
+    if (!slot || !displayNum || !pos) return null;
 
     const isSelected = selectedIds.has(id);
     const isHovered = hoveredId === id;
@@ -152,7 +153,7 @@ export default function KitVisualizer({
             target="_blank"
             rel="noopener noreferrer"
             title={title}
-            aria-label={`${meta.num} ${slot.slot_name} — ${slot.sponsor_name ?? "sponsor"}`}
+            aria-label={`${displayNum} ${slot.slot_name} — ${slot.sponsor_name ?? "sponsor"}`}
             onMouseEnter={() => onHover(id)}
             onMouseLeave={() => onHover(null)}
             className={`${shellClass} cursor-pointer`}
@@ -167,7 +168,7 @@ export default function KitVisualizer({
         <div
           key={id}
           title={title}
-          aria-label={`${meta.num} ${slot.slot_name}`}
+          aria-label={`${displayNum} ${slot.slot_name}`}
           onMouseEnter={() => onHover(id)}
           onMouseLeave={() => onHover(null)}
           className={shellClass}
@@ -185,7 +186,7 @@ export default function KitVisualizer({
         disabled={!available}
         title={title}
         aria-pressed={isSelected}
-        aria-label={`${meta.num} ${slot.slot_name}`}
+        aria-label={`${displayNum} ${slot.slot_name}`}
         onClick={() => available && onToggle(slot)}
         onMouseEnter={() => onHover(id)}
         onMouseLeave={() => onHover(null)}
@@ -200,7 +201,7 @@ export default function KitVisualizer({
             SOLD
           </span>
         ) : (
-          meta.num
+          displayNum
         )}
       </button>
     );
