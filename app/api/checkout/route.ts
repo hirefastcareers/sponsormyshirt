@@ -20,7 +20,7 @@ import {
   parseAddonFlags,
   resolveAddonProductIds,
 } from "@/lib/addons";
-import { getDodoClient } from "@/lib/dodo";
+import { assertDodoPaymentsConfigured, getDodoClient } from "@/lib/dodo";
 import {
   getPositionPrice,
   hasAnySoldPosition,
@@ -45,6 +45,16 @@ export async function POST(request: Request) {
         },
         { status: 400 }
       );
+    }
+
+    try {
+      assertDodoPaymentsConfigured();
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Dodo Payments is not configured on the server.";
+      return NextResponse.json({ error: message }, { status: 503 });
     }
 
     // Basic URL sanity check
@@ -301,9 +311,17 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("[checkout] Unexpected error:", err);
+    const message = err instanceof Error ? err.message : String(err);
+    const isConfig =
+      message.includes("DODO_PAYMENTS_API_KEY") ||
+      message.includes("not configured");
     return NextResponse.json(
-      { error: "Internal server error creating checkout session" },
-      { status: 500 }
+      {
+        error: isConfig
+          ? message
+          : "Internal server error creating checkout session",
+      },
+      { status: isConfig ? 503 : 500 },
     );
   }
 }

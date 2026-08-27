@@ -89,7 +89,7 @@ export async function POST(request: Request) {
       message:
         result.mode === "title_takeover"
           ? "All kit slots marked sold (title takeover)."
-          : `Slot ${result.slot_id} marked sold.`,
+          : `Slot(s) ${result.slot_ids.join(", ")} marked sold.`,
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";

@@ -10,7 +10,8 @@
     "test:webhook": "node scripts/test-webhook.mjs",
     "test:audit": "playwright test tests/site-audit.spec.ts --headed",
     "seed:dodo": "node --env-file=.env.local scripts/seed-dodo-products.js",
-    "sync:dodo": "node --env-file=.env.local scripts/sync-dodo-catalogue.js"
+    "sync:dodo": "node --env-file=.env.local scripts/sync-dodo-catalogue.js",
+    "sync:dodo-addons": "node --env-file=.env.local scripts/sync-dodo-addons.js"
   },
   "dependencies": {
     "@dodopayments/nextjs": "^0.3.9",

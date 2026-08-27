@@ -11,12 +11,19 @@
  *
  * Requires in .env.local:
  *   DODO_PAYMENTS_API_KEY
- *   DODO_PAYMENTS_ENVIRONMENT (optional, default test_mode)
+ *   DODO_PAYMENTS_ENVIRONMENT (test_mode | live_mode — use live_mode for prod)
  *   NEXT_PUBLIC_SUPABASE_URL
  *   SUPABASE_SERVICE_ROLE_KEY
  *
+ * Live setup:
+ *   1. Set DODO_PAYMENTS_ENVIRONMENT=live_mode and your live API key in .env.local
+ *   2. Run: npm run sync:dodo
+ *   3. Copy returned pdt_… / prod_… ids into Supabase (script writes them automatically)
+ *
  * Local prices mirror `lib/positions.ts` (canonical rate card). When a slot id
  * appears here, that GBP amount is preferred over the DB value for the sync.
+ * Inactive slots (e.g. cap_front) are skipped — flip SLOT_ACTIVE in this file
+ * when re-enabling a placement.
  */
 
 const { createClient } = require("@supabase/supabase-js");
@@ -36,14 +43,43 @@ const LOCAL_PRICES = {
   right_sock: 100,
 };
 
+/** Mirror lib/positions.ts POSITION_META.active — skip Dodo sync when false. */
+const SLOT_ACTIVE = {
+  chest_center: true,
+  upper_back: true,
+  lower_back: true,
+  cap_front: false,
+  shorts_left: true,
+  shorts_right: true,
+  right_sleeve: true,
+  left_sleeve: true,
+  left_sock: true,
+  right_sock: true,
+  title_takeover: true,
+};
+
 /** Slots removed from the rate card — never create/update Dodo products for these. */
 const RETIRED_SLOT_IDS = new Set(["left_chest"]);
 
-// Title Sponsor defaults to the sum of every placement (override by setting a number).
+function isSlotActive(slotId) {
+  if (RETIRED_SLOT_IDS.has(slotId)) return false;
+  if (Object.prototype.hasOwnProperty.call(SLOT_ACTIVE, slotId)) {
+    return SLOT_ACTIVE[slotId] !== false;
+  }
+  return true;
+}
+
+function sumActivePlacementPrices() {
+  return Object.entries(LOCAL_PRICES).reduce((sum, [id, price]) => {
+    if (!isSlotActive(id)) return sum;
+    return sum + price;
+  }, 0);
+}
+
+// Title Sponsor defaults to the sum of every ACTIVE placement (override by setting a number).
 const TITLE_SPONSOR_PRICE = undefined;
 LOCAL_PRICES.title_takeover =
-  TITLE_SPONSOR_PRICE ??
-  Object.values(LOCAL_PRICES).reduce((sum, price) => sum + price, 0);
+  TITLE_SPONSOR_PRICE ?? sumActivePlacementPrices();
 
 function resolvePriceGbp(slot) {
   if (Object.prototype.hasOwnProperty.call(LOCAL_PRICES, slot.id)) {
@@ -143,6 +179,12 @@ async function main() {
       continue;
     }
 
+    if (!isSlotActive(slot.id)) {
+      console.log(`  · ${slot.id}: skipped (inactive in slot config)`);
+      unchanged++;
+      continue;
+    }
+
     const priceGbp = resolvePriceGbp(slot);
     const pricePence = toPence(priceGbp);
 
@@ -176,41 +218,7 @@ async function main() {
     const name = productName(slot);
 
     if (!slot.dodo_product_id) {
-      process.stdout.write(
-        `  → ${slot.id}: creating "${name}" @ £${priceGbp} (${pricePence}p)… `,
-      );
-      try {
-        const product = await dodo.products.create({
-          name,
-          description: `Great North Run kit sponsorship — ${slot.slot_name}`,
-          tax_category: "digital_products",
-          price: oneTimePrice(pricePence),
-          metadata: { slot_id: slot.id },
-        });
-
-        const productId = product.product_id;
-        if (!productId) {
-          throw new Error("Dodo response missing product_id");
-        }
-
-        const { error: updateError } = await supabase
-          .from("sponsorship_slots")
-          .update({ dodo_product_id: productId })
-          .eq("id", slot.id);
-
-        if (updateError) {
-          throw new Error(
-            `Dodo product ${productId} created but Supabase update failed: ${updateError.message}`,
-          );
-        }
-
-        console.log(`ok → ${productId}`);
-        created++;
-      } catch (err) {
-        console.log("FAILED");
-        console.error(`    ${err.message || err}`);
-        failed++;
-      }
+      await createAndLinkSlot(slot, name, priceGbp, pricePence);
       continue;
     }
 
@@ -241,8 +249,21 @@ async function main() {
       console.log(`updated ${before} → £${priceGbp}`);
       updated++;
     } catch (err) {
+      const message = err?.message || String(err);
+      const isMissing =
+        message.includes("404") ||
+        message.toLowerCase().includes("not be found");
+
+      if (isMissing) {
+        console.log("missing in Dodo — creating live product…");
+        await createAndLinkSlot(slot, name, priceGbp, pricePence, {
+          replaceId: slot.dodo_product_id,
+        });
+        continue;
+      }
+
       console.log("FAILED");
-      console.error(`    ${err.message || err}`);
+      console.error(`    ${message}`);
       failed++;
     }
   }
@@ -251,6 +272,51 @@ async function main() {
     `\nDone. Created: ${created}, updated: ${updated}, unchanged: ${unchanged}, failed: ${failed}.`,
   );
   if (failed > 0) process.exit(1);
+
+  async function createAndLinkSlot(
+    slot,
+    name,
+    priceGbp,
+    pricePence,
+    { replaceId } = {},
+  ) {
+    const prefix = replaceId
+      ? `  → ${slot.id}: replacing ${replaceId} with new product @ £${priceGbp}… `
+      : `  → ${slot.id}: creating "${name}" @ £${priceGbp} (${pricePence}p)… `;
+    process.stdout.write(prefix);
+    try {
+      const product = await dodo.products.create({
+        name,
+        description: `Great North Run kit sponsorship — ${slot.slot_name}`,
+        tax_category: "digital_products",
+        price: oneTimePrice(pricePence),
+        metadata: { slot_id: slot.id },
+      });
+
+      const productId = product.product_id;
+      if (!productId) {
+        throw new Error("Dodo response missing product_id");
+      }
+
+      const { error: updateError } = await supabase
+        .from("sponsorship_slots")
+        .update({ dodo_product_id: productId })
+        .eq("id", slot.id);
+
+      if (updateError) {
+        throw new Error(
+          `Dodo product ${productId} created but Supabase update failed: ${updateError.message}`,
+        );
+      }
+
+      console.log(`ok → ${productId}`);
+      created++;
+    } catch (err) {
+      console.log("FAILED");
+      console.error(`    ${err.message || err}`);
+      failed++;
+    }
+  }
 }
 
 main().catch((err) => {
