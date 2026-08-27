@@ -83,9 +83,8 @@ export async function POST(request: Request) {
     revalidatePath("/");
 
     return NextResponse.json({
-      ok: true,
-      simulated_event: "payment.succeeded",
       ...result,
+      simulated_event: "payment.succeeded",
       metadata,
       message:
         result.mode === "title_takeover"
