@@ -14,8 +14,11 @@ const ibmPlexMono = IBM_Plex_Mono({
   weight: ["400", "500"],
 });
 
+const SITE_URL = "https://www.sponsormyshirt.app";
+const OG_IMAGE_URL = `${SITE_URL}/og-image.png`;
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.sponsormyshirt.app"),
+  metadataBase: new URL(SITE_URL),
   title: "Sponsor My Shirt | Own a Piece of the Kit",
   description:
     "Sponsor a slot on my kit for the Great North Run and get your brand featured!",
@@ -23,11 +26,11 @@ export const metadata: Metadata = {
     title: "Sponsor My Shirt | Own a Piece of the Kit",
     description:
       "Sponsor a slot on my kit for the Great North Run and get your brand featured!",
-    url: "https://www.sponsormyshirt.app",
+    url: SITE_URL,
     siteName: "Sponsor My Shirt",
     images: [
       {
-        url: "/og-image.png",
+        url: OG_IMAGE_URL,
         width: 1200,
         height: 630,
         alt: "Sponsor My Shirt Kit Preview",
@@ -41,7 +44,7 @@ export const metadata: Metadata = {
     title: "Sponsor My Shirt | Own a Piece of the Kit",
     description:
       "Sponsor a slot on my kit for the Great North Run and get your brand featured!",
-    images: ["/og-image.png"],
+    images: [OG_IMAGE_URL],
   },
 };
 
