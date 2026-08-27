@@ -7,13 +7,6 @@ import type { SponsorshipSlot, SlotCategory } from "@/types/sponsorship";
 /** Whole-kit title sponsorship — sells every placement in one purchase. */
 export const TITLE_TAKEOVER_ID = "title_takeover" as const;
 
-export const TITLE_TAKEOVER = {
-  id: TITLE_TAKEOVER_ID,
-  slot_name: "Title Sponsor / Whole Kit Takeover",
-  category: "takeover" as const,
-  price_gbp: 1200,
-} as const;
-
 /** Premium rate card — individual placement prices (GBP). */
 export const POSITION_PRICES = {
   chest_center: 1200,
@@ -30,6 +23,34 @@ export const POSITION_PRICES = {
 } as const;
 
 export type PositionId = keyof typeof POSITION_PRICES;
+
+/**
+ * Optional fixed Title Sponsor price (GBP).
+ * When unset, the master package price is the sum of all placement prices.
+ */
+export const TITLE_SPONSOR_PRICE: number | undefined = undefined;
+
+/** Sum of every individual kit placement on the rate card. */
+export function sumPlacementPrices(): number {
+  return (Object.values(POSITION_PRICES) as number[]).reduce(
+    (sum, price) => sum + price,
+    0,
+  );
+}
+
+/** Resolved Title Sponsor / Whole Kit price in GBP. */
+export function getTitleSponsorPrice(): number {
+  return TITLE_SPONSOR_PRICE ?? sumPlacementPrices();
+}
+
+export const TITLE_TAKEOVER = {
+  id: TITLE_TAKEOVER_ID,
+  slot_name: "Title Sponsor / Whole Kit Takeover",
+  category: "takeover" as const,
+  get price_gbp() {
+    return getTitleSponsorPrice();
+  },
+} as const;
 
 export const POSITION_META: Record<
   PositionId,
@@ -49,7 +70,7 @@ export const POSITION_META: Record<
 };
 
 export function getPositionPrice(slotId: string): number | undefined {
-  if (isTitleTakeover(slotId)) return TITLE_TAKEOVER.price_gbp;
+  if (isTitleTakeover(slotId)) return getTitleSponsorPrice();
   if (slotId in POSITION_PRICES) {
     return POSITION_PRICES[slotId as PositionId];
   }

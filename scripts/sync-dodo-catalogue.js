@@ -24,7 +24,6 @@ const DodoPayments = require("dodopayments");
 
 /** Keep in sync with lib/positions.ts */
 const LOCAL_PRICES = {
-  title_takeover: 1200,
   chest_center: 1200,
   left_chest: 650,
   upper_back: 500,
@@ -37,6 +36,12 @@ const LOCAL_PRICES = {
   left_sock: 100,
   right_sock: 100,
 };
+
+// Title Sponsor defaults to the sum of every placement (override by setting a number).
+const TITLE_SPONSOR_PRICE = undefined;
+LOCAL_PRICES.title_takeover =
+  TITLE_SPONSOR_PRICE ??
+  Object.values(LOCAL_PRICES).reduce((sum, price) => sum + price, 0);
 
 function resolvePriceGbp(slot) {
   if (Object.prototype.hasOwnProperty.call(LOCAL_PRICES, slot.id)) {

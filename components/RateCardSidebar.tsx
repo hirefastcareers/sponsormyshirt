@@ -7,7 +7,6 @@ import { addonLabels } from "@/lib/addons";
 import type { SponsorshipSlot } from "@/types/sponsorship";
 import {
   isTitleTakeoverPurchasable,
-  TITLE_TAKEOVER,
   TITLE_TAKEOVER_ID,
 } from "@/lib/positions";
 import { normalizeSponsorUrl } from "@/lib/sponsor-display";
@@ -110,7 +109,7 @@ export default function RateCardSidebar({
               <SlotStatusValue
                 slot={titleSlot}
                 available={takeoverOpen}
-                availableLabel={`£${TITLE_TAKEOVER.price_gbp.toLocaleString("en-GB")}`}
+                availableLabel={`£${titleSlot.price_gbp.toLocaleString("en-GB")}`}
                 unavailableFallback="Locked"
               />
             </span>

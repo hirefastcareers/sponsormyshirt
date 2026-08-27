@@ -227,7 +227,7 @@ export default function KitVisualizer({
               ? anySold || titleSlot.status === "sold"
                 ? "Title Sponsor unavailable — a placement has already been sold"
                 : "Title Sponsor unavailable — every position must still be open"
-              : `${TITLE_TAKEOVER.slot_name} — £${TITLE_TAKEOVER.price_gbp}`
+              : `${titleSlot.slot_name} — £${titleSlot.price_gbp}`
           }
           onClick={() => !titleDisabled && onToggle(titleSlot)}
           onMouseEnter={() => onHover(TITLE_TAKEOVER_ID)}
@@ -268,7 +268,7 @@ export default function KitVisualizer({
               ? "Sold"
               : titleDisabled
                 ? "Locked"
-                : `£${TITLE_TAKEOVER.price_gbp.toLocaleString("en-GB")}`}
+                : `£${titleSlot.price_gbp.toLocaleString("en-GB")}`}
           </span>
         </button>
       </div>
@@ -417,9 +417,9 @@ function ShirtFront() {
         opacity="0.7"
       />
 
-      {/* Placement zones (~1.5× prior, recentered) */}
-      <AdZone x={87} y={103} w={66} h={54} />
-      <AdZone x={135} y={94} w={42} h={36} />
+      {/* Placement zones — 01 chest + 02 heart spaced to avoid overlap */}
+      <AdZone x={75} y={118} w={64} h={52} />
+      <AdZone x={148} y={70} w={40} h={34} />
       <AdZone x={14} y={41} w={50} h={42} />
       <AdZone x={176} y={41} w={50} h={42} />
     </svg>

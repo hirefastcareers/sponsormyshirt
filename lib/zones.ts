@@ -26,9 +26,10 @@ export const MARKER_POS: Record<
   { left: string; top: string; size: number }
 > = {
   // Tuned to Lucide shirt silhouette (viewBox 240×240); sizes ~1.45× prior
-  chest_center: { left: "50%", top: "54%", size: 50 },
-  // Wearer's left chest (heart) = viewer's right
-  left_chest: { left: "65%", top: "46%", size: 42 },
+  // Chest center shifted left/down to clear the heart badge
+  chest_center: { left: "45%", top: "60%", size: 50 },
+  // Wearer's left chest (heart) = viewer's right — raised toward left shoulder
+  left_chest: { left: "70%", top: "36%", size: 42 },
   // Wearer's right sleeve = left of graphic
   right_sleeve: { left: "16%", top: "28%", size: 42 },
   left_sleeve: { left: "84%", top: "28%", size: 42 },
