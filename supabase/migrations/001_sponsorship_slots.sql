@@ -89,14 +89,16 @@ INSERT INTO public.sponsorship_slots (
   x_position, y_position, dodo_product_id
 )
 VALUES
-  ('chest_center',  'Chest Center',       'shirt',    350, 'available', 50.0, 28.0, NULL),
-  ('left_chest',    'Left Chest / Heart', 'shirt',    250, 'available', 38.0, 30.0, NULL),
-  ('upper_back',    'Upper Back',         'shirt',    200, 'available', 72.0, 26.0, NULL),
-  ('lower_back',    'Lower Back',         'shirt',    150, 'available', 72.0, 42.0, NULL),
-  ('cap_front',     'Cap Front',          'headwear', 100, 'available', 22.0, 12.0, NULL),
-  ('shorts_left',   'Shorts Left Leg',    'shorts',    90, 'available', 42.0, 62.0, NULL),
-  ('left_sock',     'Left Sock',          'socks',     50, 'available', 38.0, 88.0, NULL),
-  ('right_sock',    'Right Sock',         'socks',     50, 'available', 52.0, 88.0, NULL)
+  ('chest_center',  'Chest Center',       'shirt',    350, 'available', 42.0, 31.0, NULL),
+  ('left_chest',    'Left Chest / Heart', 'shirt',    250, 'available', 18.5, 29.0, NULL),
+  ('left_sleeve',   'Left Sleeve',        'shirt',     75, 'available', 9.0,  25.0, NULL),
+  ('right_sleeve',  'Right Sleeve',       'shirt',     75, 'available', 40.0, 25.0, NULL),
+  ('upper_back',    'Upper Back',         'shirt',    200, 'available', 71.5, 29.0, NULL),
+  ('lower_back',    'Lower Back',         'shirt',    150, 'available', 71.5, 40.0, NULL),
+  ('cap_front',     'Cap Front',          'headwear', 100, 'available', 25.0,  9.5, NULL),
+  ('shorts_left',   'Shorts Left Leg',    'shorts',    90, 'available', 38.5, 65.5, NULL),
+  ('left_sock',     'Left Sock',          'socks',     50, 'available', 38.5, 87.5, NULL),
+  ('right_sock',    'Right Sock',         'socks',     50, 'available', 51.0, 87.5, NULL)
 ON CONFLICT (id) DO UPDATE SET
   slot_name   = EXCLUDED.slot_name,
   category    = EXCLUDED.category,

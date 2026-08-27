@@ -2,6 +2,7 @@
 
 /**
  * Minimal filled kit silhouettes with dashed ad zones and hotspot badges.
+ * Top garment is a short-sleeve athletic t-shirt (front + back).
  * Badge / logo positions are keyed by slot id to match the SVG layout.
  */
 import { useMemo, useState } from "react";
@@ -18,10 +19,15 @@ const SLOT_ZONES: Record<
   { x: number; y: number; w: number; h: number }
 > = {
   cap_front: { x: 19, y: 7.5, w: 12, h: 4.2 },
-  chest_center: { x: 24, y: 26, w: 10, h: 8.5 },
-  left_chest: { x: 15.5, y: 25, w: 7, h: 6.5 },
-  upper_back: { x: 68, y: 24.5, w: 13, h: 7 },
-  lower_back: { x: 68, y: 35, w: 13, h: 7 },
+  // Front torso
+  chest_center: { x: 23.5, y: 27, w: 11, h: 9 },
+  left_chest: { x: 15, y: 26, w: 7, h: 6.5 },
+  // Sleeves (budget add-ons)
+  left_sleeve: { x: 5.5, y: 22.5, w: 7.5, h: 5.5 },
+  right_sleeve: { x: 36.5, y: 22.5, w: 7.5, h: 5.5 },
+  // Back torso
+  upper_back: { x: 64.5, y: 25.5, w: 14, h: 7.5 },
+  lower_back: { x: 64.5, y: 36, w: 14, h: 7.5 },
   shorts_left: { x: 34, y: 61, w: 9, h: 9 },
   left_sock: { x: 34.5, y: 84.5, w: 8, h: 6 },
   right_sock: { x: 47, y: 84.5, w: 8, h: 6 },
@@ -30,19 +36,29 @@ const SLOT_ZONES: Record<
 /** Badge anchor points (%). Offset slightly outside zones for readability. */
 const BADGE_POS: Record<string, { x: number; y: number }> = {
   cap_front: { x: 44, y: 9 },
-  chest_center: { x: 42, y: 30 },
-  left_chest: { x: 7, y: 28 },
-  upper_back: { x: 92, y: 27 },
-  lower_back: { x: 92, y: 38 },
+  chest_center: { x: 42, y: 31 },
+  left_chest: { x: 8, y: 29 },
+  left_sleeve: { x: 4, y: 19 },
+  right_sleeve: { x: 46, y: 19 },
+  upper_back: { x: 92, y: 28 },
+  lower_back: { x: 92, y: 40 },
   shorts_left: { x: 22, y: 65 },
   left_sock: { x: 26, y: 90 },
   right_sock: { x: 64, y: 90 },
 };
 
-const FILL = "#F1F5F9";
-const STROKE = "#CBD5E1";
-const ZONE_STROKE = "#94A3B8";
-const LABEL = "#94A3B8";
+const FILL = "#F4F4F5";
+const STROKE = "#D4D4D8";
+const ZONE_STROKE = "#A1A1AA";
+const LABEL = "#A1A1AA";
+
+const FRONT_SHIRT_SLOTS = [
+  "chest_center",
+  "left_chest",
+  "left_sleeve",
+  "right_sleeve",
+];
+const BACK_SHIRT_SLOTS = ["upper_back", "lower_back"];
 
 function formatPrice(gbp: number) {
   return `£${gbp}`;
@@ -107,32 +123,60 @@ export default function KitVisualizer({
             </text>
           </g>
 
-          {/* ——— VEST FRONT ——— */}
+          {/* ——— T-SHIRT FRONT (short sleeves + crew neck) ——— */}
           <g
             opacity={
-              hoveredId &&
-              !["chest_center", "left_chest"].includes(hoveredId)
-                ? 0.4
-                : 1
+              hoveredId && !FRONT_SHIRT_SLOTS.includes(hoveredId) ? 0.4 : 1
             }
             className="transition-opacity duration-300"
           >
+            {/*
+              Athletic short-sleeve tee:
+              left cuff → left shoulder → crew neck → right shoulder →
+              right cuff → right armpit → hem → left armpit → close
+            */}
             <path
-              d="M55 120 L85 145 L85 275 C85 285 95 290 110 290 L170 290 C185 290 195 285 195 275 L195 145 L225 120 L210 105 L185 135 L175 115 Q140 135 105 115 L95 135 L70 105 Z"
+              d="M32 178
+                 L38 148
+                 L72 138
+                 L92 155
+                 L108 128
+                 C122 116 158 116 172 128
+                 L188 155
+                 L208 138
+                 L242 148
+                 L248 178
+                 L212 192
+                 L212 278
+                 C212 288 202 294 188 294
+                 L92 294
+                 C78 294 68 288 68 278
+                 L68 192
+                 Z"
               fill={FILL}
               stroke={STROKE}
               strokeWidth="1.5"
               strokeLinejoin="round"
             />
+            {/* Crew-neck collar opening */}
             <path
-              d="M105 118 Q140 138 175 118"
+              d="M108 128 C120 142 160 142 172 128"
               fill="none"
               stroke={STROKE}
-              strokeWidth="1.25"
+              strokeWidth="1.35"
+              strokeLinecap="round"
+            />
+            {/* Inner collar hint */}
+            <path
+              d="M112 130 C122 140 158 140 168 130"
+              fill="none"
+              stroke={STROKE}
+              strokeWidth="0.9"
+              opacity="0.55"
             />
             <text
               x="140"
-              y="312"
+              y="316"
               fill={LABEL}
               fontSize="10"
               fontFamily="ui-sans-serif, system-ui, sans-serif"
@@ -140,36 +184,52 @@ export default function KitVisualizer({
               textAnchor="middle"
               letterSpacing="0.06em"
             >
-              VEST · FRONT
+              TEE · FRONT
             </text>
           </g>
 
-          {/* ——— VEST BACK ——— */}
+          {/* ——— T-SHIRT BACK (short sleeves + crew neck) ——— */}
           <g
             opacity={
-              hoveredId &&
-              !["upper_back", "lower_back"].includes(hoveredId)
-                ? 0.4
-                : 1
+              hoveredId && !BACK_SHIRT_SLOTS.includes(hoveredId) ? 0.4 : 1
             }
             className="transition-opacity duration-300"
           >
             <path
-              d="M275 120 L305 145 L305 275 C305 285 315 290 330 290 L390 290 C405 290 415 285 415 275 L415 145 L445 120 L430 105 L405 135 L395 115 Q360 135 325 115 L315 135 L290 105 Z"
+              d="M252 178
+                 L258 148
+                 L292 138
+                 L312 155
+                 L328 128
+                 C340 118 360 114 360 114
+                 C360 114 380 118 392 128
+                 L408 155
+                 L428 138
+                 L462 148
+                 L468 178
+                 L432 192
+                 L432 278
+                 C432 288 422 294 408 294
+                 L312 294
+                 C298 294 288 288 288 278
+                 L288 192
+                 Z"
               fill={FILL}
               stroke={STROKE}
               strokeWidth="1.5"
               strokeLinejoin="round"
             />
+            {/* Back crew-neck line */}
             <path
-              d="M325 118 Q360 138 395 118"
+              d="M328 128 C340 138 380 138 392 128"
               fill="none"
               stroke={STROKE}
-              strokeWidth="1.25"
+              strokeWidth="1.35"
+              strokeLinecap="round"
             />
             <text
               x="360"
-              y="312"
+              y="316"
               fill={LABEL}
               fontSize="10"
               fontFamily="ui-sans-serif, system-ui, sans-serif"
@@ -177,7 +237,7 @@ export default function KitVisualizer({
               textAnchor="middle"
               letterSpacing="0.06em"
             >
-              VEST · BACK
+              TEE · BACK
             </text>
           </g>
 
@@ -267,7 +327,7 @@ export default function KitVisualizer({
                 height={(zone.h / 100) * 580}
                 fill={
                   claimed
-                    ? "rgba(241,245,249,0.6)"
+                    ? "rgba(244,244,245,0.65)"
                     : "rgba(255,255,255,0.35)"
                 }
                 stroke={active ? "#059669" : ZONE_STROKE}
@@ -295,7 +355,7 @@ export default function KitVisualizer({
               className="max-h-full max-w-full object-contain p-0.5"
             />
           ) : (
-            <span className="px-1 text-center text-[9px] font-semibold uppercase tracking-wide text-slate-400">
+            <span className="px-1 text-center text-[9px] font-semibold uppercase tracking-wide text-zinc-400">
               Sold
             </span>
           );
@@ -326,6 +386,9 @@ export default function KitVisualizer({
                 onMouseLeave={() => setHoveredId(null)}
               >
                 {content}
+                <span className="absolute bottom-0.5 right-0.5 rounded bg-zinc-900/80 px-1 py-px text-[7px] font-bold uppercase tracking-wide text-white">
+                  Claimed
+                </span>
               </a>
             );
           }
@@ -340,6 +403,9 @@ export default function KitVisualizer({
               onMouseLeave={() => setHoveredId(null)}
             >
               {content}
+              <span className="absolute bottom-0.5 right-0.5 rounded bg-zinc-900/80 px-1 py-px text-[7px] font-bold uppercase tracking-wide text-white">
+                Claimed
+              </span>
             </div>
           );
         })}
@@ -372,7 +438,7 @@ export default function KitVisualizer({
                 <button
                   type="button"
                   onClick={() => onSelectSlot(slot)}
-                  className="cursor-pointer rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold text-emerald-700 shadow-sm transition-all hover:bg-emerald-600 hover:text-white sm:px-3 sm:text-[11px]"
+                  className="origin-center cursor-pointer rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold text-emerald-800 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-black hover:text-white sm:px-3 sm:text-[11px]"
                   aria-label={`Claim ${slot.slot_name} for ${formatPrice(slot.price_gbp)}`}
                 >
                   <span className="sm:hidden">{formatPrice(slot.price_gbp)}</span>
@@ -382,7 +448,7 @@ export default function KitVisualizer({
                 </button>
               ) : isSold ? (
                 <div
-                  className="cursor-not-allowed rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-[10px] font-semibold text-slate-400 sm:px-3 sm:text-[11px]"
+                  className="cursor-not-allowed rounded-full border border-zinc-200 bg-zinc-100 px-2.5 py-1 text-[10px] font-semibold text-zinc-400 sm:px-3 sm:text-[11px]"
                   title={
                     slot.sponsor_name
                       ? `Sponsored by ${slot.sponsor_name}`
@@ -402,7 +468,7 @@ export default function KitVisualizer({
         })}
       </div>
 
-      <p className="mt-5 text-center text-sm text-slate-500">
+      <p className="mt-5 text-center text-sm text-zinc-500">
         Select an available placement to claim your spot on race day.
       </p>
     </div>
