@@ -8,7 +8,7 @@ export default function CharityPledgeCallout() {
   const pledgePercent = Math.round(CHARITY_DONATION_RATE * 100);
 
   return (
-    <div className="mt-4 max-w-2xl">
+    <div className="mt-4 flex flex-col items-center text-center">
       <p className="inline-flex items-center gap-2 rounded-full border border-sky-200/80 bg-sky-50 px-3 py-1.5 text-xs font-medium text-sky-900">
         {pledgePercent}% of all sponsorship proceeds donated to {CHARITY_NAME}{" "}
         <span aria-hidden>💙</span>
