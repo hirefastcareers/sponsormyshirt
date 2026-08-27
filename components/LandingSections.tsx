@@ -81,8 +81,8 @@ const DIVISION_RULES = [
   },
   {
     num: "03",
-    title: "Hard deadline: September 1st.",
-    body: "With the race on September 13th, artwork locks on September 1st to guarantee print production, delivery, and a trial run. Once a slot sells or the deadline hits, it's gone.",
+    title: "Hard deadline: September 3rd.",
+    body: "With the race on September 13th, artwork locks on September 3rd to guarantee print production, delivery, and a trial run. Once a slot sells or the deadline hits, it's gone.",
   },
 ] as const;
 
@@ -95,7 +95,7 @@ const STEPS = [
   {
     num: "02",
     title: "Send artwork immediately.",
-    body: "PNG, SVG, or WebP. Transparent backgrounds preferred. You'll get a digital proof to approve before the file goes to the printer on September 1st.",
+    body: "PNG, SVG, or WebP. Transparent backgrounds preferred. You'll get a digital proof to approve before the file goes to the printer on September 3rd.",
   },
   {
     num: "03",
@@ -115,24 +115,28 @@ const RACE_SPECS = [
 
 const FAQ_ITEMS = [
   {
-    q: "What do I actually get?",
-    a: "Your logo printed onto my race-day kit, digital proof sign-off before printing, and direct exposure in front of 60,000+ runners and dense crowd coverage on September 13th.",
+    q: "What do I actually get when I buy a slot?",
+    a: "You get guaranteed logo placement printed directly onto my official race kit for the 2026 Great North Run. Once purchased, you'll receive a high-resolution digital mock-up for approval, photos of the finished printed gear, and coverage across all my training and race-day content.",
   },
   {
-    q: "When is the printing deadline?",
-    a: "Artwork closes strict on September 1st so the suit can be express printed, shipped, and tested before race morning.",
+    q: "When is the artwork deadline?",
+    a: "All logo files must be submitted by September 3rd, 2026. This gives our print team enough time to produce the physical kit, run quality checks, and let me complete a full test run in the gear before race day on September 13th.",
   },
   {
-    q: "What if I hate the proof?",
-    a: "Kit proofs are signed off by you in writing before the file goes to the printer. If the digital proof isn't right, we fix the layout before printing.",
+    q: "What happens if I'm not happy with the digital proof?",
+    a: "We won't print anything until you're completely satisfied. Once you submit your high-res logo file (vector SVG or high-res PNG preferred), we will send you a clear digital proof showing exact sizing and positioning on the kit. You can request adjustments before we send it to production.",
   },
   {
-    q: "Who can’t buy?",
-    a: "No adult content, no gambling, no illegal products, and no medical/supplement claims. The test is simple: if I wouldn't post it from my personal account, it doesn't go on my kit.",
+    q: "Can one brand buy multiple placements?",
+    a: "Absolutely. You can select and purchase as many available slots as you like (e.g., matching both sleeves or combining a shirt slot with the cap or shorts). If you want complete exclusivity, you can select the Title Sponsor / Whole Kit package to claim every slot at once.",
   },
   {
-    q: "Can I buy more than one slot?",
-    a: "Yes. Buy them one by one. Nothing stops one brand from taking multiple slots (e.g., matching both sleeves or both socks).",
+    q: "Who isn't allowed to sponsor?",
+    a: "To keep everything compliant with race regulations and family-friendly event guidelines, we cannot accept sponsorships from adult content, gambling, illegal substances, or hate speech brands. If a purchase is made that violates these terms, the order will be canceled and fully refunded immediately.",
+  },
+  {
+    q: "Are there any hidden recurring fees or subscriptions?",
+    a: "None at all. Every slot is a one-off, single payment for the 2026 Great North Run campaign. Once the race finishes on September 13th, the deliverable is 100% complete with no subscription or surprise commitments.",
   },
 ] as const;
 
@@ -275,7 +279,7 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
           <span id="works-heading">How it works</span>
         </SectionHeading>
         <p className="mt-2 w-full text-[15px] leading-relaxed text-zinc-500">
-          Pick a spot. Pay. Send artwork. Done before September 1st.
+          Pick a spot. Pay. Send artwork. Done before September 3rd.
         </p>
 
         <ol className="mt-8 grid gap-4 sm:grid-cols-3 lg:grid-cols-12">
@@ -429,7 +433,7 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
         </h2>
         <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-zinc-400">
           Direct physical logo placement on race day. Pick a spot, upload
-          artwork before September 1st, lock it in.
+          artwork before September 3rd, lock it in.
         </p>
         <button
           type="button"

@@ -94,7 +94,7 @@ export default async function HomePage({
           <div className="lg:col-span-8">
             <p className="flex items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-600" />
-              Printed kit • Artwork deadline closes September 1st.
+              Printed kit • Artwork deadline closes September 3rd.
             </p>
             <h1 className="mt-3 text-3xl font-medium tracking-tight text-zinc-900 sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
               Your brand, on my Great North Run kit.
