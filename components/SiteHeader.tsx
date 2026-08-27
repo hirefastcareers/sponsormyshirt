@@ -20,20 +20,20 @@ export default function SiteHeader() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Official kit printing partner — Visit ProPrint (opens in a new tab)"
-        className="flex w-full items-center justify-center gap-x-3 gap-y-1.5 bg-zinc-900 px-4 py-2 text-xs font-medium text-zinc-300 transition hover:bg-zinc-800 hover:text-zinc-100"
+        className="flex w-full items-center justify-center gap-2 bg-zinc-900 px-4 py-2 text-center text-xs font-medium text-zinc-300 transition hover:bg-zinc-800 hover:text-zinc-100"
       >
-        <span className="shrink-0 text-center sm:text-left">
-          Official Kit Printing Partner
+        <span className="flex items-center justify-center gap-2">
+          <span className="shrink-0">Official Kit Printing Partner</span>
+          <span className="inline-flex shrink-0 items-center rounded bg-white px-1.5 py-0.5">
+            {/* eslint-disable-next-line @next/next/no-img-element -- static partner logo */}
+            <img
+              src="/proprint-logo.jpg"
+              alt="ProPrint"
+              className="h-5 w-auto max-w-[7.5rem] object-contain"
+            />
+          </span>
+          <span className="hidden shrink-0 sm:inline">Visit ProPrint →</span>
         </span>
-        <span className="inline-flex shrink-0 items-center rounded bg-white px-1.5 py-0.5">
-          {/* eslint-disable-next-line @next/next/no-img-element -- static partner logo */}
-          <img
-            src="/proprint-logo.jpg"
-            alt="ProPrint"
-            className="h-5 w-auto max-w-[7.5rem] object-contain"
-          />
-        </span>
-        <span className="hidden shrink-0 sm:inline">Visit ProPrint →</span>
       </a>
 
       <div className="border-b border-[#E4E4E7] bg-white/90 backdrop-blur-md">
