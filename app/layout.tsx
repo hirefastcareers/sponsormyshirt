@@ -15,10 +15,10 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.sponsormyshirt.app"),
   title: "Sponsor My Shirt | Own a Piece of the Kit",
   description:
     "Sponsor a slot on my kit for the Great North Run and get your brand featured!",
-  metadataBase: new URL("https://www.sponsormyshirt.app"),
   openGraph: {
     title: "Sponsor My Shirt | Own a Piece of the Kit",
     description:
