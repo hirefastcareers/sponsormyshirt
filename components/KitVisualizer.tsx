@@ -1,7 +1,8 @@
 "use client";
 
 /**
- * Kit blueprint: off-white garment silhouettes with numbered circular nodes.
+ * Kit blueprint: plain t-shirt / shorts / cap / socks silhouettes
+ * with numbered circular placement nodes.
  */
 import type { ReactNode } from "react";
 import type { SponsorshipSlot } from "@/types/sponsorship";
@@ -9,7 +10,7 @@ import { MARKER_POS, ZONE_META, type ZoneId } from "@/lib/zones";
 
 const FILL = "#EFEFEA";
 const STROKE = "#D4D4D8";
-const LABEL = "#A1A1AA";
+const ZONE = "#A1A1AA";
 const SELECTED = "#059669";
 const SOLD = "#3F3F46";
 const INK = "#18181B";
@@ -115,41 +116,45 @@ export default function KitVisualizer({
         </h2>
       </div>
 
-      <div className="mx-auto grid w-full max-w-xl flex-1 grid-cols-2 gap-x-8 gap-y-10 content-center">
-        {/* Shirt front */}
-        <GarmentPanel label="SHIRT • FRONT">
-          <ShirtFront />
-          {node("chest_center")}
-          {node("left_chest")}
-          {node("right_sleeve")}
-          {node("left_sleeve")}
-        </GarmentPanel>
+      <div className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center gap-8">
+        {/* Uniform block: shirts then shorts directly underneath */}
+        <div className="grid grid-cols-2 gap-x-8 gap-y-6">
+          <GarmentPanel label="SHIRT • FRONT">
+            <ShirtFront />
+            {node("chest_center")}
+            {node("left_chest")}
+            {node("right_sleeve")}
+            {node("left_sleeve")}
+          </GarmentPanel>
 
-        {/* Shirt back */}
-        <GarmentPanel label="SHIRT • BACK">
-          <ShirtBack />
-          {node("upper_back")}
-          {node("lower_back")}
-        </GarmentPanel>
+          <GarmentPanel label="SHIRT • BACK">
+            <ShirtBack />
+            {node("upper_back")}
+            {node("lower_back")}
+          </GarmentPanel>
 
-        {/* Cap */}
-        <GarmentPanel label="CAP">
-          <Cap />
-          {node("cap_front")}
-        </GarmentPanel>
+          <GarmentPanel
+            label="SHORTS"
+            className="col-span-2 mx-auto w-full max-w-[200px]"
+          >
+            <Shorts />
+            {node("shorts_left")}
+          </GarmentPanel>
+        </div>
 
-        {/* Socks */}
-        <GarmentPanel label="SOCKS">
-          <Socks />
-          {node("left_sock")}
-          {node("right_sock")}
-        </GarmentPanel>
+        {/* Accessories */}
+        <div className="grid grid-cols-2 gap-x-8 gap-y-6">
+          <GarmentPanel label="CAP">
+            <Cap />
+            {node("cap_front")}
+          </GarmentPanel>
 
-        {/* Shorts — spans center under socks/cap row on larger layouts */}
-        <GarmentPanel label="SHORTS" className="col-span-2 mx-auto w-full max-w-[220px]">
-          <Shorts />
-          {node("shorts_left")}
-        </GarmentPanel>
+          <GarmentPanel label="SOCKS">
+            <Socks />
+            {node("left_sock")}
+            {node("right_sock")}
+          </GarmentPanel>
+        </div>
       </div>
 
       <div className="mt-8 flex flex-wrap items-center justify-center gap-6 border-t border-zinc-100 pt-5 text-xs text-zinc-500">
@@ -195,48 +200,125 @@ const svgBase = {
   overflow: "visible" as const,
 };
 
+/** Dashed placement zone rectangle (viewBox units). */
+function AdZone({
+  x,
+  y,
+  w,
+  h,
+}: {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}) {
+  return (
+    <rect
+      x={x}
+      y={y}
+      width={w}
+      height={h}
+      fill="rgba(255,255,255,0.35)"
+      stroke={ZONE}
+      strokeWidth="1.25"
+      strokeDasharray="4 3"
+      rx="3"
+    />
+  );
+}
+
+/**
+ * Classic short-sleeve crew-neck tee.
+ * Walks left cuff → left sleeve tip → shoulder → collar → neck →
+ * right collar → shoulder → sleeve tip → cuff → side → hem → close.
+ */
+const TEE_OUTLINE =
+  "M 58 98 L 24 74 L 56 52 L 84 70 L 96 46 C 110 30 130 30 144 46 L 156 70 L 184 52 L 216 74 L 182 98 L 170 108 L 170 252 L 70 252 L 70 108 Z";
+
 function ShirtFront() {
   return (
-    <svg viewBox="0 0 200 220" style={svgBase} aria-hidden>
-      {/*
-        Short-sleeve tee:
-        left cuff → left shoulder → crew neck → right shoulder → right cuff → hem
-      */}
+    <svg viewBox="0 0 240 270" style={svgBase} aria-hidden>
       <path
-        d="M28 72 L34 48 L62 42 L78 62 L90 38 C100 26 120 26 130 38 L142 62 L158 42 L186 48 L192 72 L168 86 L168 200 L32 200 L32 86 Z"
+        d={TEE_OUTLINE}
         fill={FILL}
         stroke={STROKE}
-        strokeWidth="2"
+        strokeWidth="2.25"
         strokeLinejoin="round"
+        strokeLinecap="round"
       />
+      {/* Crew neck opening */}
       <path
-        d="M78 62 C90 76 130 76 142 62"
+        d="M 84 70 C 98 96 142 96 156 70"
+        fill="none"
+        stroke={STROKE}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      {/* Inner collar */}
+      <path
+        d="M 90 74 C 102 92 138 92 150 74"
+        fill="none"
+        stroke={STROKE}
+        strokeWidth="1.1"
+        opacity="0.5"
+      />
+      {/* Sleeve / body seams */}
+      <path
+        d="M 70 108 L 84 70"
         fill="none"
         stroke={STROKE}
         strokeWidth="1.5"
-        strokeLinecap="round"
       />
+      <path
+        d="M 170 108 L 156 70"
+        fill="none"
+        stroke={STROKE}
+        strokeWidth="1.5"
+      />
+
+      {/* Placement zones */}
+      <AdZone x={98} y={120} w={44} h={36} />
+      <AdZone x={144} y={110} w={28} h={24} />
+      <AdZone x={30} y={74} w={32} h={22} />
+      <AdZone x={178} y={74} w={32} h={22} />
     </svg>
   );
 }
 
 function ShirtBack() {
   return (
-    <svg viewBox="0 0 200 220" style={svgBase} aria-hidden>
+    <svg viewBox="0 0 240 270" style={svgBase} aria-hidden>
       <path
-        d="M28 72 L34 48 L62 42 L78 62 L90 38 C100 26 120 26 130 38 L142 62 L158 42 L186 48 L192 72 L168 86 L168 200 L32 200 L32 86 Z"
+        d={TEE_OUTLINE}
         fill={FILL}
         stroke={STROKE}
-        strokeWidth="2"
+        strokeWidth="2.25"
         strokeLinejoin="round"
+        strokeLinecap="round"
+      />
+      {/* Shallower back neck */}
+      <path
+        d="M 84 70 C 98 86 142 86 156 70"
+        fill="none"
+        stroke={STROKE}
+        strokeWidth="2"
+        strokeLinecap="round"
       />
       <path
-        d="M78 62 C90 72 130 72 142 62"
+        d="M 70 108 L 84 70"
         fill="none"
         stroke={STROKE}
         strokeWidth="1.5"
-        strokeLinecap="round"
       />
+      <path
+        d="M 170 108 L 156 70"
+        fill="none"
+        stroke={STROKE}
+        strokeWidth="1.5"
+      />
+
+      <AdZone x={88} y={102} w={64} h={32} />
+      <AdZone x={88} y={162} w={64} h={36} />
     </svg>
   );
 }
@@ -244,7 +326,6 @@ function ShirtBack() {
 function Cap() {
   return (
     <svg viewBox="0 0 200 120" style={svgBase} aria-hidden>
-      {/* Crown / front panel */}
       <path
         d="M36 70 C36 34 62 18 100 18 C138 18 160 38 162 70 Z"
         fill={FILL}
@@ -252,7 +333,6 @@ function Cap() {
         strokeWidth="2.5"
         strokeLinejoin="round"
       />
-      {/* Brim */}
       <path
         d="M36 70 L164 70 C182 70 194 78 194 86 C194 92 188 94 178 94 L36 94 Z"
         fill="#E8E8E3"
@@ -260,6 +340,8 @@ function Cap() {
         strokeWidth="2.5"
         strokeLinejoin="round"
       />
+      {/* Front crown panel */}
+      <AdZone x={78} y={28} w={44} h={32} />
     </svg>
   );
 }
@@ -281,21 +363,37 @@ function Socks() {
         strokeWidth="2"
         strokeLinejoin="round"
       />
+      <AdZone x={38} y={28} w={24} h={36} />
+      <AdZone x={138} y={28} w={24} h={36} />
     </svg>
   );
 }
 
 function Shorts() {
   return (
-    <svg viewBox="0 0 200 180" style={svgBase} aria-hidden>
+    <svg viewBox="0 0 200 170" style={svgBase} aria-hidden>
       <path
-        d="M38 22 L162 22 L156 150 L114 150 L100 74 L86 150 L44 150 Z"
+        d="M36 18 L164 18 L170 34 L158 148 L112 148 L100 70 L88 148 L42 148 L30 34 Z"
         fill={FILL}
         stroke={STROKE}
         strokeWidth="2.5"
         strokeLinejoin="round"
       />
-      <path d="M39 40 L161 40" stroke={STROKE} strokeWidth="2.5" fill="none" />
+      {/* Waistband */}
+      <path
+        d="M34 36 L166 36"
+        stroke={STROKE}
+        strokeWidth="2"
+        fill="none"
+      />
+      {/* Crotch seam */}
+      <path
+        d="M100 36 L100 70"
+        stroke={STROKE}
+        strokeWidth="1.75"
+        fill="none"
+      />
+      <AdZone x={48} y={58} w={36} h={48} />
     </svg>
   );
 }

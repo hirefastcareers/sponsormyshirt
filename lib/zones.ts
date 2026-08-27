@@ -19,24 +19,25 @@ export const ZONE_META = [
 
 export type ZoneId = (typeof ZONE_META)[number]["id"];
 
-/** Marker positions as % of each garment panel. */
+/** Marker positions as % of each garment panel (tuned to SVG viewBoxes). */
 export const MARKER_POS: Record<
   ZoneId,
   { left: string; top: string; size: number }
 > = {
-  chest_center: { left: "50%", top: "52%", size: 34 },
-  left_chest: { left: "32%", top: "40%", size: 30 },
-  // Wearer's right sleeve = left side of front graphic
-  right_sleeve: { left: "14%", top: "28%", size: 28 },
-  // Wearer's left sleeve = right side of front graphic
-  left_sleeve: { left: "86%", top: "28%", size: 28 },
-  upper_back: { left: "50%", top: "34%", size: 34 },
+  // Front tee viewBox 240×270 — zones centered in dashed rects
+  chest_center: { left: "50%", top: "50%", size: 34 },
+  // Wearer's left chest (heart) = viewer's right
+  left_chest: { left: "66%", top: "42%", size: 28 },
+  // Wearer's right sleeve = left of graphic; left sleeve = right of graphic
+  right_sleeve: { left: "18%", top: "30%", size: 28 },
+  left_sleeve: { left: "82%", top: "30%", size: 28 },
+  upper_back: { left: "50%", top: "40%", size: 32 },
   lower_back: { left: "50%", top: "62%", size: 32 },
-  // Front crown panel of the cap (above the brim seam)
-  cap_front: { left: "48%", top: "38%", size: 30 },
-  shorts_left: { left: "36%", top: "48%", size: 28 },
-  left_sock: { left: "26%", top: "36%", size: 26 },
-  right_sock: { left: "74%", top: "36%", size: 26 },
+  // Cap crown panel (above brim)
+  cap_front: { left: "50%", top: "36%", size: 30 },
+  shorts_left: { left: "33%", top: "52%", size: 28 },
+  left_sock: { left: "25%", top: "32%", size: 26 },
+  right_sock: { left: "75%", top: "32%", size: 26 },
 };
 
 export function orderSlots(slots: SponsorshipSlot[]) {
