@@ -104,11 +104,13 @@ const STEPS = [
   },
 ] as const;
 
-const RACE_STATS = [
-  { label: "Field", value: "60,000+ runners" },
+const RACE_SPECS = [
+  { label: "Event", value: "Great North Run" },
+  { label: "Date", value: "September 13, 2026" },
   { label: "Route", value: "Newcastle → South Shields" },
   { label: "Distance", value: "13.1 Miles" },
-  { label: "Target", value: "~2:05" },
+  { label: "Field", value: "60,000+ runners" },
+  { label: "Target Time", value: "~2:05:00" },
 ] as const;
 
 const FAQ_ITEMS = [
@@ -306,42 +308,43 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
       <section
         id="the-race"
         aria-labelledby="race-heading"
-        className="scroll-mt-24"
+        className="relative scroll-mt-24 overflow-hidden rounded-2xl px-4 py-12 sm:px-8 sm:py-16"
       >
-        <SectionLabel>Event</SectionLabel>
-        <SectionHeading>
-          <span id="race-heading">The race</span>
-        </SectionHeading>
-        <div className="mt-8 grid grid-cols-1 items-center gap-8 lg:grid-cols-2">
-          <p className="max-w-xl text-[15px] leading-relaxed text-zinc-700 sm:text-base">
-            I&apos;m running the Great North Run on September 13th — the
-            world&apos;s largest half marathon. Newcastle to South Shields,
-            13.1 miles, targeting ~2:05. Your logo runs the full course in front
-            of a 60,000+ field and televised coverage.
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(#d1d5db_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_at_center,black_45%,transparent_78%)] [-webkit-mask-image:radial-gradient(ellipse_at_center,black_45%,transparent_78%)]"
+        />
+
+        <div className="relative mx-auto max-w-xl text-center">
+          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
+            Event
           </p>
-          <dl className="divide-y divide-zinc-100 overflow-hidden rounded-xl border border-zinc-200 bg-white">
-            {[0, 2].map((start) => (
-              <div
-                key={start}
-                className="grid grid-cols-2 divide-x divide-zinc-100"
-              >
-                {RACE_STATS.slice(start, start + 2).map((stat) => (
-                  <div
-                    key={stat.label}
-                    className="px-5 py-6 sm:px-6 sm:py-8"
-                  >
-                    <dt className="text-xs font-medium uppercase tracking-wider text-zinc-500">
-                      {stat.label}
-                    </dt>
-                    <dd className="mt-2 text-xl font-bold tracking-tight text-zinc-900">
-                      {stat.value}
-                    </dd>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </dl>
+          <h2
+            id="race-heading"
+            className="mt-2 text-2xl font-medium tracking-tight text-zinc-900 sm:text-[1.75rem]"
+          >
+            The race.
+          </h2>
+          <p className="mt-2 text-[15px] leading-relaxed text-zinc-500">
+            What the money buys and where it goes.
+          </p>
         </div>
+
+        <dl className="relative mx-auto mt-8 w-full max-w-md divide-y divide-zinc-100 overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm">
+          {RACE_SPECS.map((row) => (
+            <div
+              key={row.label}
+              className="flex items-baseline justify-between gap-6 px-5 py-3.5 sm:px-6"
+            >
+              <dt className="shrink-0 font-mono text-[11px] uppercase tracking-wider text-zinc-400">
+                {row.label}
+              </dt>
+              <dd className="text-right text-sm font-semibold text-zinc-900 sm:text-[15px]">
+                {row.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
       </section>
 
       {/* FAQ */}
