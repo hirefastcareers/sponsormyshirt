@@ -102,7 +102,11 @@ export default function SponsorExperience({ slots }: SponsorExperienceProps) {
       <SponsorshipModal
         slot={checkoutSlot}
         open={!!checkoutSlot}
-        onClose={() => setCheckoutSlot(null)}
+        onClose={() => {
+          setCheckoutSlot(null);
+          setSelectedIds(new Set());
+        }}
+        onCheckoutError={() => setSelectedIds(new Set())}
       />
     </>
   );

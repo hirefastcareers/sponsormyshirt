@@ -16,12 +16,14 @@ interface SponsorshipModalProps {
   slot: SponsorshipSlot | null;
   open: boolean;
   onClose: () => void;
+  onCheckoutError?: () => void;
 }
 
 export default function SponsorshipModal({
   slot,
   open,
   onClose,
+  onCheckoutError,
 }: SponsorshipModalProps) {
   const titleId = useId();
   const fileRef = useRef<HTMLInputElement>(null);
@@ -113,7 +115,22 @@ export default function SponsorshipModal({
           hasDofollowLink,
         }),
       });
-      const checkoutJson = await checkoutRes.json();
+
+      let checkoutJson: {
+        checkout_url?: string;
+        error?: string;
+        code?: string;
+        redirect?: string;
+      } = {};
+      try {
+        checkoutJson = (await checkoutRes.json()) as typeof checkoutJson;
+      } catch {
+        throw new Error(
+          checkoutRes.ok
+            ? "Checkout returned an invalid response"
+            : `Checkout failed (HTTP ${checkoutRes.status})`,
+        );
+      }
 
       if (!checkoutRes.ok) {
         if (
@@ -128,14 +145,17 @@ export default function SponsorshipModal({
         throw new Error(checkoutJson.error ?? "Checkout failed");
       }
 
-      if (!checkoutJson.checkout_url) {
+      const checkoutUrl = checkoutJson.checkout_url;
+      if (!checkoutUrl) {
         throw new Error("No checkout_url returned");
       }
 
-      window.location.href = checkoutJson.checkout_url as string;
+      // Redirect only after checkout session is initialized server-side
+      window.location.href = checkoutUrl;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
       setSubmitting(false);
+      onCheckoutError?.();
     }
   }
 

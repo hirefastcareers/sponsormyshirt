@@ -4,10 +4,9 @@
  * Flow:
  *  1. Validate body + load slot by permanent DB id (`slotId`, e.g. "shorts_left");
  *     UI display badges ("01"–"09") are never used for lookup or Dodo metadata
- *  2. Title takeover: require 100% of active positions available, hold ALL rows
- *  3. Otherwise lock the single slot as `pending` (optimistic hold)
- *  4. Create a Dodo Payments checkout session with that row's `dodo_product_id`
- *     + sponsor metadata + add-on line items
+ *  2. Title takeover: require 100% of active positions still available (read-only)
+ *  3. Create a Dodo Payments checkout session (no DB writes yet)
+ *  4. On successful session + checkout_url, mark slot(s) as `pending` in Supabase
  *  5. Return { checkout_url } for client redirect
  *
  * On payment success the webhook flips status → `sold`
@@ -183,6 +182,30 @@ export async function POST(request: Request) {
         );
       }
 
+      const dodo = getDodoClient();
+      let session;
+      try {
+        session = await dodo.checkoutSessions.create({
+          product_cart: productCart,
+          metadata,
+          return_url: returnUrl,
+        });
+      } catch (err) {
+        console.error("[checkout] Dodo session creation failed:", err);
+        const message = err instanceof Error ? err.message : String(err);
+        return NextResponse.json(
+          { error: message || "Could not start checkout session" },
+          { status: 502 },
+        );
+      }
+
+      if (!session.checkout_url) {
+        return NextResponse.json(
+          { error: "Dodo Payments did not return a checkout_url" },
+          { status: 502 },
+        );
+      }
+
       const { data: held, error: holdError } = await admin.rpc(
         "hold_title_takeover",
         {
@@ -191,17 +214,17 @@ export async function POST(request: Request) {
           p_logo_path: logoPath,
           p_has_social_post: addons.hasSocialPost,
           p_has_dofollow_link: addons.hasDofollowLink,
-        }
+        },
       );
 
       if (holdError) {
         console.error(
-          "[checkout] title_takeover hold failed:",
-          holdError.message
+          "[checkout] title_takeover hold failed after Dodo session:",
+          holdError.message,
         );
         return NextResponse.json(
           { error: "Could not reserve the kit. Please try again." },
-          { status: 500 }
+          { status: 500 },
         );
       }
 
@@ -212,37 +235,41 @@ export async function POST(request: Request) {
               "Title Sponsor is no longer available — a placement was just claimed.",
             code: "title_takeover_blocked",
           },
-          { status: 409 }
+          { status: 409 },
         );
       }
 
-      try {
-        const dodo = getDodoClient();
-        const session = await dodo.checkoutSessions.create({
-          product_cart: productCart,
-          metadata,
-          return_url: returnUrl,
-        });
-
-        if (!session.checkout_url) {
-          await admin.rpc("release_title_takeover_hold");
-          return NextResponse.json(
-            { error: "Dodo Payments did not return a checkout_url" },
-            { status: 502 }
-          );
-        }
-
-        return NextResponse.json({
-          checkout_url: session.checkout_url,
-          order_total_gbp: orderTotalGbp,
-        });
-      } catch (err) {
-        await admin.rpc("release_title_takeover_hold");
-        throw err;
-      }
+      return NextResponse.json({
+        checkout_url: session.checkout_url,
+        order_total_gbp: orderTotalGbp,
+      });
     }
 
     // ── Single placement ──────────────────────────────────────────────────
+    const dodo = getDodoClient();
+    let session;
+    try {
+      session = await dodo.checkoutSessions.create({
+        product_cart: productCart,
+        metadata,
+        return_url: returnUrl,
+      });
+    } catch (err) {
+      console.error("[checkout] Dodo session creation failed:", err);
+      const message = err instanceof Error ? err.message : String(err);
+      return NextResponse.json(
+        { error: message || "Could not start checkout session" },
+        { status: 502 },
+      );
+    }
+
+    if (!session.checkout_url) {
+      return NextResponse.json(
+        { error: "Dodo Payments did not return a checkout_url" },
+        { status: 502 },
+      );
+    }
+
     const { data: held, error: holdError } = await admin
       .from("sponsorship_slots")
       .update({
@@ -254,19 +281,21 @@ export async function POST(request: Request) {
         has_dofollow_link: addons.hasDofollowLink,
       })
       .eq("id", slotId)
-      .eq("status", "available") // optimistic lock — race-safe
+      .eq("status", "available")
       .select("id")
       .maybeSingle();
 
     if (holdError) {
-      console.error("[checkout] Failed to hold slot:", holdError.message);
+      console.error(
+        "[checkout] Failed to hold slot after Dodo session:",
+        holdError.message,
+      );
       return NextResponse.json(
         { error: "Could not reserve slot. Please try again." },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
-    // Another buyer won the race between our read and this update
     if (!held) {
       return NextResponse.json(
         {
@@ -274,34 +303,7 @@ export async function POST(request: Request) {
           code: "slot_taken",
           redirect: `/?taken=${encodeURIComponent(slotId)}`,
         },
-        { status: 400 }
-      );
-    }
-
-    const dodo = getDodoClient();
-
-    const session = await dodo.checkoutSessions.create({
-      product_cart: productCart,
-      // Metadata is echoed back on webhooks — critical for fulfilment
-      metadata,
-      return_url: returnUrl,
-    });
-
-    if (!session.checkout_url) {
-      // Release the hold if Dodo didn't return a URL
-      await admin
-        .from("sponsorship_slots")
-        .update({
-          status: "available",
-          has_social_post: false,
-          has_dofollow_link: false,
-        })
-        .eq("id", slotId)
-        .eq("status", "pending");
-
-      return NextResponse.json(
-        { error: "Dodo Payments did not return a checkout_url" },
-        { status: 502 }
+        { status: 400 },
       );
     }
 
