@@ -92,7 +92,7 @@ export function MicroSponsorHeroCTA() {
           Sponsor for £{MICRO_SPONSOR_PRICE_GBP}
         </button>
       </div>
-      <p className="mt-1 text-xs text-muted-foreground">
+      <p className="mt-4 text-xs text-muted-foreground">
         (£{MICRO_SPONSOR_PRICE_GBP} gets your logo &amp; backlink on our
         Supporter Wall)
       </p>
