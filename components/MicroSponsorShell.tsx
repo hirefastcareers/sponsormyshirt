@@ -71,23 +71,13 @@ export function MicroSponsorMarqueeBlock() {
   );
 }
 
-/** Desktop hero CTA (marquee has its own button on smaller screens). */
+/** Hero micro-copy for the Supporter Wall (CTA lives in sidebars / mobile marquee). */
 export function MicroSponsorHeroCTA() {
-  const { openModal } = useMicroSponsor();
   return (
-    <div className="flex flex-col items-center gap-2">
-      <button
-        type="button"
-        onClick={openModal}
-        className="hidden rounded-full border border-emerald-200 bg-emerald-50 px-5 py-2.5 text-sm font-semibold text-emerald-700 transition hover:border-emerald-300 hover:bg-emerald-100 xl:inline-flex"
-      >
-        Sponsor for £{MICRO_SPONSOR_PRICE_GBP}
-      </button>
-      <p className="max-w-md text-center text-xs leading-relaxed text-muted-foreground">
-        £{MICRO_SPONSOR_PRICE_GBP} Supporters get their logo and backlink
-        featured on our website&apos;s Supporter Wall (desktop sidebars &amp;
-        mobile marquee).
-      </p>
-    </div>
+    <p className="max-w-md text-center text-xs leading-relaxed text-muted-foreground">
+      £{MICRO_SPONSOR_PRICE_GBP} Supporters get their logo and backlink featured
+      on our website&apos;s Supporter Wall (desktop sidebars &amp; mobile
+      marquee).
+    </p>
   );
 }

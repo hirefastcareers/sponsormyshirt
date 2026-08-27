@@ -77,16 +77,16 @@ function GutterPanel({
 
   return (
     <aside
-      className={`pointer-events-none fixed top-32 z-30 hidden w-40 xl:block 2xl:w-44 ${
+      className={`pointer-events-none fixed top-52 z-30 hidden w-40 xl:block 2xl:w-44 ${
         side === "left" ? "left-4" : "right-4"
       }`}
       aria-label={`Supporter Wall — ${side} panel`}
     >
       <div
-        className="pointer-events-auto max-h-[calc(100vh-10rem)] overflow-hidden rounded-xl border border-[#E4E4E7] bg-white/95 shadow-sm backdrop-blur-sm"
+        className="pointer-events-auto max-h-[calc(100vh-14rem)] overflow-hidden rounded-xl border border-[#E4E4E7] bg-white/95 shadow-sm backdrop-blur-sm"
       >
         <PanelHeader />
-        <div className="flex max-h-[calc(100vh-14rem)] flex-col gap-2 overflow-y-auto p-3">
+        <div className="flex max-h-[calc(100vh-18rem)] flex-col gap-2 overflow-y-auto p-3">
           {sponsors.map((sponsor) => (
             <div
               key={sponsor.id}

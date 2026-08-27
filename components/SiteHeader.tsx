@@ -38,7 +38,7 @@ export default function SiteHeader() {
       </a>
 
       <div className="border-b border-[#E4E4E7] bg-white/90 backdrop-blur-md">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-6 py-3.5 lg:px-12">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-6 pb-3 pt-3.5 lg:px-12">
           <BrandMark showStatus href="#" />
 
           <nav
