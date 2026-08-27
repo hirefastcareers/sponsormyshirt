@@ -97,32 +97,37 @@ export const TITLE_TAKEOVER = {
 
 export function getPositionPrice(slotId: string): number | undefined {
   if (isTitleTakeover(slotId)) return getTitleSponsorPrice();
-  if (slotId in POSITION_PRICES && isPositionActive(slotId)) {
+  if (slotId in POSITION_PRICES) {
     return POSITION_PRICES[slotId as PositionId];
   }
   return undefined;
 }
 
 /**
- * Overlay canonical GBP prices from this module onto live slot rows
- * so the rate card / kit UI always show the current rate card.
+ * Overlay canonical GBP prices + `active` flags from this module onto live
+ * slot rows so the rate card / kit UI always show the current rate card.
  */
 export function applyCanonicalPrices(
   slots: SponsorshipSlot[],
 ): SponsorshipSlot[] {
   return slots.map((slot) => {
     const price = getPositionPrice(slot.id);
-    return price === undefined ? slot : { ...slot, price_gbp: price };
+    const active = isTitleTakeover(slot.id)
+      ? true
+      : isPositionActive(slot.id);
+    return {
+      ...slot,
+      ...(price !== undefined ? { price_gbp: price } : {}),
+      active,
+    };
   });
 }
 
-/** Drop inactive placements from public inventory (keeps title takeover). */
+/** Drop inactive placements from UI inventory and price totals. */
 export function filterActiveSlots(
   slots: SponsorshipSlot[],
 ): SponsorshipSlot[] {
-  return slots.filter(
-    (s) => isTitleTakeover(s.id) || isPositionActive(s.id),
-  );
+  return slots.filter((slot) => slot.active !== false);
 }
 
 export function isTitleTakeover(slotId: string): boolean {
@@ -131,7 +136,9 @@ export function isTitleTakeover(slotId: string): boolean {
 
 /** Active individual kit placements only (excludes title takeover + inactive). */
 export function getKitPositions(slots: SponsorshipSlot[]): SponsorshipSlot[] {
-  return slots.filter((s) => !isTitleTakeover(s.id) && isPositionActive(s.id));
+  return slots.filter(
+    (slot) => !isTitleTakeover(slot.id) && slot.active !== false,
+  );
 }
 
 /**

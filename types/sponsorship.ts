@@ -26,6 +26,8 @@ export interface SponsorshipSlot {
   dodo_product_id: string | null;
   has_social_post?: boolean;
   has_dofollow_link?: boolean;
+  /** When false, slot is hidden from UI and excluded from Title Sponsor totals. */
+  active?: boolean;
 }
 
 /** Payload from the sponsorship modal → /api/checkout */

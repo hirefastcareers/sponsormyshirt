@@ -37,6 +37,7 @@ const FALLBACK_SLOTS: SponsorshipSlot[] = [
     x_position: 50,
     y_position: 50,
     dodo_product_id: null,
+    active: true,
   },
   ...getActivePositionIds().map((id: PositionId) => ({
     id,
@@ -50,6 +51,7 @@ const FALLBACK_SLOTS: SponsorshipSlot[] = [
     x_position: 50,
     y_position: 50,
     dodo_product_id: null,
+    active: POSITION_META[id].active,
   })),
 ];
 
