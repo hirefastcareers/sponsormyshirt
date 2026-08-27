@@ -13,6 +13,7 @@ export type PaymentMetadata = {
   slotId?: string;
   slot_ids?: string | string[];
   slotIds?: string | string[];
+  product_id?: string;
   sponsor_name?: string;
   sponsor_url?: string;
   logo_path?: string;
@@ -23,6 +24,22 @@ export type PaymentMetadata = {
 
 export function asBool(value: boolean | string | undefined): boolean {
   return value === true || value === "true";
+}
+
+type PaymentLineItem = { product_id: string; quantity?: number };
+
+type PaymentDataForMetadata = {
+  metadata?: PaymentMetadata | Record<string, unknown> | null;
+  product_cart?: PaymentLineItem[] | null;
+};
+
+function addonProductIds(): Set<string> {
+  return new Set(
+    [
+      process.env.DODO_PRODUCT_SOCIAL_POST,
+      process.env.DODO_PRODUCT_DOFOLLOW_LINK,
+    ].filter((id): id is string => Boolean(id?.trim())),
+  );
 }
 
 /** Parse permanent slot id(s) from Dodo payment metadata (never UI badge numbers). */
@@ -50,6 +67,64 @@ export function extractSlotIds(
   }
 
   return [];
+}
+
+/**
+ * Build fulfilment metadata from a payment.succeeded payload.
+ * Prefers checkout metadata.slot_id; falls back to product_id in metadata or
+ * line items (product_cart), resolving via sponsorship_slots.dodo_product_id.
+ */
+export async function resolvePaymentMetadata(
+  data: PaymentDataForMetadata,
+): Promise<PaymentMetadata> {
+  const metadata = (data.metadata ?? {}) as PaymentMetadata;
+
+  if (extractSlotIds(metadata).length > 0) {
+    return metadata;
+  }
+
+  const productIds: string[] = [];
+  const metaProductId = metadata.product_id;
+  if (typeof metaProductId === "string" && metaProductId.trim()) {
+    productIds.push(metaProductId.trim());
+  }
+
+  for (const item of data.product_cart ?? []) {
+    if (item.product_id && !productIds.includes(item.product_id)) {
+      productIds.push(item.product_id);
+    }
+  }
+
+  const slotProductIds = productIds.filter((id) => !addonProductIds().has(id));
+  if (slotProductIds.length === 0) {
+    return metadata;
+  }
+
+  const admin = getSupabaseAdmin();
+  for (const productId of slotProductIds) {
+    const { data: slot, error } = await admin
+      .from("sponsorship_slots")
+      .select("id")
+      .eq("dodo_product_id", productId)
+      .maybeSingle();
+
+    if (error) {
+      console.error(
+        `[fulfil] product_id lookup failed for ${productId}:`,
+        error.message,
+      );
+      continue;
+    }
+
+    if (slot?.id) {
+      console.log(
+        `[fulfil] Resolved slot_id "${slot.id}" from product_id "${productId}"`,
+      );
+      return { ...metadata, slot_id: slot.id };
+    }
+  }
+
+  return metadata;
 }
 
 export type FulfilResult =

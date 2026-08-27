@@ -151,7 +151,8 @@ export async function POST(request: Request) {
     const appUrl =
       process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ??
       "http://localhost:3000";
-    const returnUrl = `${appUrl}/?payment=success&slot=${encodeURIComponent(slotId)}`;
+    const sponsorshipSlot = slot as SponsorshipSlot;
+    const returnUrl = `${appUrl}/success?slot=${encodeURIComponent(sponsorshipSlot.slot_name)}&category=${encodeURIComponent(sponsorshipSlot.category)}`;
 
     // ── Title Sponsor / Whole Kit Takeover ────────────────────────────────
     if (isTitleTakeover(slotId)) {
