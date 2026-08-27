@@ -103,24 +103,26 @@ export default async function HomePage({
 
         <section
           id="hero-section"
-          className="mx-auto w-full max-w-7xl px-6 pb-6 pt-8 lg:px-12 lg:pt-10"
+          className="mx-auto w-full max-w-7xl px-6 lg:px-12"
         >
-          <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-            <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
-              PRINTED KIT • Artwork deadline closes September 3rd
-            </p>
-            <h1 className="mt-3 text-3xl font-medium tracking-tight text-zinc-900 sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
-              Your brand, on my Great North Run kit.
-            </h1>
-            <p className="mt-3 text-[15px] leading-relaxed text-zinc-500 sm:text-base">
-              {kitPositions.length} logo placements across shirt, shorts, and
-              socks. 13.1 miles from Tyne Bridge to South Shields—aiming for
-              2:05.
-            </p>
-            <CharityPledgeCallout />
+          <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 py-8 text-center">
+            <div className="flex flex-col items-center gap-3">
+              <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
+                PRINTED KIT • Artwork deadline closes September 3rd
+              </p>
+              <h1 className="text-3xl font-medium tracking-tight text-zinc-900 sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
+                Your brand, on my Great North Run kit.
+              </h1>
+              <p className="text-[15px] leading-relaxed text-zinc-500 sm:text-base">
+                {kitPositions.length} logo placements across shirt, shorts, and
+                socks. 13.1 miles from Tyne Bridge to South Shields—aiming for
+                2:05.
+              </p>
+              <CharityPledgeCallout />
+            </div>
             <MicroSponsorHeroCTA />
           </div>
-          <p className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+          <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 pb-4 text-xs text-muted-foreground">
             <span>
               <span className="font-medium text-zinc-700">
                 {kitPositions.length}

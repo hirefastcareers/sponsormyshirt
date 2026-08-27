@@ -71,33 +71,31 @@ export function MicroSponsorMarqueeBlock() {
   );
 }
 
-/** Hero primary + secondary CTAs with Supporter Wall micro-copy under £5. */
+/** Hero primary + secondary CTAs with Supporter Wall micro-copy under the row. */
 export function MicroSponsorHeroCTA() {
   const { openModal } = useMicroSponsor();
 
   return (
-    <div className="mt-6 flex flex-col items-center gap-3">
-      <div className="flex flex-wrap items-start justify-center gap-3 sm:gap-4">
+    <div className="flex flex-col items-center">
+      <div className="mt-2 flex flex-row items-center justify-center gap-3">
         <a
           href="#kit-viewer"
-          className="rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-800"
+          className="inline-flex h-10 items-center justify-center rounded-full bg-zinc-900 px-5 text-sm font-semibold text-white transition hover:bg-zinc-800"
         >
           Claim a Kit Slot
         </a>
-        <div className="flex flex-col items-center gap-1.5">
-          <button
-            type="button"
-            onClick={openModal}
-            className="rounded-full border border-zinc-300 bg-white px-5 py-2.5 text-sm font-medium text-zinc-700 transition hover:border-zinc-400 hover:bg-zinc-50"
-          >
-            Sponsor for £{MICRO_SPONSOR_PRICE_GBP}
-          </button>
-          <p className="max-w-[14rem] text-center text-[11px] leading-snug text-muted-foreground sm:max-w-none">
-            (£{MICRO_SPONSOR_PRICE_GBP} gets your logo &amp; backlink on our
-            website Supporter Wall)
-          </p>
-        </div>
+        <button
+          type="button"
+          onClick={openModal}
+          className="inline-flex h-10 items-center justify-center rounded-full border border-zinc-300 bg-white px-5 text-sm font-medium text-zinc-700 transition hover:border-zinc-400 hover:bg-zinc-50"
+        >
+          Sponsor for £{MICRO_SPONSOR_PRICE_GBP}
+        </button>
       </div>
+      <p className="mt-1 text-xs text-muted-foreground">
+        (£{MICRO_SPONSOR_PRICE_GBP} gets your logo &amp; backlink on our
+        Supporter Wall)
+      </p>
     </div>
   );
 }
