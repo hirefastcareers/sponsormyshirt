@@ -22,6 +22,7 @@ import {
   fulfilSponsorship,
   type PaymentMetadata,
 } from "@/lib/fulfil-sponsorship";
+import { normalizeXHandle } from "@/lib/format-x-handle";
 
 function isLocalTestAllowed(): boolean {
   if (process.env.NODE_ENV === "development") return true;
@@ -61,6 +62,7 @@ export async function POST(request: Request) {
   }
 
   // Defaults so a minimal { slot_id } body still writes useful test rows
+  const xHandle = normalizeXHandle(body.x_handle);
   const metadata: PaymentMetadata = {
     slot_id: body.slot_id,
     sponsor_name: body.sponsor_name ?? "Test Sponsor",
@@ -70,6 +72,7 @@ export async function POST(request: Request) {
     has_social_post: body.has_social_post ?? false,
     has_dofollow_link: body.has_dofollow_link ?? false,
     has_backlink: body.has_backlink ?? body.has_dofollow_link ?? false,
+    ...(xHandle ? { x_handle: xHandle } : {}),
   };
 
   try {

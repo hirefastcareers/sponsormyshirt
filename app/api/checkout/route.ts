@@ -28,6 +28,7 @@ import {
   isTitleTakeoverPurchasable,
 } from "@/lib/positions";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
+import { normalizeXHandle } from "@/lib/format-x-handle";
 import type { CheckoutRequestBody, SponsorshipSlot } from "@/types/sponsorship";
 
 export async function POST(request: Request) {
@@ -129,6 +130,7 @@ export async function POST(request: Request) {
 
     const name = sponsorName.trim();
     const url = sponsorUrl.trim();
+    const xHandle = normalizeXHandle(body.xHandle);
     // Server-authoritative total — never trust a client-sent price
     const basePriceGbp = getPositionPrice(slotId) ?? slot.price_gbp;
     const orderTotalGbp = calculateOrderTotalGbp(basePriceGbp, addons);
@@ -148,6 +150,7 @@ export async function POST(request: Request) {
       has_dofollow_link: addons.hasDofollowLink,
       has_backlink: addons.hasDofollowLink,
       order_total_gbp: orderTotalGbp,
+      ...(xHandle ? { x_handle: xHandle } : {}),
     };
 
     const appUrl =
@@ -217,6 +220,7 @@ export async function POST(request: Request) {
           p_logo_path: logoPath,
           p_has_social_post: addons.hasSocialPost,
           p_has_dofollow_link: addons.hasDofollowLink,
+          p_x_handle: xHandle,
         },
       );
 
@@ -284,6 +288,7 @@ export async function POST(request: Request) {
         has_social_post: addons.hasSocialPost,
         has_dofollow_link: addons.hasDofollowLink,
         has_backlink: addons.hasDofollowLink,
+        x_handle: xHandle,
       })
       .eq("id", slotId)
       .eq("status", "available")

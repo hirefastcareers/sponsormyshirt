@@ -28,6 +28,7 @@ export interface SponsorshipSlot {
   has_social_post?: boolean;
   has_dofollow_link?: boolean;
   has_backlink?: boolean;
+  x_handle?: string | null;
   /** When false, slot is hidden from UI and excluded from Title Sponsor totals. */
   active?: boolean;
 }
@@ -42,6 +43,7 @@ export interface CheckoutRequestBody {
   sponsorName: string;
   sponsorUrl: string;
   logoPath: string;
+  xHandle?: string;
   hasSocialPost?: boolean;
   hasDofollowLink?: boolean;
 }

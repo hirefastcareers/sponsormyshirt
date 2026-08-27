@@ -3,6 +3,7 @@
  * Marks a slot (or all slots for title takeover) as sold with sponsor details.
  */
 import { assertDodoPaymentsConfigured, getDodoClient } from "@/lib/dodo";
+import { normalizeXHandle } from "@/lib/format-x-handle";
 import { isTitleTakeover } from "@/lib/positions";
 import {
   getSponsorLogoPublicUrl,
@@ -22,8 +23,17 @@ export type PaymentMetadata = {
   has_social_post?: boolean | string;
   has_dofollow_link?: boolean | string;
   has_backlink?: boolean | string;
+  x_handle?: string;
   order_total_gbp?: number | string;
 };
+
+export function extractXHandle(
+  metadata: PaymentMetadata | null | undefined,
+): string | null {
+  const raw = metadata?.x_handle;
+  if (typeof raw !== "string" || !raw.trim()) return null;
+  return raw.trim();
+}
 
 export function asBool(value: boolean | string | undefined): boolean {
   return value === true || value === "true";
@@ -183,6 +193,7 @@ type SoldUpdate = {
   has_social_post: boolean;
   has_dofollow_link: boolean;
   has_backlink: boolean;
+  x_handle: string | null;
 };
 
 /**
@@ -203,6 +214,7 @@ export async function fulfilSponsorship(
   const logo_path = metadata?.logo_path ?? null;
   const hasSocialPost = asBool(metadata?.has_social_post);
   const hasBacklink = extractHasBacklink(metadata);
+  const x_handle = normalizeXHandle(extractXHandle(metadata));
   const logoUrl = logo_path ? getSponsorLogoPublicUrl(logo_path) : null;
   const admin = getSupabaseAdmin();
 
@@ -215,6 +227,7 @@ export async function fulfilSponsorship(
     has_social_post: hasSocialPost,
     has_dofollow_link: hasBacklink,
     has_backlink: hasBacklink,
+    x_handle,
   };
 
   // Title Sponsor / whole-kit purchase — mark every row sold in one transaction.
@@ -225,6 +238,7 @@ export async function fulfilSponsorship(
       p_sponsor_logo_url: logoUrl,
       p_has_social_post: hasSocialPost,
       p_has_dofollow_link: hasBacklink,
+      p_x_handle: x_handle,
     });
 
     if (error) {

@@ -29,6 +29,7 @@ export default function SponsorshipModal({
   const fileRef = useRef<HTMLInputElement>(null);
   const [sponsorName, setSponsorName] = useState("");
   const [sponsorUrl, setSponsorUrl] = useState("");
+  const [xHandle, setXHandle] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [hasSocialPost, setHasSocialPost] = useState(false);
   const [hasDofollowLink, setHasDofollowLink] = useState(false);
@@ -39,6 +40,7 @@ export default function SponsorshipModal({
     if (!open) return;
     setSponsorName("");
     setSponsorUrl("");
+    setXHandle("");
     setFile(null);
     setHasSocialPost(false);
     setHasDofollowLink(false);
@@ -110,6 +112,7 @@ export default function SponsorshipModal({
           slotId: slot.id,
           sponsorName: sponsorName.trim(),
           sponsorUrl: sponsorUrl.trim(),
+          xHandle: xHandle.trim() || undefined,
           logoPath: uploadJson.path,
           hasSocialPost,
           hasDofollowLink,
@@ -224,6 +227,19 @@ export default function SponsorshipModal({
               value={sponsorUrl}
               onChange={(e) => setSponsorUrl(e.target.value)}
               placeholder="https://yourbrand.com"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100"
+            />
+          </label>
+
+          <label className="block">
+            <span className="mb-1.5 block text-xs font-semibold text-slate-600">
+              X Handle (Optional)
+            </span>
+            <input
+              value={xHandle}
+              onChange={(e) => setXHandle(e.target.value)}
+              placeholder="@yourhandle"
+              autoComplete="off"
               className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100"
             />
           </label>
