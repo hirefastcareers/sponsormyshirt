@@ -105,12 +105,12 @@ const STEPS = [
 ] as const;
 
 const RACE_SPECS = [
-  { label: "Event", value: "Great North Run" },
-  { label: "Date", value: "September 13, 2026" },
-  { label: "Route", value: "Newcastle → South Shields" },
-  { label: "Distance", value: "13.1 Miles" },
-  { label: "Field", value: "60,000+ runners" },
-  { label: "Target Time", value: "~2:05:00" },
+  { label: "Event", value: "Great North Run", highlight: true },
+  { label: "Date", value: "September 13, 2026", highlight: false },
+  { label: "Route", value: "Newcastle → South Shields", highlight: false },
+  { label: "Distance", value: "13.1 Miles", highlight: true },
+  { label: "Field", value: "60,000+ runners", highlight: false },
+  { label: "Target Time", value: "~2:05:00", highlight: false },
 ] as const;
 
 const FAQ_ITEMS = [
@@ -315,31 +315,35 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(#d1d5db_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_at_center,black_45%,transparent_78%)] [-webkit-mask-image:radial-gradient(ellipse_at_center,black_45%,transparent_78%)]"
         />
 
-        <div className="relative mx-auto max-w-xl text-center">
-          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
+        <div className="relative mx-auto max-w-2xl text-center">
+          <p className="font-mono text-xs uppercase tracking-widest text-zinc-500">
             Event
           </p>
           <h2
             id="race-heading"
-            className="mt-2 text-2xl font-medium tracking-tight text-zinc-900 sm:text-[1.75rem]"
+            className="mt-3 text-4xl font-extrabold tracking-tight text-zinc-900 md:text-5xl"
           >
             The race.
           </h2>
-          <p className="mt-2 text-[15px] leading-relaxed text-zinc-500">
+          <p className="mt-3 text-base font-medium text-zinc-600 md:text-lg">
             What the money buys and where it goes.
           </p>
         </div>
 
-        <dl className="relative mx-auto mt-8 w-full max-w-md divide-y divide-zinc-100 overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm">
+        <dl className="relative mx-auto mt-10 w-full max-w-2xl divide-y divide-zinc-100 overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm">
           {RACE_SPECS.map((row) => (
             <div
               key={row.label}
-              className="flex items-baseline justify-between gap-6 px-5 py-3.5 sm:px-6"
+              className="flex items-baseline justify-between gap-6 px-6 py-4 md:px-8"
             >
-              <dt className="shrink-0 font-mono text-[11px] uppercase tracking-wider text-zinc-400">
+              <dt className="shrink-0 font-mono text-xs uppercase tracking-wider text-zinc-500 md:text-sm">
                 {row.label}
               </dt>
-              <dd className="text-right text-sm font-semibold text-zinc-900 sm:text-[15px]">
+              <dd
+                className={`text-right text-base font-bold tracking-tight md:text-lg ${
+                  row.highlight ? "text-zinc-950" : "text-zinc-900"
+                }`}
+              >
                 {row.value}
               </dd>
             </div>
