@@ -5,6 +5,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import BrandMark from "@/components/BrandMark";
+import { confirmSlotSoldFromSuccessRedirect } from "@/lib/confirm-slot-sold";
 import { resolvePurchasedSlot } from "@/lib/resolve-success-slot";
 
 export const dynamic = "force-dynamic";
@@ -21,21 +22,24 @@ function firstParam(value: string | string[] | undefined): string | null {
   return null;
 }
 
-const SPONSOR_EMAIL = "sponsors@sponsormyshirt.app";
+const SPONSOR_EMAIL = "tomford61@gmail.com";
 
 export default async function SuccessPage({
   searchParams,
 }: PageProps<"/success">) {
   const params = await searchParams;
+  const statusParam = firstParam(params.status);
   const slotParam = firstParam(params.slot);
   const categoryParam = firstParam(params.category);
   const sessionIdParam = firstParam(params.session_id);
 
-  const { slotName } = await resolvePurchasedSlot(
+  const { slotId, slotName } = await resolvePurchasedSlot(
     slotParam,
     sessionIdParam,
     categoryParam,
   );
+
+  await confirmSlotSoldFromSuccessRedirect(statusParam, slotParam, slotId);
 
   const kitItem = categoryParam?.trim().toLowerCase() || "kit";
   const headline = `Payment Received — You're on the ${kitItem}!`;

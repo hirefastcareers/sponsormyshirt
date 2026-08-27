@@ -2,6 +2,7 @@
  * Shared sponsorship fulfilment used by the Dodo webhook and local test helpers.
  * Marks a slot (or all slots for title takeover) as sold with sponsor details.
  */
+import { assertDodoPaymentsConfigured, getDodoClient } from "@/lib/dodo";
 import { isTitleTakeover } from "@/lib/positions";
 import {
   getSponsorLogoPublicUrl,
@@ -31,6 +32,7 @@ type PaymentLineItem = { product_id: string; quantity?: number };
 type PaymentDataForMetadata = {
   metadata?: PaymentMetadata | Record<string, unknown> | null;
   product_cart?: PaymentLineItem[] | null;
+  payment_id?: string | null;
 };
 
 function addonProductIds(): Set<string> {
@@ -81,6 +83,28 @@ export async function resolvePaymentMetadata(
 
   if (extractSlotIds(metadata).length > 0) {
     return metadata;
+  }
+
+  const paymentId =
+    typeof data.payment_id === "string" && data.payment_id.trim()
+      ? data.payment_id.trim()
+      : null;
+
+  if (paymentId) {
+    try {
+      assertDodoPaymentsConfigured();
+      const payment = await getDodoClient().payments.retrieve(paymentId);
+      const paymentMetadata = payment.metadata as PaymentMetadata;
+      if (extractSlotIds(paymentMetadata).length > 0) {
+        return { ...metadata, ...paymentMetadata };
+      }
+      return resolvePaymentMetadata({
+        metadata: paymentMetadata,
+        product_cart: payment.product_cart ?? null,
+      });
+    } catch (err) {
+      console.error("[fulfil] Failed to load payment metadata:", err);
+    }
   }
 
   const productIds: string[] = [];
@@ -203,7 +227,8 @@ export async function fulfilSponsorship(
   const { error } = await admin
     .from("sponsorship_slots")
     .update(soldPatch)
-    .in("id", uniqueIds);
+    .in("id", uniqueIds)
+    .in("status", ["pending", "available"]);
 
   if (error) {
     console.error(
