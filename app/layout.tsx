@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Instrument_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -48,6 +49,8 @@ export const metadata: Metadata = {
   },
 };
 
+const VEMETRIC_TOKEN = "zE4bqXjTb5RDh9Vb";
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
@@ -55,6 +58,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${instrumentSans.variable} ${ibmPlexMono.variable} h-full scroll-smooth antialiased`}
     >
       <body className="min-h-full bg-[#F9F9FB] font-sans text-zinc-900">
+        <Script
+          src="https://cdn.vemetric.com/v1.js"
+          strategy="afterInteractive"
+          data-token={VEMETRIC_TOKEN}
+          data-host="https://hub.vemetric.com"
+        />
         {children}
       </body>
     </html>
