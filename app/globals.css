@@ -1,11 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --muted: #64748b;
+  --background: #f9f9fb;
+  --foreground: #18181b;
+  --muted: #71717a;
   --card: #ffffff;
-  --grid: rgba(15, 23, 42, 0.05);
+  --line: #e4e4e7;
+  --accent: #059669;
 }
 
 @theme inline {
@@ -13,44 +14,10 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-body);
   --font-mono: var(--font-mono);
-  --font-display: var(--font-display);
-}
-
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-up {
-  animation: fade-up 0.6s ease-out both;
-}
-
-.animate-fade-up-delay {
-  animation: fade-up 0.6s ease-out 0.12s both;
-}
-
-.animate-fade-up-delay-2 {
-  animation: fade-up 0.6s ease-out 0.24s both;
-}
-
-.light-grid {
-  background-image:
-    linear-gradient(to right, var(--grid) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
-  background-size: 48px 48px;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-}
-
-.font-display {
-  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body), Helvetica, sans-serif;
 }
