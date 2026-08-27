@@ -8,6 +8,7 @@ import type { CSSProperties, ReactNode } from "react";
 import type { SponsorshipSlot } from "@/types/sponsorship";
 import {
   hasAnySoldPosition,
+  isPositionActive,
   isTitleTakeoverPurchasable,
   TITLE_TAKEOVER,
   TITLE_TAKEOVER_ID,
@@ -63,6 +64,7 @@ export default function KitVisualizer({
   const titleDisabled = !takeoverOpen || titleSlot.status !== "available";
 
   function node(id: ZoneId) {
+    if (!isPositionActive(id)) return null;
     const slot = byId.get(id);
     const meta = ZONE_META.find((z) => z.id === id);
     const pos = MARKER_POS[id];
@@ -303,13 +305,26 @@ export default function KitVisualizer({
         </div>
 
         {/* Accessories */}
-        <div className="grid grid-cols-2 gap-x-5 gap-y-5 sm:gap-x-8 sm:gap-y-6">
-          <GarmentPanel label="CAP">
-            <Cap />
-            {node("cap_front")}
-          </GarmentPanel>
+        <div
+          className={`grid gap-x-5 gap-y-5 sm:gap-x-8 sm:gap-y-6 ${
+            isPositionActive("cap_front") ? "grid-cols-2" : "grid-cols-1"
+          }`}
+        >
+          {isPositionActive("cap_front") && (
+            <GarmentPanel label="CAP">
+              <Cap />
+              {node("cap_front")}
+            </GarmentPanel>
+          )}
 
-          <GarmentPanel label="SOCKS">
+          <GarmentPanel
+            label="SOCKS"
+            className={
+              isPositionActive("cap_front")
+                ? undefined
+                : "mx-auto w-full max-w-[300px]"
+            }
+          >
             <Socks />
             {node("left_sock")}
             {node("right_sock")}

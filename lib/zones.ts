@@ -2,6 +2,7 @@
  * Canonical placement order, display numbers, and garment labels
  * shared by KitVisualizer + RateCardSidebar.
  */
+import { isPositionActive } from "@/lib/positions";
 import type { SponsorshipSlot } from "@/types/sponsorship";
 
 export const ZONE_META = [
@@ -18,6 +19,11 @@ export const ZONE_META = [
 ] as const;
 
 export type ZoneId = (typeof ZONE_META)[number]["id"];
+
+/** Zones whose placements are currently active (excludes `active: false`). */
+export function getActiveZones() {
+  return ZONE_META.filter((zone) => isPositionActive(zone.id));
+}
 
 /** Marker positions as % of each garment panel (tuned to SVG viewBoxes). */
 export const MARKER_POS: Record<
@@ -43,11 +49,17 @@ export const MARKER_POS: Record<
 
 export function orderSlots(slots: SponsorshipSlot[]) {
   const byId = new Map(slots.map((s) => [s.id, s]));
-  return ZONE_META.map((zone) => {
-    const slot = byId.get(zone.id);
-    return slot ? { zone, slot } : null;
-  }).filter(
-    (row): row is { zone: (typeof ZONE_META)[number]; slot: SponsorshipSlot } =>
-      row !== null,
-  );
+  return getActiveZones()
+    .map((zone) => {
+      const slot = byId.get(zone.id);
+      return slot ? { zone, slot } : null;
+    })
+    .filter(
+      (
+        row,
+      ): row is {
+        zone: (typeof ZONE_META)[number];
+        slot: SponsorshipSlot;
+      } => row !== null,
+    );
 }

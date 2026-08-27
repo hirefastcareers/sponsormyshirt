@@ -17,7 +17,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "GNR Kit Sponsorships | Great North Run",
   description:
-    "Sponsor custom ad placements on official Great North Run race-day kit — vest, shorts, socks, and cap. Live TV and 200,000+ spectators.",
+    "Sponsor custom ad placements on official Great North Run race-day kit — vest, shorts, and socks. Live TV and 200,000+ spectators.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

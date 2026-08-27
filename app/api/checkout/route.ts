@@ -22,6 +22,7 @@ import { getDodoClient } from "@/lib/dodo";
 import {
   getPositionPrice,
   hasAnySoldPosition,
+  isPositionActive,
   isTitleTakeover,
   isTitleTakeoverPurchasable,
 } from "@/lib/positions";
@@ -65,6 +66,14 @@ export async function POST(request: Request) {
 
     if (fetchError || !slot) {
       return NextResponse.json({ error: "Slot not found" }, { status: 404 });
+    }
+
+    // Temporarily disabled placements (e.g. cap) must not reach Dodo
+    if (!isTitleTakeover(slotId) && !isPositionActive(slotId)) {
+      return NextResponse.json(
+        { error: "This placement is not currently available." },
+        { status: 404 },
+      );
     }
 
     // Sold slots must never reach Dodo — send buyer back to pick another

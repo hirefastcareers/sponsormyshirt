@@ -12,6 +12,8 @@ import TakenBanner from "@/components/TakenBanner";
 import VisitorCounter from "@/components/VisitorCounter";
 import {
   applyCanonicalPrices,
+  filterActiveSlots,
+  getActivePositionIds,
   getKitPositions,
   POSITION_META,
   POSITION_PRICES,
@@ -36,7 +38,7 @@ const FALLBACK_SLOTS: SponsorshipSlot[] = [
     y_position: 50,
     dodo_product_id: null,
   },
-  ...(Object.keys(POSITION_PRICES) as PositionId[]).map((id) => ({
+  ...getActivePositionIds().map((id: PositionId) => ({
     id,
     slot_name: POSITION_META[id].slot_name,
     category: POSITION_META[id].category,
@@ -70,8 +72,8 @@ export default async function HomePage({
   const successSlotId = firstParam(params.slot);
 
   const fetched = await getSponsorshipSlots();
-  const slots = applyCanonicalPrices(
-    fetched.length > 0 ? fetched : FALLBACK_SLOTS,
+  const slots = filterActiveSlots(
+    applyCanonicalPrices(fetched.length > 0 ? fetched : FALLBACK_SLOTS),
   );
   const kitPositions = getKitPositions(slots);
   const claimed = kitPositions.filter(
@@ -100,8 +102,8 @@ export default async function HomePage({
               Your brand, on my Great North Run kit.
             </h1>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-zinc-500 sm:text-base">
-              10 placements across shirt, shorts, cap, and socks. Tyne Bridge to
-              South Shields — 13.1 miles, aiming for 2:05.
+              {kitPositions.length} placements across shirt, shorts, and socks.
+              Tyne Bridge to South Shields — 13.1 miles, aiming for 2:05.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-zinc-500 lg:col-span-4 lg:justify-end">

@@ -5,8 +5,13 @@
  * race context, FAQ, and claim CTA.
  */
 import { useId, useState, type ReactNode } from "react";
-import { POSITION_META, POSITION_PRICES, type PositionId } from "@/lib/positions";
-import { ZONE_META } from "@/lib/zones";
+import {
+  getActivePositionIds,
+  POSITION_META,
+  POSITION_PRICES,
+  type PositionId,
+} from "@/lib/positions";
+import { getActiveZones } from "@/lib/zones";
 
 interface LandingSectionsProps {
   onClaim: () => void;
@@ -77,7 +82,7 @@ const DIVISION_RULES = [
   {
     num: "02",
     title: "Premium performance kit.",
-    body: "Every logo is printed directly onto lightweight, high-performance gear—including the running shirt, shorts, cap, and socks. Built to look crisp, vibrant, and sharp over all 13.1 miles.",
+    body: "Every logo is printed directly onto lightweight, high-performance gear—including the running shirt, shorts, and socks. Built to look crisp, vibrant, and sharp over all 13.1 miles.",
   },
   {
     num: "03",
@@ -128,7 +133,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Can one brand buy multiple placements?",
-    a: "Absolutely. You can select and purchase as many available slots as you like (e.g., matching both sleeves or combining a shirt slot with the cap or shorts). If you want complete exclusivity, you can select the Title Sponsor / Whole Kit package to claim every slot at once.",
+    a: "Absolutely. You can select and purchase as many available slots as you like (e.g., matching both sleeves or combining a shirt slot with the shorts). If you want complete exclusivity, you can select the Title Sponsor / Whole Kit package to claim every slot at once.",
   },
   {
     q: "Who isn't allowed to sponsor?",
@@ -159,6 +164,14 @@ function SectionHeading({ children }: { children: ReactNode }) {
 export default function LandingSections({ onClaim }: LandingSectionsProps) {
   const faqBaseId = useId();
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const activeZones = getActiveZones();
+  const placementCount = getActivePositionIds().length;
+  const placementCountWord =
+    placementCount === 9
+      ? "Nine"
+      : placementCount === 10
+        ? "Ten"
+        : String(placementCount);
 
   function claimPosition() {
     document
@@ -180,8 +193,8 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
           <span id="positions-heading">Positions</span>
         </SectionHeading>
         <p className="mt-2 w-full text-[15px] leading-relaxed text-zinc-500">
-          Ten placements. One kit. Every spot priced for what cameras and
-          crowds actually see.
+          {placementCountWord} placements. One kit. Every spot priced for what
+          cameras and crowds actually see.
         </p>
 
         <div className="mt-8 overflow-hidden rounded-xl border border-[#E4E4E7] bg-white">
@@ -192,7 +205,7 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
             <span className="col-span-5">Visibility</span>
           </div>
           <ul className="divide-y divide-zinc-100">
-            {ZONE_META.map((zone) => {
+            {activeZones.map((zone) => {
               const id = zone.id as PositionId;
               const meta = POSITION_META[id];
               const detail = POSITION_DETAILS[id];

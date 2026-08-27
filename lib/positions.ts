@@ -1,6 +1,9 @@
 /**
  * Canonical kit placements, premium GBP pricing, and title-takeover helpers.
  * Prices here are the source of truth for the rate card UI.
+ *
+ * Flip `active` on a POSITION_META entry to temporarily hide a placement
+ * from the kit UI, rate card, and Title Sponsor sum (set back to `true` to restore).
  */
 import type { SponsorshipSlot, SlotCategory } from "@/types/sponsorship";
 
@@ -25,14 +28,55 @@ export type PositionId = keyof typeof POSITION_PRICES;
 
 /**
  * Optional fixed Title Sponsor price (GBP).
- * When unset, the master package price is the sum of all placement prices.
+ * When unset, the master package price is the sum of all ACTIVE placement prices.
  */
 export const TITLE_SPONSOR_PRICE: number | undefined = undefined;
 
-/** Sum of every individual kit placement on the rate card. */
+export const POSITION_META: Record<
+  PositionId,
+  { slot_name: string; category: SlotCategory; active: boolean }
+> = {
+  chest_center: {
+    slot_name: "Chest Center (High / Bib)",
+    category: "shirt",
+    active: true,
+  },
+  upper_back: { slot_name: "Upper Back", category: "shirt", active: true },
+  lower_back: { slot_name: "Lower Back", category: "shirt", active: true },
+  // Temporarily unavailable — flip `active` to true to restore
+  cap_front: { slot_name: "Cap Front", category: "headwear", active: false },
+  shorts_left: {
+    slot_name: "Shorts Left Leg",
+    category: "shorts",
+    active: true,
+  },
+  shorts_right: {
+    slot_name: "Shorts Right Leg",
+    category: "shorts",
+    active: true,
+  },
+  right_sleeve: { slot_name: "Right Sleeve", category: "shirt", active: true },
+  left_sleeve: { slot_name: "Left Sleeve", category: "shirt", active: true },
+  left_sock: { slot_name: "Left Sock", category: "socks", active: true },
+  right_sock: { slot_name: "Right Sock", category: "socks", active: true },
+};
+
+export function isPositionActive(slotId: string): boolean {
+  if (!(slotId in POSITION_META)) return false;
+  return POSITION_META[slotId as PositionId].active !== false;
+}
+
+/** Active kit placement ids (excludes temporarily disabled slots). */
+export function getActivePositionIds(): PositionId[] {
+  return (Object.keys(POSITION_PRICES) as PositionId[]).filter((id) =>
+    isPositionActive(id),
+  );
+}
+
+/** Sum of every ACTIVE individual kit placement on the rate card. */
 export function sumPlacementPrices(): number {
-  return (Object.values(POSITION_PRICES) as number[]).reduce(
-    (sum, price) => sum + price,
+  return getActivePositionIds().reduce(
+    (sum, id) => sum + POSITION_PRICES[id],
     0,
   );
 }
@@ -51,28 +95,9 @@ export const TITLE_TAKEOVER = {
   },
 } as const;
 
-export const POSITION_META: Record<
-  PositionId,
-  { slot_name: string; category: SlotCategory }
-> = {
-  chest_center: {
-    slot_name: "Chest Center (High / Bib)",
-    category: "shirt",
-  },
-  upper_back: { slot_name: "Upper Back", category: "shirt" },
-  lower_back: { slot_name: "Lower Back", category: "shirt" },
-  cap_front: { slot_name: "Cap Front", category: "headwear" },
-  shorts_left: { slot_name: "Shorts Left Leg", category: "shorts" },
-  shorts_right: { slot_name: "Shorts Right Leg", category: "shorts" },
-  right_sleeve: { slot_name: "Right Sleeve", category: "shirt" },
-  left_sleeve: { slot_name: "Left Sleeve", category: "shirt" },
-  left_sock: { slot_name: "Left Sock", category: "socks" },
-  right_sock: { slot_name: "Right Sock", category: "socks" },
-};
-
 export function getPositionPrice(slotId: string): number | undefined {
   if (isTitleTakeover(slotId)) return getTitleSponsorPrice();
-  if (slotId in POSITION_PRICES) {
+  if (slotId in POSITION_PRICES && isPositionActive(slotId)) {
     return POSITION_PRICES[slotId as PositionId];
   }
   return undefined;
@@ -91,18 +116,28 @@ export function applyCanonicalPrices(
   });
 }
 
+/** Drop inactive placements from public inventory (keeps title takeover). */
+export function filterActiveSlots(
+  slots: SponsorshipSlot[],
+): SponsorshipSlot[] {
+  return slots.filter(
+    (s) => isTitleTakeover(s.id) || isPositionActive(s.id),
+  );
+}
+
 export function isTitleTakeover(slotId: string): boolean {
   return slotId === TITLE_TAKEOVER_ID;
 }
 
-/** Individual kit placements only (excludes the title takeover master slot). */
+/** Active individual kit placements only (excludes title takeover + inactive). */
 export function getKitPositions(slots: SponsorshipSlot[]): SponsorshipSlot[] {
-  return slots.filter((s) => !isTitleTakeover(s.id));
+  return slots.filter((s) => !isTitleTakeover(s.id) && isPositionActive(s.id));
 }
 
 /**
- * Title Sponsor is only purchasable when every kit position is still available
- * (and the takeover row itself is available). Any sold/pending slot blocks it.
+ * Title Sponsor is only purchasable when every ACTIVE kit position is still
+ * available (and the takeover row itself is available). Any sold/pending
+ * active slot blocks it. Inactive placements are ignored.
  */
 export function isTitleTakeoverPurchasable(slots: SponsorshipSlot[]): boolean {
   const positions = getKitPositions(slots);
@@ -115,7 +150,7 @@ export function isTitleTakeoverPurchasable(slots: SponsorshipSlot[]): boolean {
   return allPositionsOpen && takeoverOpen;
 }
 
-/** True when any single kit position has already been sold. */
+/** True when any ACTIVE kit position has already been sold. */
 export function hasAnySoldPosition(slots: SponsorshipSlot[]): boolean {
   return getKitPositions(slots).some((s) => s.status === "sold");
 }
