@@ -4,6 +4,7 @@
  * Server Component: fetches live slot inventory from Supabase,
  * then hydrates the split-screen sponsorship experience.
  */
+import BrandMark from "@/components/BrandMark";
 import PaymentSuccessBanner from "@/components/PaymentSuccessBanner";
 import SiteHeader from "@/components/SiteHeader";
 import SponsorExperience from "@/components/SponsorExperience";
@@ -126,9 +127,10 @@ export default async function HomePage({
 
       <footer className="border-t border-[#E4E4E7] bg-zinc-900 text-zinc-100">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-start sm:justify-between sm:gap-10 lg:px-12">
-          <p className="text-sm text-zinc-300">
-            GNR Kit Sponsorships — Independent project.
-          </p>
+          <div className="space-y-3">
+            <BrandMark variant="dark" href="#" />
+            <p className="text-sm text-zinc-400">Independent project.</p>
+          </div>
           <div className="max-w-md space-y-3 sm:text-right">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm sm:justify-end">
               <a

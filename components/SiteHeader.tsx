@@ -1,6 +1,8 @@
 /**
  * Sticky top navigation with smooth-scroll section links and claim CTA.
  */
+import BrandMark from "@/components/BrandMark";
+
 const NAV_LINKS = [
   { href: "#positions", label: "Positions" },
   { href: "#how-it-works", label: "How It Works" },
@@ -12,12 +14,7 @@ export default function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-[#E4E4E7] bg-white/90 backdrop-blur-md">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-6 py-3.5 lg:px-12">
-        <a
-          href="#"
-          className="shrink-0 text-[15px] font-semibold tracking-tight text-zinc-900 sm:text-[17px]"
-        >
-          GNR Kit Sponsorships
-        </a>
+        <BrandMark showStatus href="#" />
 
         <nav
           aria-label="Page sections"
