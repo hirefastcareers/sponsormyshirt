@@ -417,9 +417,9 @@ function ShirtFront() {
         opacity="0.7"
       />
 
-      {/* Placement zones — 01 chest + 02 heart spaced to avoid overlap */}
+      {/* Placement zones — 01 chest + 02 heart (02 inset left of sleeve 09) */}
       <AdZone x={75} y={118} w={64} h={52} />
-      <AdZone x={148} y={70} w={40} h={34} />
+      <AdZone x={114} y={77} w={40} h={34} />
       <AdZone x={14} y={41} w={50} h={42} />
       <AdZone x={176} y={41} w={50} h={42} />
     </svg>
