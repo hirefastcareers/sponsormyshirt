@@ -5,6 +5,7 @@
  * collect brand details → optional upsells → upload logo → create Dodo session.
  */
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import CharityOrderBreakdown from "@/components/CharityOrderBreakdown";
 import {
   calculateOrderTotalGbp,
   DOFOLLOW_LINK_ADDON,
@@ -284,6 +285,11 @@ export default function SponsorshipModal({
               {error}
             </p>
           )}
+
+          <CharityOrderBreakdown
+            totalGbp={orderTotal}
+            className="rounded-xl border border-emerald-100 bg-emerald-50/60 px-3 py-2.5 font-medium"
+          />
 
           <button
             type="submit"

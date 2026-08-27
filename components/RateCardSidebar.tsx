@@ -3,6 +3,7 @@
 /**
  * Right-rail selection / rate card: totals, inventory list, claim CTA.
  */
+import CharityOrderBreakdown from "@/components/CharityOrderBreakdown";
 import { addonLabels } from "@/lib/addons";
 import type { SponsorshipSlot } from "@/types/sponsorship";
 import {
@@ -63,6 +64,10 @@ export default function RateCardSidebar({
                 : `${count} placements`}
           </span>
         </div>
+        <CharityOrderBreakdown
+          totalGbp={total}
+          className="mt-2 rounded-lg border border-emerald-100 bg-emerald-50/60 px-2.5 py-2"
+        />
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto">
