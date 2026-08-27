@@ -2,7 +2,7 @@
  * Sticky top navigation with smooth-scroll section links and claim CTA.
  */
 import BrandMark from "@/components/BrandMark";
-import CharityAnnouncementBar from "@/components/CharityAnnouncementBar";
+import VemetricStatsBar from "@/components/VemetricStatsBar";
 
 const NAV_LINKS = [
   { href: "#positions", label: "Positions" },
@@ -67,7 +67,7 @@ export default function SiteHeader() {
         </div>
       </div>
 
-      <CharityAnnouncementBar />
+      <VemetricStatsBar />
     </header>
   );
 }
