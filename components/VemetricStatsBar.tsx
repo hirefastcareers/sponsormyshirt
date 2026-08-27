@@ -64,7 +64,7 @@ export default function VemetricStatsBar() {
   if (!stats) return null;
 
   return (
-    <div className="border-t border-zinc-100 bg-zinc-50/60 px-4 py-2.5 text-center">
+    <div className="hidden border-t border-zinc-100 bg-zinc-50/60 px-4 py-3 text-center md:block">
       <p
         className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-xs text-muted-foreground"
         aria-label="Live site analytics"

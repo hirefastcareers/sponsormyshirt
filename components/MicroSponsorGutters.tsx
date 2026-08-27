@@ -2,12 +2,14 @@
 
 /**
  * Desktop sticky left/right Supporter Wall panels (xl+).
+ * Hidden until the user scrolls past the hero so kit sponsorship stays primary.
  */
+import { useEffect, useState } from "react";
 import MicroSponsorLogo from "@/components/MicroSponsorLogo";
 import { MICRO_SPONSOR_PRICE_GBP } from "@/lib/micro-sponsors";
 import type { MicroSponsor } from "@/types/micro-sponsor";
 
-const MIN_VISIBLE_SLOTS = 4;
+const EMPTY_SLOTS_WHEN_BARE = 2;
 
 interface MicroSponsorGuttersProps {
   sponsors: MicroSponsor[];
@@ -68,25 +70,31 @@ function GutterPanel({
   side,
   sponsors,
   onSponsorClick,
+  visible,
 }: {
   side: "left" | "right";
   sponsors: MicroSponsor[];
   onSponsorClick: () => void;
+  visible: boolean;
 }) {
-  const emptySlotCount = Math.max(1, MIN_VISIBLE_SLOTS - sponsors.length);
+  const emptySlotCount =
+    sponsors.length === 0 ? EMPTY_SLOTS_WHEN_BARE : 1;
 
   return (
     <aside
-      className={`pointer-events-none fixed top-52 z-30 hidden w-40 xl:block 2xl:w-44 ${
+      className={`pointer-events-none fixed top-36 z-30 hidden w-40 transition-opacity duration-300 xl:block 2xl:w-44 ${
         side === "left" ? "left-4" : "right-4"
-      }`}
+      } ${visible ? "opacity-100" : "opacity-0"}`}
       aria-label={`Supporter Wall — ${side} panel`}
+      aria-hidden={!visible}
     >
       <div
-        className="pointer-events-auto max-h-[calc(100vh-14rem)] overflow-hidden rounded-xl border border-[#E4E4E7] bg-white/95 shadow-sm backdrop-blur-sm"
+        className={`pointer-events-auto max-h-[calc(100vh-12rem)] overflow-hidden rounded-xl border border-[#E4E4E7] bg-white/95 shadow-sm backdrop-blur-sm ${
+          visible ? "" : "pointer-events-none"
+        }`}
       >
         <PanelHeader />
-        <div className="flex max-h-[calc(100vh-18rem)] flex-col gap-2 overflow-y-auto p-3">
+        <div className="flex max-h-[calc(100vh-16rem)] flex-col gap-2 overflow-y-auto p-3">
           {sponsors.map((sponsor) => (
             <div
               key={sponsor.id}
@@ -108,6 +116,21 @@ export default function MicroSponsorGutters({
   sponsors,
   onSponsorClick,
 }: MicroSponsorGuttersProps) {
+  const [pastHero, setPastHero] = useState(false);
+
+  useEffect(() => {
+    const hero = document.getElementById("hero-section");
+    if (!hero) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setPastHero(!entry.isIntersecting),
+      { rootMargin: "-72px 0px 0px 0px", threshold: 0 },
+    );
+
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, []);
+
   const leftSponsors = sponsors.filter((_, i) => i % 2 === 0);
   const rightSponsors = sponsors.filter((_, i) => i % 2 === 1);
 
@@ -117,11 +140,13 @@ export default function MicroSponsorGutters({
         side="left"
         sponsors={leftSponsors}
         onSponsorClick={onSponsorClick}
+        visible={pastHero}
       />
       <GutterPanel
         side="right"
         sponsors={rightSponsors}
         onSponsorClick={onSponsorClick}
+        visible={pastHero}
       />
     </>
   );

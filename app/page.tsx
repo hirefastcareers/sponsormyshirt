@@ -101,23 +101,24 @@ export default async function HomePage({
         <TakenBanner taken={taken} />
         <SiteHeader />
 
-        <section className="mx-auto w-full max-w-7xl px-6 pb-6 pt-8 lg:px-12 lg:pt-10">
+        <section
+          id="hero-section"
+          className="mx-auto w-full max-w-7xl px-6 pb-6 pt-8 lg:px-12 lg:pt-10"
+        >
           <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-            <p className="flex items-center justify-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-600" />
-              Printed kit • Artwork deadline closes September 3rd.
+            <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
+              PRINTED KIT • Artwork deadline closes September 3rd
             </p>
             <h1 className="mt-3 text-3xl font-medium tracking-tight text-zinc-900 sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
               Your brand, on my Great North Run kit.
             </h1>
             <p className="mt-3 text-[15px] leading-relaxed text-zinc-500 sm:text-base">
-              {kitPositions.length} placements across shirt, shorts, and socks.
-              Tyne Bridge to South Shields — 13.1 miles, aiming for 2:05.
+              {kitPositions.length} logo placements across shirt, shorts, and
+              socks. 13.1 miles from Tyne Bridge to South Shields—aiming for
+              2:05.
             </p>
             <CharityPledgeCallout />
-            <div className="mt-4">
-              <MicroSponsorHeroCTA />
-            </div>
+            <MicroSponsorHeroCTA />
           </div>
           <p className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
             <span>
@@ -132,13 +133,13 @@ export default async function HomePage({
               claimed
             </span>
           </p>
-          <div className="mx-auto mt-8 max-w-3xl">
-            <MicroSponsorMarqueeBlock />
-          </div>
         </section>
 
         <section className="mx-auto w-full max-w-7xl px-6 pb-20 lg:px-12 lg:pb-24">
           <SponsorExperience slots={slots} />
+          <div className="mx-auto mt-12 max-w-3xl border-t border-[#E4E4E7] pt-10">
+            <MicroSponsorMarqueeBlock />
+          </div>
         </section>
 
         <footer className="border-t border-[#E4E4E7] bg-zinc-900 text-zinc-100">

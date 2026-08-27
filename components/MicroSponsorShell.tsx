@@ -63,7 +63,7 @@ export default function MicroSponsorShell({
   );
 }
 
-/** Mobile marquee block — place below hero in page layout. */
+/** Mobile marquee block — placed below the kit viewer on page layout. */
 export function MicroSponsorMarqueeBlock() {
   const { sponsors, openModal } = useMicroSponsor();
   return (
@@ -71,13 +71,33 @@ export function MicroSponsorMarqueeBlock() {
   );
 }
 
-/** Hero micro-copy for the Supporter Wall (CTA lives in sidebars / mobile marquee). */
+/** Hero primary + secondary CTAs with Supporter Wall micro-copy under £5. */
 export function MicroSponsorHeroCTA() {
+  const { openModal } = useMicroSponsor();
+
   return (
-    <p className="max-w-md text-center text-xs leading-relaxed text-muted-foreground">
-      £{MICRO_SPONSOR_PRICE_GBP} Supporters get their logo and backlink featured
-      on our website&apos;s Supporter Wall (desktop sidebars &amp; mobile
-      marquee).
-    </p>
+    <div className="mt-6 flex flex-col items-center gap-3">
+      <div className="flex flex-wrap items-start justify-center gap-3 sm:gap-4">
+        <a
+          href="#kit-viewer"
+          className="rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-800"
+        >
+          Claim a Kit Slot
+        </a>
+        <div className="flex flex-col items-center gap-1.5">
+          <button
+            type="button"
+            onClick={openModal}
+            className="rounded-full border border-zinc-300 bg-white px-5 py-2.5 text-sm font-medium text-zinc-700 transition hover:border-zinc-400 hover:bg-zinc-50"
+          >
+            Sponsor for £{MICRO_SPONSOR_PRICE_GBP}
+          </button>
+          <p className="max-w-[14rem] text-center text-[11px] leading-snug text-muted-foreground sm:max-w-none">
+            (£{MICRO_SPONSOR_PRICE_GBP} gets your logo &amp; backlink on our
+            website Supporter Wall)
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }
