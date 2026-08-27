@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * Architectural wireframe of race-day kit with interactive sponsorship pins.
- * Coordinates come from sponsorship_slots.x_position / y_position (0–100 %).
+ * Minimal filled kit silhouettes with dashed ad zones and hotspot badges.
+ * Badge / logo positions are keyed by slot id to match the SVG layout.
  */
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { SponsorshipSlot } from "@/types/sponsorship";
 
 interface KitVisualizerProps {
@@ -12,8 +12,45 @@ interface KitVisualizerProps {
   onSelectSlot: (slot: SponsorshipSlot) => void;
 }
 
+/** Zone boxes in % of the visualizer stage (for logos + dash overlays). */
+const SLOT_ZONES: Record<
+  string,
+  { x: number; y: number; w: number; h: number }
+> = {
+  cap_front: { x: 19, y: 7.5, w: 12, h: 4.2 },
+  chest_center: { x: 24, y: 26, w: 10, h: 8.5 },
+  left_chest: { x: 15.5, y: 25, w: 7, h: 6.5 },
+  upper_back: { x: 68, y: 24.5, w: 13, h: 7 },
+  lower_back: { x: 68, y: 35, w: 13, h: 7 },
+  shorts_left: { x: 34, y: 61, w: 9, h: 9 },
+  left_sock: { x: 34.5, y: 84.5, w: 8, h: 6 },
+  right_sock: { x: 47, y: 84.5, w: 8, h: 6 },
+};
+
+/** Badge anchor points (%). Offset slightly outside zones for readability. */
+const BADGE_POS: Record<string, { x: number; y: number }> = {
+  cap_front: { x: 44, y: 9 },
+  chest_center: { x: 42, y: 30 },
+  left_chest: { x: 7, y: 28 },
+  upper_back: { x: 92, y: 27 },
+  lower_back: { x: 92, y: 38 },
+  shorts_left: { x: 22, y: 65 },
+  left_sock: { x: 26, y: 90 },
+  right_sock: { x: 64, y: 90 },
+};
+
+const FILL = "#F1F5F9";
+const STROKE = "#CBD5E1";
+const ZONE_STROKE = "#94A3B8";
+const LABEL = "#94A3B8";
+
 function formatPrice(gbp: number) {
   return `£${gbp}`;
+}
+
+function shortLabel(name: string) {
+  const first = name.split(/[\s/]/)[0];
+  return first || name;
 }
 
 export default function KitVisualizer({
@@ -22,313 +59,352 @@ export default function KitVisualizer({
 }: KitVisualizerProps) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
+  const byId = useMemo(() => {
+    const map = new Map<string, SponsorshipSlot>();
+    for (const slot of slots) map.set(slot.id, slot);
+    return map;
+  }, [slots]);
+
   return (
-    <div className="relative w-full overflow-hidden rounded-none border border-emerald-500/20 bg-slate-950/80">
-      {/* Blueprint grid */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.18]"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, rgba(16,185,129,0.35) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(16,185,129,0.35) 1px, transparent 1px)
-          `,
-          backgroundSize: "28px 28px",
-        }}
-      />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(16,185,129,0.08),transparent_65%)]" />
-
-      <div className="relative px-4 py-8 sm:px-8 sm:py-10">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-emerald-400/80">
-            Fig. 01 — Race Kit Blueprint
-          </p>
-          <p className="font-mono text-[10px] text-slate-500">
-            SCALE 1:1 · INTERACTIVE
-          </p>
-        </div>
-
-        <div className="relative mx-auto aspect-[4/5] w-full max-w-lg sm:aspect-[3/4] sm:max-w-xl">
-          <svg
-            viewBox="0 0 400 500"
-            className="h-full w-full"
-            role="img"
-            aria-label="Running kit blueprint with sponsorship placement pins"
+    <div className="relative w-full">
+      <div className="relative mx-auto aspect-[4/5] w-full max-w-lg sm:aspect-[3/4] sm:max-w-xl">
+        <svg
+          viewBox="0 0 480 580"
+          className="h-full w-full"
+          role="img"
+          aria-label="Running kit with sponsorship placement zones"
+        >
+          {/* ——— CAP ——— */}
+          <g
+            opacity={hoveredId && hoveredId !== "cap_front" ? 0.4 : 1}
+            className="transition-opacity duration-300"
           >
-            <defs>
-              <filter id="glow">
-                <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
-                <feMerge>
-                  <feMergeNode in="coloredBlur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-
-            {/* Construction guides */}
-            <line
-              x1="200"
-              y1="20"
-              x2="200"
-              y2="480"
-              stroke="#10b981"
-              strokeOpacity="0.15"
-              strokeDasharray="4 6"
+            <path
+              d="M70 42 C90 12 150 12 170 42 L178 66 L62 66 Z"
+              fill={FILL}
+              stroke={STROKE}
+              strokeWidth="1.5"
+              strokeLinejoin="round"
             />
-
-            {/* ——— CAP ——— */}
-            <g
-              stroke="#94a3b8"
+            <path
+              d="M170 46 L210 62 L170 62 Z"
+              fill={FILL}
+              stroke={STROKE}
               strokeWidth="1.5"
-              fill="none"
-              className="transition-opacity duration-300"
-              opacity={hoveredId && !["cap_front"].includes(hoveredId) ? 0.35 : 1}
+              strokeLinejoin="round"
+            />
+            <text
+              x="120"
+              y="86"
+              fill={LABEL}
+              fontSize="10"
+              fontFamily="ui-sans-serif, system-ui, sans-serif"
+              fontWeight="600"
+              textAnchor="middle"
+              letterSpacing="0.08em"
             >
-              <path d="M60 55 Q90 20 120 55" />
-              <path d="M55 55 L125 55 L130 70 L50 70 Z" />
-              <path d="M125 58 L155 68 L125 68" />
-              <text
-                x="90"
-                y="90"
-                fill="#64748b"
-                fontSize="9"
-                fontFamily="ui-monospace, monospace"
-                textAnchor="middle"
-              >
-                CAP
-              </text>
-            </g>
+              CAP
+            </text>
+          </g>
 
-            {/* ——— VEST (front) ——— */}
-            <g
-              stroke="#94a3b8"
+          {/* ——— VEST FRONT ——— */}
+          <g
+            opacity={
+              hoveredId &&
+              !["chest_center", "left_chest"].includes(hoveredId)
+                ? 0.4
+                : 1
+            }
+            className="transition-opacity duration-300"
+          >
+            <path
+              d="M55 120 L85 145 L85 275 C85 285 95 290 110 290 L170 290 C185 290 195 285 195 275 L195 145 L225 120 L210 105 L185 135 L175 115 Q140 135 105 115 L95 135 L70 105 Z"
+              fill={FILL}
+              stroke={STROKE}
               strokeWidth="1.5"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M105 118 Q140 138 175 118"
               fill="none"
-              opacity={
-                hoveredId &&
-                !["chest_center", "left_chest"].includes(hoveredId)
-                  ? 0.35
-                  : 1
-              }
-              className="transition-opacity duration-300"
+              stroke={STROKE}
+              strokeWidth="1.25"
+            />
+            <text
+              x="140"
+              y="312"
+              fill={LABEL}
+              fontSize="10"
+              fontFamily="ui-sans-serif, system-ui, sans-serif"
+              fontWeight="600"
+              textAnchor="middle"
+              letterSpacing="0.06em"
             >
-              <path d="M145 110 L165 130 L165 230 L235 230 L235 130 L255 110 L270 125 L250 155 L250 250 L150 250 L150 155 L130 125 Z" />
-              {/* Neck */}
-              <path d="M175 118 Q200 135 225 118" />
-              {/* Heart zone highlight */}
-              <circle
-                cx="175"
-                cy="155"
-                r="18"
-                stroke="#10b981"
-                strokeOpacity={hoveredId === "left_chest" ? 0.7 : 0.2}
-                strokeDasharray="3 3"
-              />
-              {/* Center chest zone */}
-              <rect
-                x="185"
-                y="145"
-                width="30"
-                height="40"
-                stroke="#10b981"
-                strokeOpacity={hoveredId === "chest_center" ? 0.7 : 0.2}
-                strokeDasharray="3 3"
-              />
-              <text
-                x="200"
-                y="270"
-                fill="#64748b"
-                fontSize="9"
-                fontFamily="ui-monospace, monospace"
-                textAnchor="middle"
-              >
-                VEST · FRONT
-              </text>
-            </g>
+              VEST · FRONT
+            </text>
+          </g>
 
-            {/* ——— VEST (back panel) ——— */}
-            <g
-              stroke="#94a3b8"
+          {/* ——— VEST BACK ——— */}
+          <g
+            opacity={
+              hoveredId &&
+              !["upper_back", "lower_back"].includes(hoveredId)
+                ? 0.4
+                : 1
+            }
+            className="transition-opacity duration-300"
+          >
+            <path
+              d="M275 120 L305 145 L305 275 C305 285 315 290 330 290 L390 290 C405 290 415 285 415 275 L415 145 L445 120 L430 105 L405 135 L395 115 Q360 135 325 115 L315 135 L290 105 Z"
+              fill={FILL}
+              stroke={STROKE}
               strokeWidth="1.5"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M325 118 Q360 138 395 118"
               fill="none"
-              opacity={
-                hoveredId &&
-                !["upper_back", "lower_back"].includes(hoveredId)
-                  ? 0.35
-                  : 1
-              }
-              className="transition-opacity duration-300"
+              stroke={STROKE}
+              strokeWidth="1.25"
+            />
+            <text
+              x="360"
+              y="312"
+              fill={LABEL}
+              fontSize="10"
+              fontFamily="ui-sans-serif, system-ui, sans-serif"
+              fontWeight="600"
+              textAnchor="middle"
+              letterSpacing="0.06em"
             >
-              <path d="M290 120 L310 140 L310 250 L370 250 L370 140 L390 120 L375 110 L355 135 L355 115 L305 115 L305 135 L285 110 Z" />
-              <rect
-                x="320"
-                y="145"
-                width="40"
-                height="28"
-                stroke="#10b981"
-                strokeOpacity={hoveredId === "upper_back" ? 0.7 : 0.2}
-                strokeDasharray="3 3"
-              />
-              <rect
-                x="320"
-                y="195"
-                width="40"
-                height="28"
-                stroke="#10b981"
-                strokeOpacity={hoveredId === "lower_back" ? 0.7 : 0.2}
-                strokeDasharray="3 3"
-              />
-              <text
-                x="340"
-                y="270"
-                fill="#64748b"
-                fontSize="9"
-                fontFamily="ui-monospace, monospace"
-                textAnchor="middle"
-              >
-                VEST · BACK
-              </text>
-            </g>
+              VEST · BACK
+            </text>
+          </g>
 
-            {/* ——— SHORTS ——— */}
-            <g
-              stroke="#94a3b8"
+          {/* ——— SHORTS ——— */}
+          <g
+            opacity={hoveredId && hoveredId !== "shorts_left" ? 0.4 : 1}
+            className="transition-opacity duration-300"
+          >
+            <path
+              d="M155 340 L325 340 L332 355 L300 450 L255 450 L240 370 L225 450 L180 450 L148 355 Z"
+              fill={FILL}
+              stroke={STROKE}
               strokeWidth="1.5"
-              fill="none"
-              opacity={
-                hoveredId && hoveredId !== "shorts_left" ? 0.35 : 1
-              }
-              className="transition-opacity duration-300"
+              strokeLinejoin="round"
+            />
+            <line
+              x1="240"
+              y1="340"
+              x2="240"
+              y2="370"
+              stroke={STROKE}
+              strokeWidth="1.25"
+            />
+            <text
+              x="240"
+              y="472"
+              fill={LABEL}
+              fontSize="10"
+              fontFamily="ui-sans-serif, system-ui, sans-serif"
+              fontWeight="600"
+              textAnchor="middle"
+              letterSpacing="0.08em"
             >
-              <path d="M155 290 L245 290 L250 300 L230 380 L200 380 L200 310 L200 380 L170 380 L150 300 Z" />
-              <rect
-                x="160"
-                y="320"
-                width="28"
-                height="40"
-                stroke="#10b981"
-                strokeOpacity={hoveredId === "shorts_left" ? 0.7 : 0.2}
-                strokeDasharray="3 3"
-              />
-              <text
-                x="200"
-                y="400"
-                fill="#64748b"
-                fontSize="9"
-                fontFamily="ui-monospace, monospace"
-                textAnchor="middle"
-              >
-                SHORTS
-              </text>
-            </g>
+              SHORTS
+            </text>
+          </g>
 
-            {/* ——— SOCKS ——— */}
-            <g
-              stroke="#94a3b8"
+          {/* ——— SOCKS ——— */}
+          <g
+            opacity={
+              hoveredId &&
+              !["left_sock", "right_sock"].includes(hoveredId)
+                ? 0.4
+                : 1
+            }
+            className="transition-opacity duration-300"
+          >
+            <path
+              d="M168 490 L168 530 C168 543 175 547 185 547 L198 547 C208 547 212 543 212 530 L212 490 Z"
+              fill={FILL}
+              stroke={STROKE}
               strokeWidth="1.5"
-              fill="none"
-              opacity={
-                hoveredId &&
-                !["left_sock", "right_sock"].includes(hoveredId)
-                  ? 0.35
-                  : 1
-              }
-              className="transition-opacity duration-300"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M228 490 L228 530 C228 543 235 547 245 547 L258 547 C268 547 272 543 272 530 L272 490 Z"
+              fill={FILL}
+              stroke={STROKE}
+              strokeWidth="1.5"
+              strokeLinejoin="round"
+            />
+            <text
+              x="220"
+              y="568"
+              fill={LABEL}
+              fontSize="10"
+              fontFamily="ui-sans-serif, system-ui, sans-serif"
+              fontWeight="600"
+              textAnchor="middle"
+              letterSpacing="0.08em"
             >
-              <path d="M165 420 L165 460 L155 475 L175 475 L180 460 L180 420 Z" />
-              <path d="M220 420 L220 460 L210 475 L230 475 L235 460 L235 420 Z" />
-              <text
-                x="200"
-                y="495"
-                fill="#64748b"
-                fontSize="9"
-                fontFamily="ui-monospace, monospace"
-                textAnchor="middle"
-              >
-                SOCKS
-              </text>
-            </g>
+              SOCKS
+            </text>
+          </g>
 
-            {/* Interactive pins — HTML overlay for logos + buttons */}
-          </svg>
-
-          {/* Pin layer (HTML for logos + accessibility) */}
-          {slots.map((slot) => {
-            const isAvailable = slot.status === "available";
-            const isSold = slot.status === "sold";
-            const isPending = slot.status === "pending";
-            const isHovered = hoveredId === slot.id;
-
+          {/* Dashed ad zones */}
+          {Object.entries(SLOT_ZONES).map(([id, zone]) => {
+            const active = hoveredId === id;
+            const slot = byId.get(id);
+            const claimed = slot?.status === "sold";
             return (
-              <div
-                key={slot.id}
-                className="absolute -translate-x-1/2 -translate-y-1/2"
-                style={{
-                  left: `${slot.x_position}%`,
-                  top: `${slot.y_position}%`,
-                  zIndex: isHovered ? 20 : 10,
-                }}
+              <rect
+                key={`zone-${id}`}
+                x={(zone.x / 100) * 480}
+                y={(zone.y / 100) * 580}
+                width={(zone.w / 100) * 480}
+                height={(zone.h / 100) * 580}
+                fill={
+                  claimed
+                    ? "rgba(241,245,249,0.6)"
+                    : "rgba(255,255,255,0.35)"
+                }
+                stroke={active ? "#059669" : ZONE_STROKE}
+                strokeWidth={active ? 1.75 : 1.25}
+                strokeDasharray="5 4"
+                rx="3"
+                className="transition-all duration-300"
+                opacity={hoveredId && hoveredId !== id ? 0.35 : 1}
+              />
+            );
+          })}
+        </svg>
+
+        {/* Sold logos centered in zones */}
+        {slots.map((slot) => {
+          if (slot.status !== "sold") return null;
+          const zone = SLOT_ZONES[slot.id];
+          if (!zone) return null;
+
+          const content = slot.sponsor_logo_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={slot.sponsor_logo_url}
+              alt={slot.sponsor_name ?? "Sponsor logo"}
+              className="max-h-full max-w-full object-contain p-0.5"
+            />
+          ) : (
+            <span className="px-1 text-center text-[9px] font-semibold uppercase tracking-wide text-slate-400">
+              Sold
+            </span>
+          );
+
+          const wrapperClass =
+            "absolute flex items-center justify-center overflow-hidden rounded-sm bg-white/90 shadow-sm";
+          const style = {
+            left: `${zone.x}%`,
+            top: `${zone.y}%`,
+            width: `${zone.w}%`,
+            height: `${zone.h}%`,
+          };
+          const title = slot.sponsor_name
+            ? `Sponsored by ${slot.sponsor_name}`
+            : "Sponsor";
+
+          if (slot.sponsor_url) {
+            return (
+              <a
+                key={`logo-${slot.id}`}
+                href={slot.sponsor_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={title}
+                className={`${wrapperClass} transition hover:shadow-md`}
+                style={style}
                 onMouseEnter={() => setHoveredId(slot.id)}
                 onMouseLeave={() => setHoveredId(null)}
               >
-                {isSold && slot.sponsor_logo_url ? (
-                  <a
-                    href={slot.sponsor_url ?? "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex flex-col items-center gap-1"
-                    title={slot.sponsor_name ?? "Sponsor"}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={slot.sponsor_logo_url}
-                      alt={slot.sponsor_name ?? "Sponsor logo"}
-                      className="h-10 w-10 rounded-sm border border-slate-600 bg-white object-contain p-0.5 shadow-lg sm:h-12 sm:w-12"
-                    />
-                    <span className="rounded bg-slate-800 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-slate-300 ring-1 ring-slate-600">
-                      [SOLD]
-                    </span>
-                  </a>
-                ) : isSold ? (
-                  <div className="rounded bg-slate-800 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-slate-300 ring-1 ring-slate-600">
-                    [SOLD]
-                  </div>
-                ) : isPending ? (
-                  <div className="rounded bg-amber-950/80 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-amber-400 ring-1 ring-amber-500/40">
-                    Pending
-                  </div>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => isAvailable && onSelectSlot(slot)}
-                    className={`group relative flex items-center gap-1.5 rounded-sm border px-2 py-1 font-mono text-[10px] uppercase tracking-wide transition-all duration-300 sm:text-[11px] ${
-                      isHovered
-                        ? "border-emerald-400 bg-emerald-500/20 text-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.35)] scale-105"
-                        : "border-emerald-500/50 bg-slate-950/90 text-emerald-400"
-                    } animate-pulse-emerald`}
-                    aria-label={`Sponsor ${slot.slot_name} for ${formatPrice(slot.price_gbp)}`}
-                  >
-                    <span
-                      className={`h-1.5 w-1.5 rounded-full bg-emerald-400 ${
-                        isHovered ? "" : "animate-ping-slow"
-                      }`}
-                    />
-                    <span className="hidden sm:inline">
-                      {slot.slot_name.split(" ")[0]}
-                    </span>
-                    <span className="text-emerald-300">
-                      {formatPrice(slot.price_gbp)}
-                    </span>
-                  </button>
-                )}
-              </div>
+                {content}
+              </a>
             );
-          })}
-        </div>
+          }
 
-        <p className="mt-6 text-center font-mono text-[11px] text-slate-500">
-          Click an emerald pin to claim that placement on race day.
-        </p>
+          return (
+            <div
+              key={`logo-${slot.id}`}
+              title={title}
+              className={wrapperClass}
+              style={style}
+              onMouseEnter={() => setHoveredId(slot.id)}
+              onMouseLeave={() => setHoveredId(null)}
+            >
+              {content}
+            </div>
+          );
+        })}
+
+        {/* Hotspot badges */}
+        {slots.map((slot) => {
+          const pos = BADGE_POS[slot.id] ?? {
+            x: slot.x_position,
+            y: slot.y_position,
+          };
+          const isAvailable = slot.status === "available";
+          const isSold = slot.status === "sold";
+          const isPending = slot.status === "pending";
+          const isHovered = hoveredId === slot.id;
+          const label = shortLabel(slot.slot_name);
+
+          return (
+            <div
+              key={`badge-${slot.id}`}
+              className="absolute -translate-x-1/2 -translate-y-1/2"
+              style={{
+                left: `${pos.x}%`,
+                top: `${pos.y}%`,
+                zIndex: isHovered ? 30 : 15,
+              }}
+              onMouseEnter={() => setHoveredId(slot.id)}
+              onMouseLeave={() => setHoveredId(null)}
+            >
+              {isAvailable ? (
+                <button
+                  type="button"
+                  onClick={() => onSelectSlot(slot)}
+                  className="cursor-pointer rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold text-emerald-700 shadow-sm transition-all hover:bg-emerald-600 hover:text-white sm:px-3 sm:text-[11px]"
+                  aria-label={`Claim ${slot.slot_name} for ${formatPrice(slot.price_gbp)}`}
+                >
+                  <span className="sm:hidden">{formatPrice(slot.price_gbp)}</span>
+                  <span className="hidden sm:inline">
+                    {label} • {formatPrice(slot.price_gbp)}
+                  </span>
+                </button>
+              ) : isSold ? (
+                <div
+                  className="cursor-not-allowed rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-[10px] font-semibold text-slate-400 sm:px-3 sm:text-[11px]"
+                  title={
+                    slot.sponsor_name
+                      ? `Sponsored by ${slot.sponsor_name}`
+                      : "Sold"
+                  }
+                >
+                  <span className="sm:hidden">Sold</span>
+                  <span className="hidden sm:inline">{label} • Sold</span>
+                </div>
+              ) : isPending ? (
+                <div className="cursor-not-allowed rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] font-semibold text-amber-700 sm:px-3 sm:text-[11px]">
+                  Pending
+                </div>
+              ) : null}
+            </div>
+          );
+        })}
       </div>
+
+      <p className="mt-5 text-center text-sm text-slate-500">
+        Select an available placement to claim your spot on race day.
+      </p>
     </div>
   );
 }

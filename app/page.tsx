@@ -19,8 +19,8 @@ const FALLBACK_SLOTS: SponsorshipSlot[] = [
     sponsor_name: null,
     sponsor_url: null,
     sponsor_logo_url: null,
-    x_position: 50,
-    y_position: 28,
+    x_position: 38,
+    y_position: 31,
     dodo_product_id: null,
   },
   {
@@ -32,7 +32,7 @@ const FALLBACK_SLOTS: SponsorshipSlot[] = [
     sponsor_name: null,
     sponsor_url: null,
     sponsor_logo_url: null,
-    x_position: 38,
+    x_position: 8,
     y_position: 30,
     dodo_product_id: null,
   },
@@ -45,8 +45,8 @@ const FALLBACK_SLOTS: SponsorshipSlot[] = [
     sponsor_name: null,
     sponsor_url: null,
     sponsor_logo_url: null,
-    x_position: 72,
-    y_position: 26,
+    x_position: 90,
+    y_position: 28,
     dodo_product_id: null,
   },
   {
@@ -58,8 +58,8 @@ const FALLBACK_SLOTS: SponsorshipSlot[] = [
     sponsor_name: null,
     sponsor_url: null,
     sponsor_logo_url: null,
-    x_position: 72,
-    y_position: 42,
+    x_position: 90,
+    y_position: 39,
     dodo_product_id: null,
   },
   {
@@ -71,8 +71,8 @@ const FALLBACK_SLOTS: SponsorshipSlot[] = [
     sponsor_name: null,
     sponsor_url: null,
     sponsor_logo_url: null,
-    x_position: 22,
-    y_position: 12,
+    x_position: 42,
+    y_position: 7,
     dodo_product_id: null,
   },
   {
@@ -84,8 +84,8 @@ const FALLBACK_SLOTS: SponsorshipSlot[] = [
     sponsor_name: null,
     sponsor_url: null,
     sponsor_logo_url: null,
-    x_position: 42,
-    y_position: 62,
+    x_position: 24,
+    y_position: 66,
     dodo_product_id: null,
   },
   {
@@ -97,8 +97,8 @@ const FALLBACK_SLOTS: SponsorshipSlot[] = [
     sponsor_name: null,
     sponsor_url: null,
     sponsor_logo_url: null,
-    x_position: 38,
-    y_position: 88,
+    x_position: 28,
+    y_position: 90,
     dodo_product_id: null,
   },
   {
@@ -110,8 +110,8 @@ const FALLBACK_SLOTS: SponsorshipSlot[] = [
     sponsor_name: null,
     sponsor_url: null,
     sponsor_logo_url: null,
-    x_position: 52,
-    y_position: 88,
+    x_position: 62,
+    y_position: 90,
     dodo_product_id: null,
   },
 ];
@@ -125,100 +125,82 @@ export default async function HomePage() {
 
   return (
     <main className="relative min-h-screen overflow-x-hidden">
-      {/* Atmospheric blueprint field */}
-      <div className="pointer-events-none fixed inset-0 blueprint-grid opacity-40" />
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(16,185,129,0.12),_transparent_55%)]" />
+      <div className="pointer-events-none fixed inset-0 light-grid" />
 
       {/* ——— HERO ——— */}
-      <header className="relative mx-auto flex min-h-[100svh] max-w-6xl flex-col px-5 pb-10 pt-8 sm:px-8 lg:px-10">
+      <header className="relative mx-auto max-w-6xl px-5 pb-12 pt-8 sm:px-8 lg:px-10 lg:pt-10">
         <nav className="animate-fade-up flex items-center justify-between">
           <div>
-            <p className="font-display text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
-              GNR<span className="text-emerald-400">.</span>
+            <p className="font-display text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+              GNR<span className="text-emerald-600">.</span>
             </p>
-            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-slate-500">
+            <p className="mt-0.5 text-xs font-medium uppercase tracking-[0.22em] text-slate-400">
               Great North Run · Kit Inventory
             </p>
           </div>
           <a
             href="#kit"
-            className="border border-emerald-500/40 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-400 transition hover:bg-emerald-500/10"
+            className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50"
           >
             View Kit
           </a>
         </nav>
 
-        <div className="flex flex-1 flex-col justify-center gap-10 py-16 lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-12 lg:py-0">
-          <div>
-            <p className="animate-fade-up font-mono text-[11px] uppercase tracking-[0.35em] text-emerald-400/90">
-              Race Day Inventory · Open
-            </p>
-            <h1 className="animate-fade-up-delay mt-4 max-w-xl font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Your Brand, on my{" "}
-              <span className="text-emerald-400">Great North Run</span> journey.
-            </h1>
-            <p className="animate-fade-up-delay-2 mt-5 max-w-lg text-base leading-relaxed text-slate-400 sm:text-lg">
-              Sponsoring my 21.1km run across the Tyne Bridge to South Shields.
-              Aiming for a 2:05 finish. Estimated 200,000+ race day spectators
-              and BBC live TV coverage.
-            </p>
+        <div className="animate-fade-up-delay mx-auto mt-14 max-w-2xl text-center sm:mt-20">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">
+            Race Day Inventory · Open
+          </p>
+          <h1 className="mt-4 font-display text-4xl font-bold leading-[1.08] tracking-tight text-slate-900 sm:text-5xl lg:text-[3.25rem]">
+            Your brand, on my Great North Run journey.
+          </h1>
+          <p className="mx-auto mt-5 max-w-lg text-base leading-relaxed text-slate-500 sm:text-lg">
+            Sponsor placements on race-day kit for the Tyne Bridge to South
+            Shields — aiming for 2:05, with 200,000+ spectators and BBC coverage.
+          </p>
 
-            <div className="animate-fade-up-delay-2 mt-8 flex flex-wrap gap-3">
-              <a
-                href="#kit"
-                className="inline-flex items-center border border-emerald-400 bg-emerald-500/15 px-5 py-3 font-mono text-xs uppercase tracking-[0.2em] text-emerald-300 transition hover:bg-emerald-500/25"
-              >
-                Claim a Slot
-              </a>
-              <a
-                href="#inventory"
-                className="inline-flex items-center border border-slate-700 px-5 py-3 font-mono text-xs uppercase tracking-[0.2em] text-slate-400 transition hover:border-slate-500 hover:text-slate-200"
-              >
-                Price List
-              </a>
-            </div>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <a
+              href="#kit"
+              className="inline-flex items-center rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+            >
+              Claim Your Spot on Race Day
+            </a>
+            <a
+              href="#inventory"
+              className="inline-flex items-center rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
+            >
+              View rate card
+            </a>
           </div>
 
-          {/* Metrics strip — target KPIs */}
-          <div className="animate-fade-up-delay-2 grid grid-cols-2 gap-px border border-emerald-500/20 bg-emerald-500/20 sm:grid-cols-2">
-            <MetricCell label="Miles Trained" value="420+" hint="YTD volume" />
-            <MetricCell label="Goal Time" value="2:05:00" hint="Half marathon" />
+          <div className="animate-fade-up-delay-2 mt-12 grid grid-cols-2 gap-6 sm:grid-cols-4 sm:gap-8">
+            <MetricCell label="Miles trained" value="420+" />
+            <MetricCell label="Goal time" value="2:05" />
             <MetricCell
-              label="Slots Available"
+              label="Available"
               value={`${metrics.available}`}
-              hint={`of ${metrics.total} total`}
+              hint={`of ${metrics.total}`}
             />
-            <MetricCell
-              label="Slots Sold"
-              value={`${metrics.sold}`}
-              hint={
-                metrics.pending > 0
-                  ? `${metrics.pending} pending`
-                  : "live inventory"
-              }
-            />
+            <MetricCell label="Claimed" value={`${metrics.sold}`} />
           </div>
-        </div>
-
-        <div className="animate-fade-up-delay-2 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.25em] text-slate-600">
-          <span className="h-px flex-1 bg-slate-800" />
-          Scroll to interactive kit
-          <span className="h-px flex-1 bg-slate-800" />
         </div>
       </header>
 
       {/* ——— KIT VISUALIZER ——— */}
-      <section id="kit" className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8 lg:px-10">
-        <div className="mb-8 max-w-2xl">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-emerald-400/80">
-            Interactive Blueprint
+      <section
+        id="kit"
+        className="relative mx-auto max-w-6xl px-5 py-10 sm:px-8 lg:px-10 lg:py-14"
+      >
+        <div className="mb-8 max-w-xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+            Interactive kit
           </p>
-          <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Pick your placement on the kit.
+          <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            Pick your placement.
           </h2>
-          <p className="mt-3 text-slate-400">
-            Emerald pins are live inventory. Sold placements show the sponsor
-            logo stamped directly on the blueprint.
+          <p className="mt-3 text-slate-500">
+            Emerald badges are live inventory. Sold zones show the sponsor logo
+            stamped on the garment.
           </p>
         </div>
 
@@ -231,52 +213,56 @@ export default async function HomePage() {
         className="relative mx-auto max-w-6xl px-5 pb-24 sm:px-8 lg:px-10"
       >
         <div className="mb-6">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-emerald-400/80">
-            Full Inventory
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+            Full inventory
           </p>
-          <h2 className="mt-2 font-display text-2xl font-bold text-white sm:text-3xl">
+          <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
             Sponsorship rate card
           </h2>
         </div>
 
-        <div className="overflow-x-auto border border-slate-800">
-          <table className="w-full min-w-[560px] text-left text-sm">
-            <thead className="border-b border-slate-800 bg-slate-950/60 font-mono text-[10px] uppercase tracking-[0.2em] text-slate-500">
-              <tr>
-                <th className="px-4 py-3 font-medium">Slot</th>
-                <th className="px-4 py-3 font-medium">Category</th>
-                <th className="px-4 py-3 font-medium">Price</th>
-                <th className="px-4 py-3 font-medium">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {slots.map((slot) => (
-                <tr
-                  key={slot.id}
-                  className="border-b border-slate-800/80 transition hover:bg-emerald-500/5"
-                >
-                  <td className="px-4 py-3 text-slate-200">{slot.slot_name}</td>
-                  <td className="px-4 py-3 font-mono text-xs uppercase text-slate-500">
-                    {slot.category}
-                  </td>
-                  <td className="px-4 py-3 font-mono text-emerald-400">
-                    £{slot.price_gbp}
-                  </td>
-                  <td className="px-4 py-3">
-                    <StatusPill status={slot.status} />
-                  </td>
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[560px] text-left text-sm">
+              <thead className="border-b border-slate-100 bg-slate-50/80 text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
+                <tr>
+                  <th className="px-5 py-3.5 font-semibold">Slot</th>
+                  <th className="px-5 py-3.5 font-semibold">Category</th>
+                  <th className="px-5 py-3.5 font-semibold">Price</th>
+                  <th className="px-5 py-3.5 font-semibold">Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {slots.map((slot) => (
+                  <tr
+                    key={slot.id}
+                    className="border-b border-slate-100 last:border-0 transition hover:bg-slate-50/80"
+                  >
+                    <td className="px-5 py-3.5 font-medium text-slate-900">
+                      {slot.slot_name}
+                    </td>
+                    <td className="px-5 py-3.5 capitalize text-slate-500">
+                      {slot.category}
+                    </td>
+                    <td className="px-5 py-3.5 font-semibold tabular-nums text-slate-900">
+                      £{slot.price_gbp}
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <StatusPill status={slot.status} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
-      <footer className="border-t border-slate-800 py-10 text-center">
-        <p className="font-display text-lg text-white">
-          GNR<span className="text-emerald-400">.</span>
+      <footer className="border-t border-slate-200 bg-white/60 py-10 text-center backdrop-blur-sm">
+        <p className="font-display text-lg font-bold text-slate-900">
+          GNR<span className="text-emerald-600">.</span>
         </p>
-        <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.25em] text-slate-600">
+        <p className="mt-2 text-xs font-medium uppercase tracking-[0.2em] text-slate-400">
           Newcastle → South Shields · 13.1 Miles
         </p>
       </footer>
@@ -291,32 +277,41 @@ function MetricCell({
 }: {
   label: string;
   value: string;
-  hint: string;
+  hint?: string;
 }) {
   return (
-    <div className="bg-slate-950/90 px-4 py-5 sm:px-5 sm:py-6">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-500">
+    <div className="text-center">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">
         {label}
       </p>
-      <p className="mt-2 font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
+      <p className="mt-1.5 font-display text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
         {value}
       </p>
-      <p className="mt-1 font-mono text-[10px] text-emerald-500/70">{hint}</p>
+      {hint ? (
+        <p className="mt-0.5 text-xs text-slate-400">{hint}</p>
+      ) : null}
     </div>
   );
 }
 
 function StatusPill({ status }: { status: SponsorshipSlot["status"] }) {
-  const styles =
-    status === "available"
-      ? "text-emerald-400"
-      : status === "sold"
-        ? "text-slate-400"
-        : "text-amber-400";
-
+  if (status === "available") {
+    return (
+      <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
+        Available
+      </span>
+    );
+  }
+  if (status === "pending") {
+    return (
+      <span className="inline-flex rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-700">
+        Pending
+      </span>
+    );
+  }
   return (
-    <span className={`font-mono text-xs uppercase tracking-wider ${styles}`}>
-      {status === "sold" ? "[SOLD]" : status}
+    <span className="inline-flex rounded-full border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-400">
+      Sold
     </span>
   );
 }

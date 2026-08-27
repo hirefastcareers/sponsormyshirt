@@ -32,7 +32,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${syne.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-slate-900 font-sans text-slate-200">
+      <body className="min-h-full bg-[#F8FAFC] font-sans text-slate-900">
         {children}
       </body>
     </html>

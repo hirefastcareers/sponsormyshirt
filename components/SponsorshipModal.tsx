@@ -55,7 +55,6 @@ export default function SponsorshipModal({
     setError(null);
 
     try {
-      // 1) Upload logo → sponsor-logos bucket
       const formData = new FormData();
       formData.append("file", file);
 
@@ -69,7 +68,6 @@ export default function SponsorshipModal({
         throw new Error(uploadJson.error ?? "Logo upload failed");
       }
 
-      // 2) Create Dodo checkout session
       const checkoutRes = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -90,7 +88,6 @@ export default function SponsorshipModal({
         throw new Error("No checkout_url returned");
       }
 
-      // 3) Redirect to Dodo-hosted checkout
       window.location.href = checkoutJson.checkout_url as string;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -107,44 +104,41 @@ export default function SponsorshipModal({
     >
       <button
         type="button"
-        className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"
+        className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
         aria-label="Close modal"
         onClick={onClose}
       />
 
-      <div className="relative z-10 w-full max-w-md border border-emerald-500/30 bg-slate-900 shadow-[0_0_60px_rgba(16,185,129,0.12)] sm:mx-4">
-        {/* Top accent bar */}
-        <div className="h-0.5 w-full bg-gradient-to-r from-transparent via-emerald-400 to-transparent" />
-
-        <div className="flex items-start justify-between gap-4 border-b border-slate-800 px-5 py-4">
+      <div className="relative z-10 w-full max-w-md rounded-t-2xl border border-slate-200 bg-white shadow-xl sm:mx-4 sm:rounded-2xl">
+        <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-5 py-4">
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-400/80">
-              Claim Placement
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+              Claim placement
             </p>
             <h2
               id={titleId}
-              className="mt-1 font-display text-xl tracking-tight text-slate-50"
+              className="mt-1 font-display text-xl font-bold tracking-tight text-slate-900"
             >
               {slot.slot_name}
             </h2>
-            <p className="mt-1 font-mono text-sm text-emerald-400">
+            <p className="mt-1 text-sm font-semibold text-emerald-700">
               £{slot.price_gbp}{" "}
-              <span className="text-slate-500">· one-time · GBP</span>
+              <span className="font-normal text-slate-400">· one-time · GBP</span>
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="font-mono text-slate-500 transition hover:text-slate-200"
+            className="rounded-lg px-2 py-1 text-sm font-medium text-slate-400 transition hover:bg-slate-50 hover:text-slate-700"
             aria-label="Close"
           >
-            ESC
+            Esc
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 px-5 py-5">
           <label className="block">
-            <span className="mb-1.5 block font-mono text-[11px] uppercase tracking-wider text-slate-400">
+            <span className="mb-1.5 block text-xs font-semibold text-slate-600">
               Company / Sponsor Name
             </span>
             <input
@@ -152,12 +146,12 @@ export default function SponsorshipModal({
               value={sponsorName}
               onChange={(e) => setSponsorName(e.target.value)}
               placeholder="Acme Athletics"
-              className="w-full border border-slate-700 bg-slate-950 px-3 py-2.5 text-sm text-slate-100 outline-none transition focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/40"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100"
             />
           </label>
 
           <label className="block">
-            <span className="mb-1.5 block font-mono text-[11px] uppercase tracking-wider text-slate-400">
+            <span className="mb-1.5 block text-xs font-semibold text-slate-600">
               Destination URL
             </span>
             <input
@@ -166,12 +160,12 @@ export default function SponsorshipModal({
               value={sponsorUrl}
               onChange={(e) => setSponsorUrl(e.target.value)}
               placeholder="https://yourbrand.com"
-              className="w-full border border-slate-700 bg-slate-950 px-3 py-2.5 text-sm text-slate-100 outline-none transition focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/40"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100"
             />
           </label>
 
           <label className="block">
-            <span className="mb-1.5 block font-mono text-[11px] uppercase tracking-wider text-slate-400">
+            <span className="mb-1.5 block text-xs font-semibold text-slate-600">
               Logo (PNG / SVG / WebP)
             </span>
             <input
@@ -180,12 +174,12 @@ export default function SponsorshipModal({
               type="file"
               accept="image/png,image/jpeg,image/webp,image/svg+xml,.svg"
               onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-              className="w-full border border-dashed border-slate-700 bg-slate-950 px-3 py-3 text-sm text-slate-300 file:mr-3 file:border-0 file:bg-emerald-500/15 file:px-3 file:py-1 file:font-mono file:text-xs file:text-emerald-400"
+              className="w-full rounded-xl border border-dashed border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-emerald-50 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-emerald-700"
             />
           </label>
 
           {error && (
-            <p className="border border-red-500/30 bg-red-950/40 px-3 py-2 font-mono text-xs text-red-300">
+            <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-medium text-red-700">
               {error}
             </p>
           )}
@@ -193,15 +187,12 @@ export default function SponsorshipModal({
           <button
             type="submit"
             disabled={submitting}
-            className="group relative w-full overflow-hidden border border-emerald-400/60 bg-emerald-500/10 px-4 py-3 font-mono text-sm uppercase tracking-[0.15em] text-emerald-300 transition hover:bg-emerald-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
           >
-            <span className="relative z-10">
-              {submitting ? "Redirecting to payment…" : "Proceed to Payment"}
-            </span>
-            <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-emerald-400/10 to-transparent transition duration-700 group-hover:translate-x-full" />
+            {submitting ? "Redirecting to payment…" : "Proceed to Payment"}
           </button>
 
-          <p className="text-center font-mono text-[10px] text-slate-500">
+          <p className="text-center text-[11px] text-slate-400">
             Secure checkout via Dodo Payments · Merchant of Record
           </p>
         </form>
