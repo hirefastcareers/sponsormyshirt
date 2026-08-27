@@ -5,6 +5,7 @@
  * then hydrates the split-screen sponsorship experience.
  */
 import PaymentSuccessBanner from "@/components/PaymentSuccessBanner";
+import SiteHeader from "@/components/SiteHeader";
 import SponsorExperience from "@/components/SponsorExperience";
 import TakenBanner from "@/components/TakenBanner";
 import VisitorCounter from "@/components/VisitorCounter";
@@ -85,60 +86,50 @@ export default async function HomePage({
     <main className="min-h-screen bg-[#F9F9FB]">
       <PaymentSuccessBanner slot={successSlot} />
       <TakenBanner taken={taken} />
-      <header className="border-b border-[#E4E4E7] bg-white/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
-          <div className="flex items-baseline gap-3">
-            <span className="text-[17px] font-semibold tracking-tight text-zinc-900">
-              Great North Run
-            </span>
-            <span className="hidden font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400 sm:inline">
-              Kit Sponsorship
-            </span>
+      <SiteHeader />
+
+      <section className="mx-auto w-full max-w-7xl px-6 pb-6 pt-8 lg:px-12 lg:pt-10">
+        <div className="grid grid-cols-1 items-end gap-6 lg:grid-cols-12">
+          <div className="lg:col-span-8">
+            <p className="flex items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-600" />
+              Race-day inventory open
+            </p>
+            <h1 className="mt-3 text-3xl font-medium tracking-tight text-zinc-900 sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
+              Your brand, on my Great North Run kit.
+            </h1>
+            <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-zinc-500 sm:text-base">
+              Ten placements across shirt, shorts, socks and cap. Tyne Bridge to
+              South Shields — 13.1 miles, aiming for 2:05.
+            </p>
           </div>
-          <div className="flex items-center gap-6">
-            <div className="hidden items-center gap-4 text-xs text-zinc-500 sm:flex">
-              <VisitorCounter />
-              <span>
-                <span className="font-medium text-zinc-800">{kitPositions.length}</span>{" "}
-                placements
-              </span>
-              <span className="h-3 w-px bg-zinc-200" />
-              <span>
-                <span className="font-medium text-zinc-800">{claimed}</span>{" "}
-                claimed
-              </span>
-            </div>
-            <a
-              href="#kit"
-              className="rounded-full bg-zinc-900 px-4 py-2 text-xs font-medium text-white transition hover:bg-zinc-800"
-            >
-              Claim a placement
-            </a>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-zinc-500 lg:col-span-4 lg:justify-end">
+            <VisitorCounter />
+            <span>
+              <span className="font-medium text-zinc-800">
+                {kitPositions.length}
+              </span>{" "}
+              placements
+            </span>
+            <span className="h-3 w-px bg-zinc-200" aria-hidden />
+            <span>
+              <span className="font-medium text-zinc-800">{claimed}</span>{" "}
+              claimed
+            </span>
           </div>
         </div>
-      </header>
-
-      <section className="mx-auto max-w-7xl px-5 pb-6 pt-8 sm:px-8 sm:pt-10">
-        <p className="flex items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-600" />
-          Race-day inventory open
-        </p>
-        <h1 className="mt-3 max-w-2xl text-3xl font-medium tracking-tight text-zinc-900 sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
-          Your brand, on my Great North Run kit.
-        </h1>
-        <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-zinc-500 sm:text-base">
-          Ten placements across shirt, shorts, socks and cap. Tyne Bridge to
-          South Shields — 13.1 miles, aiming for 2:05.
-        </p>
       </section>
 
-      <section id="kit" className="mx-auto max-w-7xl px-5 pb-20 sm:px-8 sm:pb-24">
+      <section
+        id="kit"
+        className="mx-auto w-full max-w-7xl scroll-mt-20 px-6 pb-20 lg:px-12 lg:pb-24"
+      >
         <SponsorExperience slots={slots} />
       </section>
 
       <footer className="border-t border-[#E4E4E7] bg-zinc-900 text-zinc-100">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-8 sm:px-8">
-          <span className="text-sm font-semibold">Great North Run</span>
+        <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-3 px-6 py-8 lg:px-12">
+          <span className="text-sm font-semibold">GNR Kit Sponsorships</span>
           <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-zinc-500">
             Newcastle → South Shields · 13.1 miles
           </span>
