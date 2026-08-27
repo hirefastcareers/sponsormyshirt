@@ -1,17 +1,69 @@
 "use client";
 
 /**
- * Desktop sticky left/right gutter panels (xl+) showing micro-sponsor logos.
+ * Desktop sticky left/right Supporter Wall panels (xl+).
  */
 import MicroSponsorLogo from "@/components/MicroSponsorLogo";
 import type { MicroSponsor } from "@/types/micro-sponsor";
+
+const MIN_VISIBLE_SLOTS = 4;
 
 interface MicroSponsorGuttersProps {
   sponsors: MicroSponsor[];
   onSponsorClick: () => void;
 }
 
-function GutterColumn({
+function InfoIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="currentColor"
+      aria-hidden
+      className={className}
+    >
+      <path
+        fillRule="evenodd"
+        d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM7 7.25V11h2V7.25H7Zm0-2.5V6h2V4.75H7Z"
+        clipRule="evenodd"
+      />
+    </svg>
+  );
+}
+
+function EmptySlotButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex h-14 w-full items-center justify-center rounded-lg border border-dashed border-zinc-200 bg-zinc-50/60 px-2 text-center text-[10px] font-medium leading-snug text-zinc-500 transition hover:border-emerald-300 hover:bg-emerald-50/80 hover:text-emerald-700"
+    >
+      + Add your logo for £2
+    </button>
+  );
+}
+
+function PanelHeader() {
+  return (
+    <header className="border-b border-zinc-100 px-3 py-2.5">
+      <div className="flex items-center gap-1.5">
+        <p className="text-xs font-semibold leading-tight text-zinc-800">
+          Supporter Wall (£2)
+        </p>
+        <span
+          className="text-zinc-400"
+          title="Get your logo & link featured on the site sidebars."
+        >
+          <InfoIcon className="h-3.5 w-3.5 shrink-0" />
+        </span>
+      </div>
+      <p className="mt-1 text-[10px] leading-snug text-muted-foreground">
+        Get your logo & link featured on the site sidebars.
+      </p>
+    </header>
+  );
+}
+
+function GutterPanel({
   side,
   sponsors,
   onSponsorClick,
@@ -20,29 +72,34 @@ function GutterColumn({
   sponsors: MicroSponsor[];
   onSponsorClick: () => void;
 }) {
+  const emptySlotCount = Math.max(1, MIN_VISIBLE_SLOTS - sponsors.length);
+
   return (
     <aside
-      className={`pointer-events-none fixed top-32 z-30 hidden w-[4.5rem] xl:block ${
-        side === "left" ? "left-3 2xl:left-6" : "right-3 2xl:right-6"
+      className={`pointer-events-none fixed top-28 z-30 hidden w-40 xl:block 2xl:w-44 ${
+        side === "left" ? "left-3 2xl:left-5" : "right-3 2xl:right-5"
       }`}
-      aria-label={`Micro sponsors — ${side} column`}
+      aria-label={`Supporter Wall — ${side} panel`}
     >
-      <div className="pointer-events-auto sticky top-32 flex flex-col items-center gap-3">
-        <p className="mb-1 text-center font-mono text-[9px] font-medium uppercase tracking-[0.14em] text-zinc-400">
-          £2 Wall
-        </p>
-        <div className="flex flex-col items-center gap-2.5">
+      <div
+        className="pointer-events-auto overflow-hidden rounded-xl border border-[#E4E4E7] bg-white/95 shadow-sm backdrop-blur-sm"
+      >
+        <PanelHeader />
+        <div
+          className="flex max-h-[calc(100vh-11rem)] flex-col gap-2 overflow-y-auto p-3"
+        >
           {sponsors.map((sponsor) => (
-            <MicroSponsorLogo key={sponsor.id} sponsor={sponsor} />
+            <div
+              key={sponsor.id}
+              className="flex items-center justify-center rounded-lg border border-zinc-100 bg-zinc-50/40 p-1.5 transition hover:border-zinc-200 hover:bg-white"
+            >
+              <MicroSponsorLogo sponsor={sponsor} />
+            </div>
+          ))}
+          {Array.from({ length: emptySlotCount }, (_, i) => (
+            <EmptySlotButton key={`empty-${i}`} onClick={onSponsorClick} />
           ))}
         </div>
-        <button
-          type="button"
-          onClick={onSponsorClick}
-          className="mt-1 w-full rounded-lg border border-dashed border-emerald-300 bg-emerald-50/80 px-1 py-2 text-center text-[10px] font-semibold leading-tight text-emerald-700 transition hover:border-emerald-400 hover:bg-emerald-50"
-        >
-          + Sponsor £2
-        </button>
       </div>
     </aside>
   );
@@ -57,12 +114,12 @@ export default function MicroSponsorGutters({
 
   return (
     <>
-      <GutterColumn
+      <GutterPanel
         side="left"
         sponsors={leftSponsors}
         onSponsorClick={onSponsorClick}
       />
-      <GutterColumn
+      <GutterPanel
         side="right"
         sponsors={rightSponsors}
         onSponsorClick={onSponsorClick}

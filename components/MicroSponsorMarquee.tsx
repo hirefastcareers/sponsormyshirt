@@ -26,7 +26,7 @@ export default function MicroSponsorMarquee({
       <div className="mb-3 flex items-center justify-between gap-3 px-1">
         <div>
           <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
-            Micro-Sponsor Wall
+            Supporter Wall (£2)
           </p>
           <p className="text-sm text-zinc-500">
             {hasSponsors
@@ -66,7 +66,7 @@ export default function MicroSponsorMarquee({
           <span className="text-lg" aria-hidden>
             +
           </span>
-          Add your logo for just £2
+          Add your logo for £2
         </button>
       )}
     </section>

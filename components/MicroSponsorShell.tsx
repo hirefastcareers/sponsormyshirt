@@ -75,12 +75,18 @@ export function MicroSponsorMarqueeBlock() {
 export function MicroSponsorHeroCTA() {
   const { openModal } = useMicroSponsor();
   return (
-    <button
-      type="button"
-      onClick={openModal}
-      className="hidden rounded-full border border-emerald-200 bg-emerald-50 px-5 py-2.5 text-sm font-semibold text-emerald-700 transition hover:border-emerald-300 hover:bg-emerald-100 xl:inline-flex"
-    >
-      Sponsor for £{MICRO_SPONSOR_PRICE_GBP}
-    </button>
+    <div className="flex flex-col items-center gap-2">
+      <button
+        type="button"
+        onClick={openModal}
+        className="hidden rounded-full border border-emerald-200 bg-emerald-50 px-5 py-2.5 text-sm font-semibold text-emerald-700 transition hover:border-emerald-300 hover:bg-emerald-100 xl:inline-flex"
+      >
+        Sponsor for £{MICRO_SPONSOR_PRICE_GBP}
+      </button>
+      <p className="max-w-md text-center text-xs leading-relaxed text-muted-foreground">
+        £2 Supporters get their logo and backlink featured on our website&apos;s
+        Supporter Wall (desktop sidebars &amp; mobile marquee).
+      </p>
+    </div>
   );
 }
