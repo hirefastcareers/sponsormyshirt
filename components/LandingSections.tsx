@@ -317,25 +317,32 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
         <SectionHeading>
           <span id="race-heading">The race</span>
         </SectionHeading>
-        <div className="mt-8 grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-12">
-          <p className="max-w-xl text-[15px] leading-relaxed text-zinc-500 sm:text-base lg:col-span-5">
+        <div className="mt-8 grid grid-cols-1 items-center gap-8 lg:grid-cols-2">
+          <p className="max-w-xl text-[15px] leading-relaxed text-zinc-700 sm:text-base">
             I&apos;m running the Great North Run on September 13th — the
             world&apos;s largest half marathon. Newcastle to South Shields,
             13.1 miles, targeting ~2:05. Your logo runs the full course in front
             of a 60,000+ field and televised coverage.
           </p>
-          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-zinc-800 bg-zinc-800 lg:col-span-7">
-            {RACE_STATS.map((stat) => (
+          <dl className="divide-y divide-zinc-100 overflow-hidden rounded-xl border border-zinc-200 bg-white">
+            {[0, 2].map((start) => (
               <div
-                key={stat.label}
-                className="bg-zinc-900 px-5 py-6 sm:px-6 sm:py-8"
+                key={start}
+                className="grid grid-cols-2 divide-x divide-zinc-100"
               >
-                <dt className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-zinc-500">
-                  {stat.label}
-                </dt>
-                <dd className="mt-2 text-lg font-medium tracking-tight text-white sm:text-xl">
-                  {stat.value}
-                </dd>
+                {RACE_STATS.slice(start, start + 2).map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="px-5 py-6 sm:px-6 sm:py-8"
+                  >
+                    <dt className="text-xs font-medium uppercase tracking-wider text-zinc-500">
+                      {stat.label}
+                    </dt>
+                    <dd className="mt-2 text-xl font-bold tracking-tight text-zinc-900">
+                      {stat.value}
+                    </dd>
+                  </div>
+                ))}
               </div>
             ))}
           </dl>
