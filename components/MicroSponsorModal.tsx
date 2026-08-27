@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Streamlined £2 micro-sponsor checkout modal.
+ * Streamlined £5 micro-sponsor checkout modal.
  */
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { MICRO_SPONSOR_PRICE_GBP } from "@/lib/micro-sponsors";

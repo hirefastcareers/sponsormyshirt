@@ -4,6 +4,7 @@
  * Mobile/tablet horizontal marquee of micro-sponsor logos (hidden on xl+).
  */
 import MicroSponsorLogo from "@/components/MicroSponsorLogo";
+import { MICRO_SPONSOR_PRICE_GBP } from "@/lib/micro-sponsors";
 import type { MicroSponsor } from "@/types/micro-sponsor";
 
 interface MicroSponsorMarqueeProps {
@@ -19,19 +20,16 @@ export default function MicroSponsorMarquee({
   const track = hasSponsors ? [...sponsors, ...sponsors] : [];
 
   return (
-    <section
-      className="xl:hidden"
-      aria-label="Micro sponsor wall"
-    >
+    <section className="xl:hidden" aria-label="Supporter Wall">
       <div className="mb-3 flex items-center justify-between gap-3 px-1">
         <div>
           <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
-            Supporter Wall (£2)
+            Supporter Wall (£{MICRO_SPONSOR_PRICE_GBP})
           </p>
           <p className="text-sm text-zinc-500">
             {hasSponsors
               ? `${sponsors.length} brand${sponsors.length === 1 ? "" : "s"} supporting the run`
-              : "Be the first £2 micro-sponsor"}
+              : `Be the first £${MICRO_SPONSOR_PRICE_GBP} supporter`}
           </p>
         </div>
         <button
@@ -39,7 +37,7 @@ export default function MicroSponsorMarquee({
           onClick={onSponsorClick}
           className="shrink-0 rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-emerald-700"
         >
-          Sponsor for £2
+          Sponsor for £{MICRO_SPONSOR_PRICE_GBP}
         </button>
       </div>
 
@@ -66,7 +64,7 @@ export default function MicroSponsorMarquee({
           <span className="text-lg" aria-hidden>
             +
           </span>
-          Add your logo for £2
+          Add your logo for £{MICRO_SPONSOR_PRICE_GBP}
         </button>
       )}
     </section>

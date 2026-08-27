@@ -124,8 +124,8 @@ const FAQ_ITEMS = [
     a: "You get guaranteed logo placement printed directly onto my official race kit for the 2026 Great North Run. Once purchased, you'll receive a high-resolution digital mock-up for approval, photos of the finished printed gear, and coverage across all my training and race-day content.",
   },
   {
-    q: "What do I get with the £2 Supporter option?",
-    a: "The £2 option is a micro-sponsorship for supporters, indie hackers, and creators. Your logo and website link will be permanently displayed on our website's Supporter Wall sidebar (and mobile grid) throughout the campaign. Note: Main kit printing (shirt/shorts/socks) is reserved for the primary 9 placement slots.",
+    q: "What do I get with the £5 Supporter option?",
+    a: "The £5 option is a micro-sponsorship for supporters, indie hackers, and creators. Your logo and website link will be displayed on our website's Supporter Wall throughout the campaign.",
   },
   {
     q: "When is the artwork deadline?",

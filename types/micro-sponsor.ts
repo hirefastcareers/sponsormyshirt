@@ -1,5 +1,5 @@
 /**
- * Domain types for the £2 Micro-Sponsor Wall.
+ * Domain types for the £5 Micro-Sponsor Wall.
  * Mirrors the Supabase `micro_sponsors` table schema.
  */
 

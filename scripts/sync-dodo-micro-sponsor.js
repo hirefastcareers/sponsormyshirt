@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Create / refresh the £2 Micro-Sponsor Wall Dodo product and write ID to .env.local.
+ * Create / refresh the £5 Micro-Sponsor Wall Dodo product and write ID to .env.local.
  *
  * Usage:
  *   npm run sync:dodo-micro
@@ -19,8 +19,8 @@ const MICRO_SPONSOR = {
   envKey: "DODO_PRODUCT_MICRO_SPONSOR",
   name: "Micro-Sponsor Wall Placement",
   description:
-    "£2 logo placement on the Micro-Sponsor Wall — visible in page gutters (desktop) and marquee (mobile).",
-  price_gbp: 2,
+    "£5 logo placement on the Supporter Wall — visible in page gutters (desktop) and marquee (mobile).",
+  price_gbp: 5,
 };
 
 const ENV_PATH = path.join(process.cwd(), ".env.local");

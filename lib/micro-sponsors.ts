@@ -5,9 +5,9 @@ import { supabase } from "@/lib/supabase";
 import type { MicroSponsor } from "@/types/micro-sponsor";
 
 /** Fixed price for a micro-sponsor placement (GBP). */
-export const MICRO_SPONSOR_PRICE_GBP = 2;
+export const MICRO_SPONSOR_PRICE_GBP = 5;
 
-/** Dodo product env var for the £2 micro-sponsor checkout. */
+/** Dodo product env var for the £5 micro-sponsor checkout. */
 export const MICRO_SPONSOR_PRODUCT_ENV = "DODO_PRODUCT_MICRO_SPONSOR";
 
 /** Metadata flag written to Dodo checkout sessions for webhook routing. */

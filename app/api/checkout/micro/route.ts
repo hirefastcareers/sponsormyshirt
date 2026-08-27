@@ -1,7 +1,7 @@
 /**
  * POST /api/checkout/micro
  *
- * Streamlined £2 Micro-Sponsor Wall checkout:
+ * Streamlined £5 Micro-Sponsor Wall checkout:
  *  1. Validate sponsor name, URL, and logo path
  *  2. Create a Dodo Payments checkout session
  *  3. Return { checkout_url } for client redirect

@@ -1,5 +1,5 @@
 /**
- * Fulfilment for £2 Micro-Sponsor Wall purchases.
+ * Fulfilment for £5 Micro-Sponsor Wall purchases.
  * Inserts a row into micro_sponsors after successful Dodo payment.
  */
 import {
