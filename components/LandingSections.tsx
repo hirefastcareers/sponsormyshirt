@@ -18,12 +18,7 @@ const POSITION_DETAILS: Record<
 > = {
   chest_center: {
     dimensions: "200 × 120 mm",
-    perk: "Prime broadcast real estate. Every finish-chute photo, crowd selfie, and front-facing gantry shot.",
-    tier: "primary",
-  },
-  left_chest: {
-    dimensions: "80 × 80 mm",
-    perk: "Heart-side placement. In frame for close-ups and race-day portraits.",
+    perk: "High on the chest, above and around the race bib. Every finish-chute photo, crowd selfie, and front-facing gantry shot.",
     tier: "primary",
   },
   upper_back: {
@@ -76,18 +71,18 @@ const POSITION_DETAILS: Record<
 const DIVISION_RULES = [
   {
     num: "01",
-    title: "Front and back are separate brands.",
-    body: "The shirt carries clear front and back real estate. Nobody is buying a wrap that repeats the same mark, because nobody ever sees both at once.",
+    title: "Prime real estate.",
+    body: "Front and back spots are kept separate so your logo gets maximum, uncluttered visibility. No tiny, hidden side marks or crowded placements.",
   },
   {
     num: "02",
-    title: "Printed once, zero cheap vinyl.",
-    body: "Every placement is sublimated directly into the fabric of a high-performance custom race suit—no peeling stickers or heavy patches.",
+    title: "Premium performance kit.",
+    body: "Every logo is printed directly onto lightweight, high-performance gear—including the running shirt, shorts, cap, and socks. Built to look crisp, vibrant, and sharp over all 13.1 miles.",
   },
   {
     num: "03",
-    title: "Fast-turnaround kit printing.",
-    body: "With race day on September 13th, kit artwork locks on September 1st to allow express printing and a quick test run. Once inventory is gone or September 1st hits, the board locks.",
+    title: "Hard deadline: September 1st.",
+    body: "With the race on September 13th, artwork locks on September 1st to guarantee print production, delivery, and a trial run. Once a slot sells or the deadline hits, it's gone.",
   },
 ] as const;
 
@@ -179,7 +174,7 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
           <span id="positions-heading">Positions</span>
         </SectionHeading>
         <p className="mt-2 w-full text-[15px] leading-relaxed text-zinc-500">
-          Eleven placements. One kit. Every spot priced for what cameras and
+          Ten placements. One kit. Every spot priced for what cameras and
           crowds actually see.
         </p>
 

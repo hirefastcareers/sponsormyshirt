@@ -8,8 +8,7 @@ INSERT INTO public.sponsorship_slots (
   x_position, y_position, dodo_product_id
 )
 VALUES
-  ('chest_center',  'Chest Center',        'shirt',    1200, 'available', 42.0, 31.0, NULL),
-  ('left_chest',    'Left Chest / Heart',  'shirt',     650, 'available', 18.5, 29.0, NULL),
+  ('chest_center',  'Chest Center (High / Bib)', 'shirt',    1200, 'available', 50.0, 42.0, NULL),
   ('upper_back',    'Upper Back',          'shirt',     500, 'available', 71.5, 29.0, NULL),
   ('lower_back',    'Lower Back',          'shirt',     350, 'available', 71.5, 40.0, NULL),
   ('cap_front',     'Cap Front',           'headwear',  300, 'available', 25.0,  9.5, NULL),

@@ -100,7 +100,7 @@ export default async function HomePage({
               Your brand, on my Great North Run kit.
             </h1>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-zinc-500 sm:text-base">
-              11 placements across shirt, shorts, cap, and socks. Tyne Bridge to
+              10 placements across shirt, shorts, cap, and socks. Tyne Bridge to
               South Shields — 13.1 miles, aiming for 2:05.
             </p>
           </div>

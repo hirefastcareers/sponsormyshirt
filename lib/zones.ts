@@ -6,16 +6,15 @@ import type { SponsorshipSlot } from "@/types/sponsorship";
 
 export const ZONE_META = [
   { id: "chest_center", num: "01", garment: "Shirt" },
-  { id: "left_chest", num: "02", garment: "Shirt" },
-  { id: "upper_back", num: "03", garment: "Shirt" },
-  { id: "lower_back", num: "04", garment: "Shirt" },
-  { id: "cap_front", num: "05", garment: "Cap" },
-  { id: "shorts_left", num: "06", garment: "Shorts" },
-  { id: "shorts_right", num: "07", garment: "Shorts" },
-  { id: "right_sleeve", num: "08", garment: "Shirt" },
-  { id: "left_sleeve", num: "09", garment: "Shirt" },
-  { id: "left_sock", num: "10", garment: "Socks" },
-  { id: "right_sock", num: "11", garment: "Socks" },
+  { id: "upper_back", num: "02", garment: "Shirt" },
+  { id: "lower_back", num: "03", garment: "Shirt" },
+  { id: "cap_front", num: "04", garment: "Cap" },
+  { id: "shorts_left", num: "05", garment: "Shorts" },
+  { id: "shorts_right", num: "06", garment: "Shorts" },
+  { id: "right_sleeve", num: "07", garment: "Shirt" },
+  { id: "left_sleeve", num: "08", garment: "Shirt" },
+  { id: "left_sock", num: "09", garment: "Socks" },
+  { id: "right_sock", num: "10", garment: "Socks" },
 ] as const;
 
 export type ZoneId = (typeof ZONE_META)[number]["id"];
@@ -26,10 +25,8 @@ export const MARKER_POS: Record<
   { left: string; top: string; size: number }
 > = {
   // Tuned to Lucide shirt silhouette (viewBox 240×240); sizes ~1.45× prior
-  // Chest center shifted left/down to clear the heart badge
-  chest_center: { left: "45%", top: "60%", size: 50 },
-  // Wearer's left chest (heart) = viewer's right — inset from sleeve (09)
-  left_chest: { left: "56%", top: "39%", size: 42 },
+  // High chest / race-bib band — centered on the front torso
+  chest_center: { left: "50%", top: "42%", size: 50 },
   // Wearer's right sleeve = left of graphic
   right_sleeve: { left: "16%", top: "28%", size: 42 },
   left_sleeve: { left: "84%", top: "28%", size: 42 },

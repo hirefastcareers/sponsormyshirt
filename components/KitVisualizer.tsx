@@ -282,7 +282,6 @@ export default function KitVisualizer({
           <GarmentPanel label="SHIRT • FRONT">
             <ShirtFront />
             {node("chest_center")}
-            {node("left_chest")}
             {node("right_sleeve")}
             {node("left_sleeve")}
           </GarmentPanel>
@@ -417,9 +416,8 @@ function ShirtFront() {
         opacity="0.7"
       />
 
-      {/* Placement zones — 01 chest + 02 heart (02 inset left of sleeve 09) */}
-      <AdZone x={75} y={118} w={64} h={52} />
-      <AdZone x={114} y={77} w={40} h={34} />
+      {/* Placement zones — 01 high chest / bib (centered) + sleeves */}
+      <AdZone x={84} y={78} w={72} h={50} />
       <AdZone x={14} y={41} w={50} h={42} />
       <AdZone x={176} y={41} w={50} h={42} />
     </svg>

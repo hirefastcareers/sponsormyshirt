@@ -10,7 +10,6 @@ export const TITLE_TAKEOVER_ID = "title_takeover" as const;
 /** Premium rate card — individual placement prices (GBP). */
 export const POSITION_PRICES = {
   chest_center: 1200,
-  left_chest: 650,
   upper_back: 500,
   lower_back: 350,
   cap_front: 300,
@@ -56,8 +55,10 @@ export const POSITION_META: Record<
   PositionId,
   { slot_name: string; category: SlotCategory }
 > = {
-  chest_center: { slot_name: "Chest Center", category: "shirt" },
-  left_chest: { slot_name: "Left Chest / Heart", category: "shirt" },
+  chest_center: {
+    slot_name: "Chest Center (High / Bib)",
+    category: "shirt",
+  },
   upper_back: { slot_name: "Upper Back", category: "shirt" },
   lower_back: { slot_name: "Lower Back", category: "shirt" },
   cap_front: { slot_name: "Cap Front", category: "headwear" },

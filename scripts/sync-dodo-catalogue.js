@@ -25,7 +25,6 @@ const DodoPayments = require("dodopayments");
 /** Keep in sync with lib/positions.ts */
 const LOCAL_PRICES = {
   chest_center: 1200,
-  left_chest: 650,
   upper_back: 500,
   lower_back: 350,
   cap_front: 300,
@@ -36,6 +35,9 @@ const LOCAL_PRICES = {
   left_sock: 100,
   right_sock: 100,
 };
+
+/** Slots removed from the rate card — never create/update Dodo products for these. */
+const RETIRED_SLOT_IDS = new Set(["left_chest"]);
 
 // Title Sponsor defaults to the sum of every placement (override by setting a number).
 const TITLE_SPONSOR_PRICE = undefined;
@@ -135,6 +137,12 @@ async function main() {
   let failed = 0;
 
   for (const slot of slots) {
+    if (RETIRED_SLOT_IDS.has(slot.id)) {
+      console.log(`  · ${slot.id}: skipped (retired placement)`);
+      unchanged++;
+      continue;
+    }
+
     const priceGbp = resolvePriceGbp(slot);
     const pricePence = toPence(priceGbp);
 
