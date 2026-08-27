@@ -273,7 +273,7 @@ export default function KitVisualizer({
         </button>
       </div>
 
-      <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center gap-6 sm:gap-8">
+      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center gap-6 sm:gap-8">
         {/* Uniform block: shirts then shorts directly underneath */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-5 sm:gap-x-10 sm:gap-y-7">
           <GarmentPanel label="SHIRT • FRONT">

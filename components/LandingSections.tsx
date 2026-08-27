@@ -81,7 +81,7 @@ const STEPS = [
   {
     num: "01",
     title: "Pick your spot & upload",
-    body: "Choose your exact placement on the interactive kit map and drop in a high-res logo. What you see is what prints.",
+    body: "Choose your exact placement on the interactive kit map and drop in your logo. What you see is what prints on the kit.",
   },
   {
     num: "02",
@@ -90,27 +90,27 @@ const STEPS = [
   },
   {
     num: "03",
-    title: "Race-day exposure + media kit",
-    body: "Your logo runs the world’s biggest half marathon — then you get a post-race high-res media kit with your brand in action.",
+    title: "Show up on race day",
+    body: "Your logo runs live past 60,000+ runners and spectators along the 13.1-mile Newcastle-to-South-Shields route — targeting a ~2:05 finish.",
   },
 ] as const;
 
 const FAQ_ITEMS = [
   {
     q: "What logo formats do you need?",
-    a: "PNG, SVG, or WebP. SVG or a transparent high-res PNG prints sharpest on fabric — no muddy edges, no surprise backgrounds.",
+    a: "PNG, SVG, or WebP. SVG or a transparent high-resolution PNG prints sharpest on fabric — no muddy edges, no surprise backgrounds.",
   },
   {
-    q: "How good is the physical print?",
-    a: "Professional fabric print, sized to the placement you bought. Artwork is locked after payment and proofed before race weekend so what you approve is what hits the course.",
+    q: "When is the printing deadline?",
+    a: "Artwork locks after payment. Logos are printed onto the race kit in the days before race weekend, with a proof sent once your file is approved for print.",
   },
   {
-    q: "What do I get after the race?",
-    a: "A curated high-res media kit: photos of your logo on course, in the crowd, and at the finish — ready for your site, socials, or pitch deck.",
+    q: "Is payment secure?",
+    a: "Yes. Checkout runs through a secure payment provider. Your placement is held only after successful payment — no card details are stored on this site.",
   },
   {
     q: "How do add-ons work?",
-    a: `Optional at checkout, processed with your placement. ${SOCIAL_POST_ADDON.title} (£${SOCIAL_POST_ADDON.price_gbp}): a dedicated announcement on X & LinkedIn tagging your brand. ${DOFOLLOW_LINK_ADDON.title} (£${DOFOLLOW_LINK_ADDON.price_gbp}): a permanent dofollow link on sponsormyshirt.app.`,
+    a: `Optional at checkout, fulfilled with your placement. ${SOCIAL_POST_ADDON.title} (£${SOCIAL_POST_ADDON.price_gbp}): a dedicated announcement on X & LinkedIn tagging your brand. ${DOFOLLOW_LINK_ADDON.title} (£${DOFOLLOW_LINK_ADDON.price_gbp}): a permanent dofollow link on sponsormyshirt.app.`,
   },
 ] as const;
 
@@ -257,16 +257,16 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
           <span id="works-heading">How it works</span>
         </SectionHeading>
         <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-zinc-500">
-          Pick a spot, pay once, show up on race day — built for indie projects
-          and small businesses that want high-impact visibility without agency
-          pricing.
+          Pick a spot, pay once, get your logo printed on the race-day kit —
+          built for indie projects and small businesses that want clear,
+          physical visibility.
         </p>
 
         <ol className="mt-8 grid gap-4 sm:grid-cols-3">
           {STEPS.map((step, i) => (
             <li
               key={step.num}
-              className="relative rounded-xl border border-[#E4E4E7] bg-white px-5 py-6 sm:px-6"
+              className="relative rounded-xl border border-[#E4E4E7] bg-white px-5 py-6 sm:px-6 lg:col-span-4 lg:px-8"
             >
               <span className="font-mono text-xs font-medium tabular-nums text-zinc-400">
                 {step.num}
@@ -330,8 +330,8 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
           <span id="faq-heading">FAQ</span>
         </SectionHeading>
         <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-zinc-500">
-          Straight answers on artwork, print quality, media deliverables, and
-          add-ons — before you spend a pound.
+          Straight answers on artwork, print deadlines, payment, and add-ons —
+          before you spend a pound.
         </p>
 
         <div className="mt-8 overflow-hidden rounded-xl border border-[#E4E4E7] bg-white">
@@ -400,8 +400,8 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
           Claim a position
         </h2>
         <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-zinc-400">
-          Affordable kit real estate on the world’s biggest half marathon —
-          pick a placement, upload your logo, lock it in.
+          Direct physical logo placement on race-day kit for the Great North
+          Run — pick a spot, upload, lock it in.
         </p>
         <button
           type="button"

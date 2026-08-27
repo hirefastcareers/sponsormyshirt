@@ -36,7 +36,7 @@ export default function TakenBanner({ taken }: TakenBannerProps) {
       role="status"
       className="border-b border-amber-200 bg-amber-50"
     >
-      <div className="mx-auto flex max-w-7xl items-start gap-3 px-5 py-3 sm:items-center sm:px-8">
+      <div className="mx-auto flex w-full max-w-7xl items-start gap-3 px-6 py-3 sm:items-center lg:px-12">
         <p className="flex-1 text-sm font-medium text-amber-900">
           Sorry! Someone just claimed that slot a moment ago. Please select an
           available position.

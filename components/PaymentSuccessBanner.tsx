@@ -40,7 +40,7 @@ export default function PaymentSuccessBanner({
 
   return (
     <div role="status" className="border-b border-emerald-200 bg-emerald-50">
-      <div className="mx-auto flex max-w-7xl items-start gap-3 px-5 py-4 sm:items-center sm:px-8">
+      <div className="mx-auto flex w-full max-w-7xl items-start gap-3 px-6 py-4 sm:items-center lg:px-12">
         <div className="flex-1">
           <p className="text-sm font-semibold text-emerald-950">
             Payment received — thank you, {sponsor}.
