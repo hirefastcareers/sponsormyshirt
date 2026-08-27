@@ -15,7 +15,6 @@ import PaymentSuccessBanner from "@/components/PaymentSuccessBanner";
 import SiteHeader from "@/components/SiteHeader";
 import SponsorExperience from "@/components/SponsorExperience";
 import TakenBanner from "@/components/TakenBanner";
-import VisitorCounter from "@/components/VisitorCounter";
 import {
   applyCanonicalPrices,
   filterActiveSlots,
@@ -120,20 +119,19 @@ export default async function HomePage({
               <MicroSponsorHeroCTA />
             </div>
           </div>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-zinc-500">
-            <VisitorCounter />
+          <p className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
             <span>
-              <span className="font-medium text-zinc-800">
+              <span className="font-medium text-zinc-700">
                 {kitPositions.length}
               </span>{" "}
               placements
             </span>
-            <span className="h-3 w-px bg-zinc-200" aria-hidden />
+            <span aria-hidden className="text-zinc-300">·</span>
             <span>
-              <span className="font-medium text-zinc-800">{claimed}</span>{" "}
+              <span className="font-medium text-zinc-700">{claimed}</span>{" "}
               claimed
             </span>
-          </div>
+          </p>
           <div className="mx-auto mt-8 max-w-3xl">
             <MicroSponsorMarqueeBlock />
           </div>

@@ -17,6 +17,14 @@ function formatCount(value: number): string {
   return value.toLocaleString("en-GB");
 }
 
+function Dot() {
+  return (
+    <span aria-hidden className="text-zinc-300">
+      ·
+    </span>
+  );
+}
+
 export default function VemetricStatsBar() {
   const [stats, setStats] = useState<VemetricStats | null>(null);
 
@@ -56,32 +64,25 @@ export default function VemetricStatsBar() {
   if (!stats) return null;
 
   return (
-    <div className="border-b border-zinc-200/80 bg-zinc-50/95 px-4 py-2 text-center text-xs text-zinc-600 sm:text-sm">
-      <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
-        <span className="inline-flex items-center gap-1.5 font-medium text-zinc-700">
+    <div className="px-4 pb-2 pt-0 text-center">
+      <p
+        className="flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground"
+        aria-label="Live site analytics"
+      >
+        <span className="inline-flex items-center gap-1.5">
           <span
             aria-hidden
             className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500"
           />
           {formatCount(stats.liveUsers)} live
         </span>
-        <span className="hidden text-zinc-300 sm:inline" aria-hidden>
-          ·
-        </span>
+        <Dot />
         <span>
-          <span className="font-medium text-zinc-800">
-            {formatCount(stats.visitors24h)}
-          </span>{" "}
-          visitors (24h)
+          {formatCount(stats.visitors24h)} visitors (24h)
         </span>
-        <span className="hidden text-zinc-300 sm:inline" aria-hidden>
-          ·
-        </span>
+        <Dot />
         <span>
-          <span className="font-medium text-zinc-800">
-            {formatCount(stats.pageviews24h)}
-          </span>{" "}
-          pageviews (24h)
+          {formatCount(stats.pageviews24h)} pageviews (24h)
         </span>
       </p>
     </div>
