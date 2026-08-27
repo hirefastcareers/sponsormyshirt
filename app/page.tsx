@@ -132,13 +132,13 @@ export default async function HomePage({
           <div className="max-w-md space-y-3 sm:text-right">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm sm:justify-end">
               <a
-                href="mailto:hello@sponsormyshirt.app"
+                href="mailto:tomford61@gmail.com"
                 className="text-zinc-100 underline-offset-4 transition hover:underline"
               >
-                hello@sponsormyshirt.app
+                tomford61@gmail.com
               </a>
               <a
-                href="https://x.com"
+                href="https://x.com/sponsormyshirt"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-zinc-100 underline-offset-4 transition hover:underline"
