@@ -379,7 +379,7 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
           <span id="faq-heading">FAQ</span>
         </SectionHeading>
         <p className="mt-2 w-full text-[15px] leading-relaxed text-zinc-500">
-          Direct answers. No soft language.
+          Everything you need to know about sponsoring.
         </p>
 
         <div className="mt-8 overflow-hidden rounded-xl border border-[#E4E4E7] bg-white">
