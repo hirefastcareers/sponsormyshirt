@@ -15,17 +15,11 @@ function ShirtIcon({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
-      fill="none"
+      fill="currentColor"
       aria-hidden
       className={className}
     >
-      <path
-        d="M16.2 3.5 13.5 2a3.2 3.2 0 0 1-3 0L7.8 3.5A1.6 1.6 0 0 0 6.7 5.3l.5 2.8A.8.8 0 0 0 8 8.7h1.7V17a1.6 1.6 0 0 0 1.6 1.6h2.4A1.6 1.6 0 0 0 15.3 17V8.7H17a.8.8 0 0 0 .8-.6l.5-2.8a1.6 1.6 0 0 0-1.1-1.8Z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-        strokeLinecap="round"
-      />
+      <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" />
     </svg>
   );
 }
@@ -45,13 +39,13 @@ export default function BrandMark({
       aria-label="sponsormyshirt.app"
     >
       <span
-        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
+        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full p-0 ${
           light
             ? "bg-zinc-900 text-white"
             : "bg-zinc-100 text-zinc-900"
         }`}
       >
-        <ShirtIcon className="h-4 w-4" />
+        <ShirtIcon className="h-5 w-5" />
       </span>
 
       <span className="flex min-w-0 items-baseline gap-0">
