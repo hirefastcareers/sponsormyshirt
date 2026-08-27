@@ -228,97 +228,66 @@ function AdZone({
 }
 
 /**
- * Classic short-sleeve crew-neck tee.
- * Walks left cuff → left sleeve tip → shoulder → collar → neck →
- * right collar → shoulder → sleeve tip → cuff → side → hem → close.
+ * Lucide "shirt" silhouette (ISC) — recognizable crew-neck tee with
+ * hanging short sleeves. Scaled 10× from the 24×24 icon path.
+ * https://lucide.dev/icons/shirt
  */
 const TEE_OUTLINE =
-  "M 58 98 L 24 74 L 56 52 L 84 70 L 96 46 C 110 30 130 30 144 46 L 156 70 L 184 52 L 216 74 L 182 98 L 170 108 L 170 252 L 70 252 L 70 108 Z";
+  "M 203.8 34.6 L 160 20 A 40 40 0 0 1 80 20 L 36.2 34.6 A 20 20 0 0 0 22.8 56.9 L 28.6 91.6 A 10 10 0 0 0 38.5 100 H 60 V 200 C 60 211 69 220 80 220 H 160 C 171 220 180 211 180 200 V 100 H 201.5 A 10 10 0 0 0 211.4 91.6 L 217.2 56.9 A 20 20 0 0 0 203.8 34.6 Z";
 
 function ShirtFront() {
   return (
-    <svg viewBox="0 0 240 270" style={svgBase} aria-hidden>
+    <svg viewBox="0 0 240 240" style={svgBase} aria-hidden>
       <path
         d={TEE_OUTLINE}
         fill={FILL}
         stroke={STROKE}
-        strokeWidth="2.25"
+        strokeWidth="2.5"
         strokeLinejoin="round"
         strokeLinecap="round"
       />
-      {/* Crew neck opening */}
+      {/* Collar seam hint */}
       <path
-        d="M 84 70 C 98 96 142 96 156 70"
+        d="M 88 48 C 100 68 140 68 152 48"
         fill="none"
         stroke={STROKE}
-        strokeWidth="2"
+        strokeWidth="1.5"
         strokeLinecap="round"
-      />
-      {/* Inner collar */}
-      <path
-        d="M 90 74 C 102 92 138 92 150 74"
-        fill="none"
-        stroke={STROKE}
-        strokeWidth="1.1"
-        opacity="0.5"
-      />
-      {/* Sleeve / body seams */}
-      <path
-        d="M 70 108 L 84 70"
-        fill="none"
-        stroke={STROKE}
-        strokeWidth="1.5"
-      />
-      <path
-        d="M 170 108 L 156 70"
-        fill="none"
-        stroke={STROKE}
-        strokeWidth="1.5"
+        opacity="0.7"
       />
 
       {/* Placement zones */}
-      <AdZone x={98} y={120} w={44} h={36} />
-      <AdZone x={144} y={110} w={28} h={24} />
-      <AdZone x={30} y={74} w={32} h={22} />
-      <AdZone x={178} y={74} w={32} h={22} />
+      <AdZone x={98} y={112} w={44} h={36} />
+      <AdZone x={142} y={100} w={28} h={24} />
+      <AdZone x={22} y={48} w={34} h={28} />
+      <AdZone x={184} y={48} w={34} h={28} />
     </svg>
   );
 }
 
 function ShirtBack() {
   return (
-    <svg viewBox="0 0 240 270" style={svgBase} aria-hidden>
+    <svg viewBox="0 0 240 240" style={svgBase} aria-hidden>
       <path
         d={TEE_OUTLINE}
         fill={FILL}
         stroke={STROKE}
-        strokeWidth="2.25"
+        strokeWidth="2.5"
         strokeLinejoin="round"
         strokeLinecap="round"
       />
-      {/* Shallower back neck */}
+      {/* Shallower back-neck hint */}
       <path
-        d="M 84 70 C 98 86 142 86 156 70"
+        d="M 90 44 C 104 56 136 56 150 44"
         fill="none"
         stroke={STROKE}
-        strokeWidth="2"
+        strokeWidth="1.5"
         strokeLinecap="round"
-      />
-      <path
-        d="M 70 108 L 84 70"
-        fill="none"
-        stroke={STROKE}
-        strokeWidth="1.5"
-      />
-      <path
-        d="M 170 108 L 156 70"
-        fill="none"
-        stroke={STROKE}
-        strokeWidth="1.5"
+        opacity="0.7"
       />
 
-      <AdZone x={88} y={102} w={64} h={32} />
-      <AdZone x={88} y={162} w={64} h={36} />
+      <AdZone x={88} y={92} w={64} h={32} />
+      <AdZone x={88} y={148} w={64} h={36} />
     </svg>
   );
 }

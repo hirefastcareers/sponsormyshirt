@@ -24,15 +24,15 @@ export const MARKER_POS: Record<
   ZoneId,
   { left: string; top: string; size: number }
 > = {
-  // Front tee viewBox 240×270 — zones centered in dashed rects
-  chest_center: { left: "50%", top: "50%", size: 34 },
+  // Tuned to Lucide shirt silhouette (viewBox 240×240)
+  chest_center: { left: "50%", top: "54%", size: 34 },
   // Wearer's left chest (heart) = viewer's right
-  left_chest: { left: "66%", top: "42%", size: 28 },
-  // Wearer's right sleeve = left of graphic; left sleeve = right of graphic
-  right_sleeve: { left: "18%", top: "30%", size: 28 },
-  left_sleeve: { left: "82%", top: "30%", size: 28 },
-  upper_back: { left: "50%", top: "40%", size: 32 },
-  lower_back: { left: "50%", top: "62%", size: 32 },
+  left_chest: { left: "65%", top: "46%", size: 28 },
+  // Wearer's right sleeve = left of graphic
+  right_sleeve: { left: "16%", top: "28%", size: 28 },
+  left_sleeve: { left: "84%", top: "28%", size: 28 },
+  upper_back: { left: "50%", top: "42%", size: 32 },
+  lower_back: { left: "50%", top: "66%", size: 32 },
   // Cap crown panel (above brim)
   cap_front: { left: "50%", top: "36%", size: 30 },
   shorts_left: { left: "33%", top: "52%", size: 28 },
