@@ -404,7 +404,7 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
                   hidden={!open}
                   className="px-5 pb-5 sm:px-6 lg:px-8"
                 >
-                  <p className="max-w-3xl text-sm leading-relaxed text-zinc-500">
+                  <p className="w-full max-w-none pr-12 text-sm leading-relaxed text-zinc-600 md:text-base">
                     {item.a}
                   </p>
                 </div>
