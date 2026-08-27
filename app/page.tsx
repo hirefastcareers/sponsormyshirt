@@ -132,7 +132,7 @@ export default async function HomePage({
         </p>
       </section>
 
-      <section id="kit" className="mx-auto max-w-7xl px-5 pb-16 sm:px-8">
+      <section id="kit" className="mx-auto max-w-7xl px-5 pb-20 sm:px-8 sm:pb-24">
         <SponsorExperience slots={slots} />
       </section>
 

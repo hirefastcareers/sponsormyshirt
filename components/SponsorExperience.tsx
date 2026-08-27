@@ -6,6 +6,7 @@
  */
 import { useState } from "react";
 import KitVisualizer from "@/components/KitVisualizer";
+import LandingSections from "@/components/LandingSections";
 import RateCardSidebar from "@/components/RateCardSidebar";
 import SponsorshipModal from "@/components/SponsorshipModal";
 import {
@@ -83,6 +84,10 @@ export default function SponsorExperience({ slots }: SponsorExperienceProps) {
           onClear={() => setSelectedIds(new Set())}
           onClaim={claim}
         />
+      </div>
+
+      <div className="mt-16 border-t border-[#E4E4E7] pt-16 sm:mt-20 sm:pt-20">
+        <LandingSections onClaim={claim} />
       </div>
 
       <SponsorshipModal
