@@ -135,7 +135,9 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   function claimPosition() {
-    document.getElementById("kit")?.scrollIntoView({ behavior: "smooth" });
+    document
+      .getElementById("kit-viewer")
+      ?.scrollIntoView({ behavior: "smooth" });
     onClaim();
   }
 
@@ -151,7 +153,7 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
         <SectionHeading>
           <span id="positions-heading">Positions</span>
         </SectionHeading>
-        <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-zinc-500">
+        <p className="mt-2 w-full text-[15px] leading-relaxed text-zinc-500">
           Physical kit visibility, priced so small brands can buy real race-day
           exposure — not a vague “partnership.”
         </p>
@@ -216,7 +218,7 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
         <SectionHeading>
           <span id="divided-heading">How it&apos;s divided</span>
         </SectionHeading>
-        <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-zinc-500">
+        <p className="mt-2 w-full text-[15px] leading-relaxed text-zinc-500">
           Placements map to how cameras and crowds actually see a runner —
           chest for broadcast, back for tracking, sleeves for profile, lower
           kit for action.
@@ -264,7 +266,7 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
         <SectionHeading>
           <span id="works-heading">How it works</span>
         </SectionHeading>
-        <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-zinc-500">
+        <p className="mt-2 w-full text-[15px] leading-relaxed text-zinc-500">
           Pick a spot, pay once, get your logo printed on the race-day kit —
           built for indie projects and small businesses that want clear,
           physical visibility.
@@ -347,7 +349,7 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
         <SectionHeading>
           <span id="faq-heading">FAQ</span>
         </SectionHeading>
-        <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-zinc-500">
+        <p className="mt-2 w-full text-[15px] leading-relaxed text-zinc-500">
           Straight answers on artwork, print deadlines, payment, and add-ons —
           before you spend a pound.
         </p>

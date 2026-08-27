@@ -273,9 +273,12 @@ export default function KitVisualizer({
         </button>
       </div>
 
-      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center gap-6 sm:gap-8">
+      <div
+        className="mx-auto flex w-full flex-1 flex-col justify-center gap-5 sm:gap-6"
+        style={{ zoom: 1.25 }}
+      >
         {/* Uniform block: shirts then shorts directly underneath */}
-        <div className="grid grid-cols-2 gap-x-6 gap-y-5 sm:gap-x-10 sm:gap-y-7">
+        <div className="grid grid-cols-2 gap-x-5 gap-y-5 sm:gap-x-8 sm:gap-y-6">
           <GarmentPanel label="SHIRT • FRONT">
             <ShirtFront />
             {node("chest_center")}
@@ -301,7 +304,7 @@ export default function KitVisualizer({
         </div>
 
         {/* Accessories */}
-        <div className="grid grid-cols-2 gap-x-6 gap-y-5 sm:gap-x-10 sm:gap-y-7">
+        <div className="grid grid-cols-2 gap-x-5 gap-y-5 sm:gap-x-8 sm:gap-y-6">
           <GarmentPanel label="CAP">
             <Cap />
             {node("cap_front")}

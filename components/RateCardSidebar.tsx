@@ -47,7 +47,7 @@ export default function RateCardSidebar({
   const count = selected.length;
 
   return (
-    <aside className="flex h-full flex-col overflow-hidden rounded-xl border border-[#E4E4E7] bg-white">
+    <aside className="flex max-h-[calc(100vh-8rem)] flex-col overflow-hidden rounded-xl border border-[#E4E4E7] bg-white lg:max-h-[calc(100vh-7.5rem)]">
       <div className="border-b border-zinc-100 px-5 py-5 sm:px-6">
         <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
           Your selection

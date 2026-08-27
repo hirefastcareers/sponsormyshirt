@@ -36,7 +36,7 @@ export default function SiteHeader() {
             ))}
           </ul>
           <a
-            href="#kit"
+            href="#kit-viewer"
             className="rounded-full bg-zinc-900 px-4 py-2 text-xs font-medium text-white transition hover:bg-zinc-800 sm:text-[13px]"
           >
             Claim a Slot

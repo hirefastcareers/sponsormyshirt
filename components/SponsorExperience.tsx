@@ -67,7 +67,10 @@ export default function SponsorExperience({ slots }: SponsorExperienceProps) {
 
   return (
     <>
-      <div className="grid min-h-[calc(100vh-7.5rem)] grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-6">
+      <div
+        id="kit-viewer"
+        className="grid scroll-mt-24 grid-cols-1 items-start gap-5 lg:grid-cols-12 lg:gap-6"
+      >
         <div className="min-w-0 lg:col-span-8">
           <KitVisualizer
             slots={slots}
@@ -78,19 +81,21 @@ export default function SponsorExperience({ slots }: SponsorExperienceProps) {
           />
         </div>
         <div className="min-w-0 lg:col-span-4">
-          <RateCardSidebar
-            slots={slots}
-            selectedIds={selectedIds}
-            hoveredId={hoveredId}
-            onToggle={claimSlot}
-            onHover={setHoveredId}
-            onClear={() => setSelectedIds(new Set())}
-            onClaim={claim}
-          />
+          <div className="lg:sticky lg:top-24">
+            <RateCardSidebar
+              slots={slots}
+              selectedIds={selectedIds}
+              hoveredId={hoveredId}
+              onToggle={claimSlot}
+              onHover={setHoveredId}
+              onClear={() => setSelectedIds(new Set())}
+              onClaim={claim}
+            />
+          </div>
         </div>
       </div>
 
-      <div className="mt-16 border-t border-[#E4E4E7] pt-16 sm:mt-20 sm:pt-20">
+      <div className="mx-auto mt-16 w-full max-w-7xl border-t border-[#E4E4E7] pt-16 sm:mt-20 sm:pt-20">
         <LandingSections onClaim={claim} />
       </div>
 
