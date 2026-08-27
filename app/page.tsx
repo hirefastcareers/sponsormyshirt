@@ -93,14 +93,14 @@ export default async function HomePage({
           <div className="lg:col-span-8">
             <p className="flex items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-600" />
-              Race-day inventory open
+              Printed kit • Artwork deadline closes September 1st.
             </p>
             <h1 className="mt-3 text-3xl font-medium tracking-tight text-zinc-900 sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
               Your brand, on my Great North Run kit.
             </h1>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-zinc-500 sm:text-base">
-              Eleven placements across shirt, shorts, socks and cap. Tyne Bridge
-              to South Shields — 13.1 miles, aiming for 2:05.
+              11 placements across shirt, shorts, cap, and socks. Tyne Bridge to
+              South Shields — 13.1 miles, aiming for 2:05.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-zinc-500 lg:col-span-4 lg:justify-end">

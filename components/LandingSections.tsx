@@ -5,10 +5,6 @@
  * race context, FAQ, and claim CTA.
  */
 import { useId, useState, type ReactNode } from "react";
-import {
-  DOFOLLOW_LINK_ADDON,
-  SOCIAL_POST_ADDON,
-} from "@/lib/addons";
 import { POSITION_META, POSITION_PRICES, type PositionId } from "@/lib/positions";
 import { ZONE_META } from "@/lib/zones";
 
@@ -22,95 +18,125 @@ const POSITION_DETAILS: Record<
 > = {
   chest_center: {
     dimensions: "200 × 120 mm",
-    perk: "Prime chest real estate — broadcast frames & every front-facing photo",
+    perk: "Prime broadcast real estate. Every finish-chute photo, crowd selfie, and front-facing gantry shot.",
     tier: "primary",
   },
   left_chest: {
     dimensions: "80 × 80 mm",
-    perk: "Heart-side chest hit — finish-line close-ups and selfie range",
+    perk: "Heart-side placement. In frame for close-ups and race-day portraits.",
     tier: "primary",
   },
   upper_back: {
     dimensions: "180 × 100 mm",
-    perk: "Long-duration tracking — chase cams and runners behind you for miles",
+    perk: "13.1 miles of continuous tracking. Seen by every runner and follow-cam behind me for two hours.",
     tier: "primary",
   },
   lower_back: {
     dimensions: "150 × 80 mm",
-    perk: "Follow-cam real estate — stays in frame whenever the pack trails",
+    perk: "Follow-cam real estate. Stays locked in frame whenever the pack trails.",
     tier: "secondary",
   },
   cap_front: {
     dimensions: "80 × 50 mm",
-    perk: "Eye-level brand hit — gantry cameras and finish-line portraits",
+    perk: "Eye-level brand placement. Straight down the line of every gantry camera.",
     tier: "primary",
   },
   shorts_left: {
     dimensions: "100 × 60 mm",
-    perk: "Dynamic action photos — stride, barriers, and low-angle course shots",
+    perk: "Dynamic stride action. In shot for 13.1 miles of leg work.",
     tier: "secondary",
   },
   shorts_right: {
     dimensions: "100 × 60 mm",
-    perk: "Dynamic action photos — stride, barriers, and low-angle course shots",
+    perk: "Dynamic stride action. In shot for 13.1 miles of leg work.",
     tier: "secondary",
   },
   right_sleeve: {
     dimensions: "80 × 60 mm",
-    perk: "Side-profile shots — arm swing keeps you in every lateral frame",
+    perk: "Side-profile visibility. Arms swinging through every lateral photo angle.",
     tier: "secondary",
   },
   left_sleeve: {
     dimensions: "80 × 60 mm",
-    perk: "Side-profile shots — arm swing keeps you in every lateral frame",
+    perk: "Side-profile visibility. Arms swinging through every lateral photo angle.",
     tier: "secondary",
   },
   left_sock: {
     dimensions: "60 × 40 mm",
-    perk: "Action detail — low-angle strides and finish-chute cutaways",
+    perk: "Low-angle action detail. Low-stride cuts and finish-chute moments.",
     tier: "secondary",
   },
   right_sock: {
     dimensions: "60 × 40 mm",
-    perk: "Action detail — low-angle strides and finish-chute cutaways",
+    perk: "Low-angle action detail. Low-stride cuts and finish-chute moments.",
     tier: "secondary",
   },
 };
 
-const STEPS = [
+const DIVISION_RULES = [
   {
     num: "01",
-    title: "Pick your spot & upload",
-    body: "Choose your exact placement on the interactive kit map and drop in your logo. What you see is what prints on the kit.",
+    title: "Front and back are separate brands.",
+    body: "The shirt carries clear front and back real estate. Nobody is buying a wrap that repeats the same mark, because nobody ever sees both at once.",
   },
   {
     num: "02",
-    title: "Lock it in at checkout",
-    body: "Secure payment holds your placement instantly. Add a social announcement or SEO backlink if you want extra reach.",
+    title: "Printed once, zero cheap vinyl.",
+    body: "Every placement is sublimated directly into the fabric of a high-performance custom race suit—no peeling stickers or heavy patches.",
   },
   {
     num: "03",
-    title: "Show up on race day",
-    body: "Your logo runs live past 60,000+ runners and spectators along the 13.1-mile Newcastle-to-South-Shields route — targeting a ~2:05 finish.",
+    title: "Fast-turnaround kit printing.",
+    body: "With race day on September 13th, kit artwork locks on September 1st to allow express printing and a quick test run. Once inventory is gone or September 1st hits, the board locks.",
   },
+] as const;
+
+const STEPS = [
+  {
+    num: "01",
+    title: "Pick a spot & pay.",
+    body: "Card checkout via Dodo, instant confirmation. The spot is marked sold the moment it clears.",
+  },
+  {
+    num: "02",
+    title: "Send artwork immediately.",
+    body: "PNG, SVG, or WebP. Transparent backgrounds preferred. You'll get a digital proof to approve before the file goes to the printer on September 1st.",
+  },
+  {
+    num: "03",
+    title: "Race day & visibility.",
+    body: "Your brand runs past 60,000+ runners and hundreds of thousands of spectators lining the course from Newcastle to South Shields on September 13th.",
+  },
+] as const;
+
+const RACE_STATS = [
+  { label: "Event", value: "Great North Run (World's Largest Half Marathon)" },
+  { label: "Date", value: "September 13, 2026" },
+  { label: "Distance", value: "13.1 Miles (Newcastle → South Shields)" },
+  { label: "Target Time", value: "~2:05" },
+  { label: "Field", value: "60,000+ Runners & Televised Broadcast" },
 ] as const;
 
 const FAQ_ITEMS = [
   {
-    q: "What logo formats do you need?",
-    a: "PNG, SVG, or WebP. SVG or a transparent high-resolution PNG prints sharpest on fabric — no muddy edges, no surprise backgrounds.",
+    q: "What do I actually get?",
+    a: "Your logo printed onto my race-day kit, digital proof sign-off before printing, and direct exposure in front of 60,000+ runners and dense crowd coverage on September 13th.",
   },
   {
     q: "When is the printing deadline?",
-    a: "Artwork locks after payment. Logos are printed onto the race kit in the days before race weekend, with a proof sent once your file is approved for print.",
+    a: "Artwork closes strict on September 1st so the suit can be express printed, shipped, and tested before race morning.",
   },
   {
-    q: "Is payment secure?",
-    a: "Yes. Checkout runs through a secure payment provider. Your placement is held only after successful payment — no card details are stored on this site.",
+    q: "What if I hate the proof?",
+    a: "Kit proofs are signed off by you in writing before the file goes to the printer. If the digital proof isn't right, we fix the layout before printing.",
   },
   {
-    q: "How do add-ons work?",
-    a: `Optional at checkout, fulfilled with your placement. ${SOCIAL_POST_ADDON.title} (£${SOCIAL_POST_ADDON.price_gbp}): a dedicated announcement on X & LinkedIn tagging your brand. ${DOFOLLOW_LINK_ADDON.title} (£${DOFOLLOW_LINK_ADDON.price_gbp}): a permanent dofollow link on sponsormyshirt.app.`,
+    q: "Who can’t buy?",
+    a: "No adult content, no gambling, no illegal products, and no medical/supplement claims. The test is simple: if I wouldn't post it from my personal account, it doesn't go on my kit.",
+  },
+  {
+    q: "Can I buy more than one slot?",
+    a: "Yes. Buy them one by one. Nothing stops one brand from taking multiple slots (e.g., matching both sleeves or both socks).",
   },
 ] as const;
 
@@ -154,8 +180,8 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
           <span id="positions-heading">Positions</span>
         </SectionHeading>
         <p className="mt-2 w-full text-[15px] leading-relaxed text-zinc-500">
-          Physical kit visibility, priced so small brands can buy real race-day
-          exposure — not a vague “partnership.”
+          Eleven placements. One kit. Every spot priced for what cameras and
+          crowds actually see.
         </p>
 
         <div className="mt-8 overflow-hidden rounded-xl border border-[#E4E4E7] bg-white">
@@ -219,41 +245,27 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
           <span id="divided-heading">How it&apos;s divided</span>
         </SectionHeading>
         <p className="mt-2 w-full text-[15px] leading-relaxed text-zinc-500">
-          Placements map to how cameras and crowds actually see a runner —
-          chest for broadcast, back for tracking, sleeves for profile, lower
-          kit for action.
+          Three rules. No partnership fog. No soft inventory.
         </p>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-12">
-          <div className="rounded-xl border border-[#E4E4E7] bg-white px-5 py-6 sm:px-6 lg:col-span-6 lg:px-8">
-            <p className="flex items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-emerald-700">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-600" />
-              High visibility
-            </p>
-            <h3 className="mt-3 text-lg font-medium tracking-tight text-zinc-900">
-              Chest, upper back, cap
-            </h3>
-            <p className="mt-2 text-[15px] leading-relaxed text-zinc-500">
-              Prime chest real estate for broadcast and front-facing photos;
-              upper back for long-duration runner tracking; cap front for
-              eye-level finish shots. The placements that earn the most frames.
-            </p>
-          </div>
-          <div className="rounded-xl border border-[#E4E4E7] bg-white px-5 py-6 sm:px-6 lg:col-span-6 lg:px-8">
-            <p className="flex items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-zinc-400" />
-              Secondary
-            </p>
-            <h3 className="mt-3 text-lg font-medium tracking-tight text-zinc-900">
-              Sleeves, shorts, socks, lower back
-            </h3>
-            <p className="mt-2 text-[15px] leading-relaxed text-zinc-500">
-              Sleeves catch side-profile shots; shorts and socks own dynamic
-              action photos; lower back stays in follow-cam. Affordable entry
-              with real course presence for 13.1 miles.
-            </p>
-          </div>
-        </div>
+        <ol className="mt-8 grid gap-4 sm:grid-cols-3 lg:grid-cols-12">
+          {DIVISION_RULES.map((rule) => (
+            <li
+              key={rule.num}
+              className="rounded-xl border border-[#E4E4E7] bg-white px-5 py-6 sm:px-6 lg:col-span-4 lg:px-8"
+            >
+              <span className="font-mono text-xs font-medium tabular-nums text-zinc-400">
+                Rule {rule.num}
+              </span>
+              <h3 className="mt-3 text-base font-medium tracking-tight text-zinc-900">
+                {rule.title}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-zinc-500">
+                {rule.body}
+              </p>
+            </li>
+          ))}
+        </ol>
       </section>
 
       {/* How it works */}
@@ -267,9 +279,7 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
           <span id="works-heading">How it works</span>
         </SectionHeading>
         <p className="mt-2 w-full text-[15px] leading-relaxed text-zinc-500">
-          Pick a spot, pay once, get your logo printed on the race-day kit —
-          built for indie projects and small businesses that want clear,
-          physical visibility.
+          Pick a spot. Pay. Send artwork. Done before September 1st.
         </p>
 
         <ol className="mt-8 grid gap-4 sm:grid-cols-3 lg:grid-cols-12">
@@ -309,33 +319,18 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
           <span id="race-heading">The race</span>
         </SectionHeading>
         <div className="mt-8 rounded-xl border border-[#E4E4E7] bg-white px-5 py-8 sm:px-8 sm:py-10 lg:px-10">
-          <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
-            <p className="text-[15px] leading-relaxed text-zinc-500 sm:text-base lg:col-span-7">
-              The Great North Run is the world’s biggest half marathon —{" "}
-              <span className="font-medium text-zinc-800">60,000+ runners</span>,
-              televised coverage, and thousands of spectators lining the{" "}
-              <span className="font-medium text-zinc-800">13.1-mile</span>{" "}
-              Newcastle-to-South-Shields route. Target finish around{" "}
-              <span className="font-medium text-zinc-800">~2:05</span> — your logo
-              on course for the full broadcast window.
-            </p>
-            <dl className="grid gap-6 sm:grid-cols-3 lg:col-span-5 lg:grid-cols-1 lg:gap-5">
-              {[
-                { label: "Field", value: "60,000+ runners" },
-                { label: "Route", value: "Newcastle → South Shields" },
-                { label: "Target time", value: "~2:05" },
-              ].map((stat) => (
-                <div key={stat.label}>
-                  <dt className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
-                    {stat.label}
-                  </dt>
-                  <dd className="mt-1.5 text-lg font-medium tracking-tight text-zinc-900">
-                    {stat.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
+          <dl className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-5">
+            {RACE_STATS.map((stat) => (
+              <div key={stat.label}>
+                <dt className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
+                  {stat.label}
+                </dt>
+                <dd className="mt-1.5 text-base font-medium tracking-tight text-zinc-900 sm:text-lg">
+                  {stat.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 
@@ -350,8 +345,7 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
           <span id="faq-heading">FAQ</span>
         </SectionHeading>
         <p className="mt-2 w-full text-[15px] leading-relaxed text-zinc-500">
-          Straight answers on artwork, print deadlines, payment, and add-ons —
-          before you spend a pound.
+          Direct answers. No soft language.
         </p>
 
         <div className="mt-8 overflow-hidden rounded-xl border border-[#E4E4E7] bg-white">
@@ -410,18 +404,15 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
         aria-labelledby="claim-cta-heading"
         className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 px-6 py-10 text-center sm:px-10 sm:py-14"
       >
-        <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-500">
-          Limited race-day inventory
-        </p>
         <h2
           id="claim-cta-heading"
-          className="mt-3 text-2xl font-medium tracking-tight text-white sm:text-3xl"
+          className="text-2xl font-medium tracking-tight text-white sm:text-3xl"
         >
           Claim a position
         </h2>
         <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-zinc-400">
-          Direct physical logo placement on race-day kit for the Great North
-          Run — pick a spot, upload, lock it in.
+          Direct physical logo placement on race day. Pick a spot, upload
+          artwork before September 1st, lock it in.
         </p>
         <button
           type="button"
