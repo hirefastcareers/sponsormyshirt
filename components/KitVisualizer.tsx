@@ -4,7 +4,7 @@
  * Kit blueprint: plain t-shirt / shorts / cap / socks silhouettes
  * with numbered circular placement nodes.
  */
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type { SponsorshipSlot } from "@/types/sponsorship";
 import {
   hasAnySoldPosition,
@@ -12,6 +12,10 @@ import {
   TITLE_TAKEOVER,
   TITLE_TAKEOVER_ID,
 } from "@/lib/positions";
+import {
+  normalizeSponsorUrl,
+  resolveSponsorLogoUrl,
+} from "@/lib/sponsor-display";
 import { MARKER_POS, ZONE_META, type ZoneId } from "@/lib/zones";
 
 const FILL = "#EFEFEA";
@@ -69,12 +73,19 @@ export default function KitVisualizer({
     const isSold = slot.status === "sold";
     const isPending = slot.status === "pending";
     const available = slot.status === "available";
+    const logoUrl = resolveSponsorLogoUrl(slot.sponsor_logo_url);
+    const sponsorHref = normalizeSponsorUrl(slot.sponsor_url);
+    const showLogo = Boolean(logoUrl) && (isSold || isPending);
 
     let bg = "#FFFFFF";
     let border = INK;
     let color = INK;
 
-    if (isSold) {
+    if (showLogo) {
+      bg = "#FFFFFF";
+      border = isSold ? SOLD : "#D97706";
+      color = INK;
+    } else if (isSold) {
       bg = SOLD;
       border = SOLD;
       color = "#FFFFFF";
@@ -88,18 +99,83 @@ export default function KitVisualizer({
       color = "#FFFFFF";
     }
 
-    const size = isSold ? Math.max(pos.size, 36) : pos.size;
+    const size = showLogo || isSold ? Math.max(pos.size, 36) : pos.size;
+    const shellStyle: CSSProperties = {
+      left: pos.left,
+      top: pos.top,
+      width: showLogo ? size : isSold ? size + 10 : size,
+      height: size,
+      background: bg,
+      borderColor: border,
+      color,
+      boxShadow: isHovered ? "0 0 0 4px rgba(5,150,105,0.18)" : undefined,
+      zIndex: isHovered ? 20 : 10,
+      transform: `translate(-50%, -50%) scale(${isHovered ? 1.08 : 1})`,
+    };
+
+    const title =
+      showLogo && slot.sponsor_name
+        ? `${slot.slot_name} — ${slot.sponsor_name}`
+        : isSold
+          ? `${slot.slot_name} — Sold`
+          : isPending
+            ? `${slot.slot_name} — Pending`
+            : `${slot.slot_name} — £${slot.price_gbp}`;
+
+    if (showLogo && logoUrl) {
+      const logo = (
+        // eslint-disable-next-line @next/next/no-img-element -- external sponsor logos from Supabase Storage
+        <img
+          src={logoUrl}
+          alt={slot.sponsor_name ?? `${slot.slot_name} sponsor`}
+          className="h-full w-full rounded-full object-cover"
+          draggable={false}
+        />
+      );
+
+      const shellClass =
+        "absolute block overflow-hidden rounded-full border-[1.5px] transition-all duration-150";
+
+      if (sponsorHref) {
+        return (
+          <a
+            key={id}
+            href={sponsorHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={title}
+            aria-label={`${meta.num} ${slot.slot_name} — ${slot.sponsor_name ?? "sponsor"}`}
+            onMouseEnter={() => onHover(id)}
+            onMouseLeave={() => onHover(null)}
+            className={`${shellClass} cursor-pointer`}
+            style={shellStyle}
+          >
+            {logo}
+          </a>
+        );
+      }
+
+      return (
+        <div
+          key={id}
+          title={title}
+          aria-label={`${meta.num} ${slot.slot_name}`}
+          onMouseEnter={() => onHover(id)}
+          onMouseLeave={() => onHover(null)}
+          className={shellClass}
+          style={shellStyle}
+        >
+          {logo}
+        </div>
+      );
+    }
 
     return (
       <button
         key={id}
         type="button"
         disabled={!available}
-        title={
-          isSold
-            ? `${slot.slot_name} — Sold`
-            : `${slot.slot_name} — £${slot.price_gbp}`
-        }
+        title={title}
         aria-pressed={isSelected}
         aria-label={`${meta.num} ${slot.slot_name}`}
         onClick={() => available && onToggle(slot)}
@@ -107,17 +183,8 @@ export default function KitVisualizer({
         onMouseLeave={() => onHover(null)}
         className="absolute flex items-center justify-center rounded-full border-[1.5px] font-mono text-[10px] font-medium transition-all duration-150"
         style={{
-          left: pos.left,
-          top: pos.top,
-          width: isSold ? size + 10 : size,
-          height: size,
-          background: bg,
-          borderColor: border,
-          color,
+          ...shellStyle,
           cursor: available ? "pointer" : "not-allowed",
-          boxShadow: isHovered ? "0 0 0 4px rgba(5,150,105,0.18)" : undefined,
-          zIndex: isHovered ? 20 : 10,
-          transform: `translate(-50%, -50%) scale(${isHovered ? 1.08 : 1})`,
         }}
       >
         {isSold ? (

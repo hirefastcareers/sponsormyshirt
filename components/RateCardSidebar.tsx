@@ -10,6 +10,7 @@ import {
   TITLE_TAKEOVER,
   TITLE_TAKEOVER_ID,
 } from "@/lib/positions";
+import { normalizeSponsorUrl } from "@/lib/sponsor-display";
 import { orderSlots } from "@/lib/zones";
 
 interface RateCardSidebarProps {
@@ -106,11 +107,12 @@ export default function RateCardSidebar({
                     : "text-zinc-400"
               }`}
             >
-              {titleSlot.status === "sold"
-                ? "Sold"
-                : takeoverOpen
-                  ? `£${TITLE_TAKEOVER.price_gbp.toLocaleString("en-GB")}`
-                  : "Locked"}
+              <SlotStatusValue
+                slot={titleSlot}
+                available={takeoverOpen}
+                availableLabel={`£${TITLE_TAKEOVER.price_gbp.toLocaleString("en-GB")}`}
+                unavailableFallback="Locked"
+              />
             </span>
           </div>
         )}
@@ -164,11 +166,12 @@ export default function RateCardSidebar({
                       : "text-zinc-900"
                 }`}
               >
-                {available
-                  ? `£${slot.price_gbp.toLocaleString("en-GB")}`
-                  : sold
-                    ? "Sold"
-                    : "Pending"}
+                <SlotStatusValue
+                  slot={slot}
+                  available={available}
+                  availableLabel={`£${slot.price_gbp.toLocaleString("en-GB")}`}
+                  unavailableFallback={sold ? "Sold" : "Pending"}
+                />
               </span>
             </div>
           );
@@ -193,6 +196,48 @@ export default function RateCardSidebar({
       </div>
     </aside>
   );
+}
+
+function SlotStatusValue({
+  slot,
+  available,
+  availableLabel,
+  unavailableFallback,
+}: {
+  slot: SponsorshipSlot;
+  available: boolean;
+  availableLabel: string;
+  unavailableFallback: string;
+}) {
+  if (available) return availableLabel;
+
+  const name = slot.sponsor_name?.trim();
+  const href = normalizeSponsorUrl(slot.sponsor_url);
+
+  if (name && href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={(e) => e.stopPropagation()}
+        className="max-w-[9rem] truncate font-sans text-[13px] text-zinc-700 underline-offset-2 hover:text-zinc-900 hover:underline"
+        title={name}
+      >
+        {name}
+      </a>
+    );
+  }
+
+  if (name) {
+    return (
+      <span className="max-w-[9rem] truncate font-sans text-[13px] text-zinc-500">
+        {name}
+      </span>
+    );
+  }
+
+  return unavailableFallback;
 }
 
 function SoldAddonHints({ slot }: { slot: SponsorshipSlot }) {
