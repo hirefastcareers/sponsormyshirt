@@ -2,9 +2,12 @@
 
 /**
  * Live visitor badge for the header stats bar.
- * Records a view on mount via POST /api/visits; renders nothing on failure.
+ * Counts one organic view per browser tab session via sessionStorage;
+ * refreshes in the same tab only fetch the current total (GET /api/visits).
  */
 import { useEffect, useState } from "react";
+
+const SESSION_VISITED_KEY = "has_visited";
 
 export default function VisitorCounter() {
   const [totalViews, setTotalViews] = useState<number | null>(null);
@@ -12,9 +15,16 @@ export default function VisitorCounter() {
   useEffect(() => {
     let cancelled = false;
 
-    async function recordVisit() {
+    async function loadViews() {
       try {
-        const res = await fetch("/api/visits", { method: "POST" });
+        const hasVisited =
+          typeof window !== "undefined" &&
+          window.sessionStorage.getItem(SESSION_VISITED_KEY) === "true";
+
+        const res = await fetch("/api/visits", {
+          method: hasVisited ? "GET" : "POST",
+          credentials: "same-origin",
+        });
         if (!res.ok) return;
 
         const json = (await res.json()) as { totalViews?: unknown };
@@ -22,13 +32,17 @@ export default function VisitorCounter() {
 
         if (!cancelled && Number.isFinite(n) && n >= 0) {
           setTotalViews(n);
+
+          if (!hasVisited) {
+            window.sessionStorage.setItem(SESSION_VISITED_KEY, "true");
+          }
         }
       } catch {
         // Fail closed — no fake numbers
       }
     }
 
-    void recordVisit();
+    void loadViews();
     return () => {
       cancelled = true;
     };
