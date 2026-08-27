@@ -7,6 +7,8 @@ import type { SponsorshipSlot } from "@/types/sponsorship";
 
 export const CHARITY_NAME = "Dementia UK";
 
+export const CHARITY_URL = "https://www.dementiauk.org/";
+
 export const CHARITY_DONATION_RATE = 0.25;
 
 export const CHARITY_SPLIT_NOTE =
