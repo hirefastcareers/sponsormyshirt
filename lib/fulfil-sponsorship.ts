@@ -11,6 +11,7 @@ import {
 } from "@/lib/supabase-admin";
 
 export type PaymentMetadata = {
+  checkout_type?: string;
   slot_id?: string;
   slotId?: string;
   slot_ids?: string | string[];
@@ -67,6 +68,7 @@ function addonProductIds(): Set<string> {
     [
       process.env.DODO_PRODUCT_SOCIAL_POST,
       process.env.DODO_PRODUCT_DOFOLLOW_LINK,
+      process.env.DODO_PRODUCT_MICRO_SPONSOR,
     ].filter((id): id is string => Boolean(id?.trim())),
   );
 }

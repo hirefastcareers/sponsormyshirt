@@ -29,6 +29,7 @@ export default async function SuccessPage({
 }: PageProps<"/success">) {
   const params = await searchParams;
   const statusParam = firstParam(params.status);
+  const typeParam = firstParam(params.type);
   const slotParam = firstParam(params.slot);
   const categoryParam = firstParam(params.category);
   const sessionIdParam = firstParam(params.session_id);
@@ -41,8 +42,11 @@ export default async function SuccessPage({
 
   await confirmSlotSoldFromSuccessRedirect(statusParam, slotParam, slotId);
 
+  const isMicroSponsor = typeParam === "micro";
   const kitItem = categoryParam?.trim().toLowerCase() || "kit";
-  const headline = `Payment Received — You're on the ${kitItem}!`;
+  const headline = isMicroSponsor
+    ? "Payment Received — You're on the Micro-Sponsor Wall!"
+    : `Payment Received — You're on the ${kitItem}!`;
 
   return (
     <main className="min-h-screen bg-[#F9F9FB]">
@@ -64,7 +68,12 @@ export default async function SuccessPage({
 
         <div className="mt-8 rounded-2xl border border-[#E4E4E7] bg-white p-6 shadow-sm sm:p-8">
           <p className="text-[15px] leading-relaxed text-zinc-600 sm:text-base">
-            {slotName ? (
+            {isMicroSponsor ? (
+              <>
+                Thank you for joining the Micro-Sponsor Wall! Your logo should
+                appear on the site within a few seconds.
+              </>
+            ) : slotName ? (
               <>
                 Thank you for sponsoring the{" "}
                 <span className="font-semibold text-zinc-900">{slotName}</span>!
@@ -74,17 +83,19 @@ export default async function SuccessPage({
             )}
           </p>
 
-          <p className="mt-4 text-[15px] leading-relaxed text-zinc-600 sm:text-base">
-            Please email your high-res / vector logo (.SVG, .EPS, .AI, or
-            high-res .PNG) to{" "}
-            <a
-              href={`mailto:${SPONSOR_EMAIL}`}
-              className="font-semibold text-zinc-900 underline decoration-zinc-300 underline-offset-4 transition hover:decoration-emerald-500"
-            >
-              {SPONSOR_EMAIL}
-            </a>{" "}
-            along with your order details.
-          </p>
+          {!isMicroSponsor && (
+            <p className="mt-4 text-[15px] leading-relaxed text-zinc-600 sm:text-base">
+              Please email your high-res / vector logo (.SVG, .EPS, .AI, or
+              high-res .PNG) to{" "}
+              <a
+                href={`mailto:${SPONSOR_EMAIL}`}
+                className="font-semibold text-zinc-900 underline decoration-zinc-300 underline-offset-4 transition hover:decoration-emerald-500"
+              >
+                {SPONSOR_EMAIL}
+              </a>{" "}
+              along with your order details.
+            </p>
+          )}
         </div>
 
         <div className="mt-10">
@@ -92,7 +103,7 @@ export default async function SuccessPage({
             href="/"
             className="inline-flex items-center justify-center rounded-full bg-zinc-900 px-6 py-3 text-sm font-medium text-white transition hover:bg-zinc-800"
           >
-            Return to Kit Overview
+            Return to {isMicroSponsor ? "Homepage" : "Kit Overview"}
           </Link>
         </div>
       </section>

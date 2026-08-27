@@ -17,6 +17,11 @@ import {
   verifyWebhookPayload,
 } from "@dodopayments/core";
 import {
+  enrichMicroSponsorMetadata,
+  fulfilMicroSponsor,
+  isMicroSponsorCheckout,
+} from "@/lib/fulfil-micro-sponsor";
+import {
   fulfilSponsorship,
   resolvePaymentMetadata,
   type PaymentMetadata,
@@ -45,26 +50,51 @@ async function processWebhookFulfilment(
 ): Promise<void> {
   console.log("[webhook] Processing fulfilment", { eventType });
 
-  const metadata = await resolvePaymentMetadata(data);
-  console.log("[webhook] Resolved metadata slot_id:", metadata.slot_id ?? null);
-
-  const result = await fulfilSponsorship(metadata);
-
-  if (!result.ok) {
-    const message =
-      result.reason === "missing_slot_id"
-        ? `${eventType} metadata missing slot_id`
-        : (result.message ?? "Failed to update sponsorship_slots");
-    console.error("[webhook] Fulfilment failed:", message);
-    throw new Error(message);
-  }
-
-  console.log("[webhook] Fulfilment complete", {
-    eventType,
-    mode: result.mode,
-    slot_ids: result.slot_ids,
-    sponsor_name: result.sponsor_name,
+  const metadata = enrichMicroSponsorMetadata(
+    await resolvePaymentMetadata(data),
+    data.product_cart,
+  );
+  console.log("[webhook] Resolved metadata", {
+    checkout_type: metadata.checkout_type ?? null,
+    slot_id: metadata.slot_id ?? null,
   });
+
+  if (isMicroSponsorCheckout(metadata, data.product_cart)) {
+    const result = await fulfilMicroSponsor(metadata);
+
+    if (!result.ok) {
+      const message =
+        result.reason === "missing_fields"
+          ? `${eventType} metadata missing micro-sponsor fields`
+          : (result.message ?? "Failed to insert micro_sponsors");
+      console.error("[webhook] Micro-sponsor fulfilment failed:", message);
+      throw new Error(message);
+    }
+
+    console.log("[webhook] Micro-sponsor fulfilment complete", {
+      eventType,
+      sponsor_name: result.sponsor_name,
+      micro_sponsor_id: result.micro_sponsor_id,
+    });
+  } else {
+    const result = await fulfilSponsorship(metadata);
+
+    if (!result.ok) {
+      const message =
+        result.reason === "missing_slot_id"
+          ? `${eventType} metadata missing slot_id`
+          : (result.message ?? "Failed to update sponsorship_slots");
+      console.error("[webhook] Fulfilment failed:", message);
+      throw new Error(message);
+    }
+
+    console.log("[webhook] Fulfilment complete", {
+      eventType,
+      mode: result.mode,
+      slot_ids: result.slot_ids,
+      sponsor_name: result.sponsor_name,
+    });
+  }
 
   revalidatePath("/");
   revalidatePath("/success");
