@@ -8,6 +8,11 @@ import { useState } from "react";
 import KitVisualizer from "@/components/KitVisualizer";
 import RateCardSidebar from "@/components/RateCardSidebar";
 import SponsorshipModal from "@/components/SponsorshipModal";
+import {
+  isTitleTakeover,
+  isTitleTakeoverPurchasable,
+  TITLE_TAKEOVER_ID,
+} from "@/lib/positions";
 import type { SponsorshipSlot } from "@/types/sponsorship";
 
 interface SponsorExperienceProps {
@@ -23,10 +28,29 @@ export default function SponsorExperience({ slots }: SponsorExperienceProps) {
 
   function toggle(slot: SponsorshipSlot) {
     if (slot.status !== "available") return;
+
+    // Title takeover requires a fully open kit
+    if (
+      isTitleTakeover(slot.id) &&
+      !isTitleTakeoverPurchasable(slots)
+    ) {
+      return;
+    }
+
     setSelectedIds((prev) => {
       const next = new Set(prev);
-      if (next.has(slot.id)) next.delete(slot.id);
-      else next.add(slot.id);
+      if (next.has(slot.id)) {
+        next.delete(slot.id);
+        return next;
+      }
+
+      // Title takeover is exclusive — clears individual picks, and vice versa
+      if (isTitleTakeover(slot.id)) {
+        return new Set([TITLE_TAKEOVER_ID]);
+      }
+
+      next.delete(TITLE_TAKEOVER_ID);
+      next.add(slot.id);
       return next;
     });
   }
@@ -36,12 +60,23 @@ export default function SponsorExperience({ slots }: SponsorExperienceProps) {
       (s) => selectedIds.has(s.id) && s.status === "available",
     );
     if (available.length > 0) {
-      // Checkout is one slot at a time — highest-priced selection first
-      const next = [...available].sort((a, b) => b.price_gbp - a.price_gbp)[0];
-      setCheckoutSlot(next);
-      return;
+      // Prefer title takeover if selected; otherwise highest-priced pick
+      const takeover = available.find((s) => isTitleTakeover(s.id));
+      if (takeover && isTitleTakeoverPurchasable(slots)) {
+        setCheckoutSlot(takeover);
+        return;
+      }
+      const next = [...available]
+        .filter((s) => !isTitleTakeover(s.id))
+        .sort((a, b) => b.price_gbp - a.price_gbp)[0];
+      if (next) {
+        setCheckoutSlot(next);
+        return;
+      }
     }
-    const first = slots.find((s) => s.status === "available");
+    const first = slots.find(
+      (s) => s.status === "available" && !isTitleTakeover(s.id),
+    );
     if (first) setCheckoutSlot(first);
   }
 

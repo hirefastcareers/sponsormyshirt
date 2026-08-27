@@ -3,7 +3,13 @@
 /**
  * Right-rail selection / rate card: totals, inventory list, claim CTA.
  */
+import { addonLabels } from "@/lib/addons";
 import type { SponsorshipSlot } from "@/types/sponsorship";
+import {
+  isTitleTakeoverPurchasable,
+  TITLE_TAKEOVER,
+  TITLE_TAKEOVER_ID,
+} from "@/lib/positions";
 import { orderSlots } from "@/lib/zones";
 
 interface RateCardSidebarProps {
@@ -26,9 +32,16 @@ export default function RateCardSidebar({
   onClaim,
 }: RateCardSidebarProps) {
   const ordered = orderSlots(slots);
-  const selected = ordered
-    .map((r) => r.slot)
-    .filter((s) => selectedIds.has(s.id) && s.status === "available");
+  const titleSlot = slots.find((s) => s.id === TITLE_TAKEOVER_ID);
+  const takeoverOpen = isTitleTakeoverPurchasable(slots);
+  const titleSelected = selectedIds.has(TITLE_TAKEOVER_ID);
+
+  const selected = [
+    ...(titleSelected && titleSlot?.status === "available" ? [titleSlot] : []),
+    ...ordered
+      .map((r) => r.slot)
+      .filter((s) => selectedIds.has(s.id) && s.status === "available"),
+  ];
   const total = selected.reduce((sum, s) => sum + s.price_gbp, 0);
   const count = selected.length;
 
@@ -40,15 +53,67 @@ export default function RateCardSidebar({
         </p>
         <div className="mt-2 flex items-baseline justify-between gap-3">
           <span className="text-3xl font-medium tracking-tight text-zinc-900 tabular-nums">
-            £{total}
+            £{total.toLocaleString("en-GB")}
           </span>
           <span className="text-sm text-zinc-500">
-            {count === 1 ? "1 placement" : `${count} placements`}
+            {titleSelected
+              ? "Whole kit"
+              : count === 1
+                ? "1 placement"
+                : `${count} placements`}
           </span>
         </div>
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto">
+        {titleSlot && (
+          <div
+            role={takeoverOpen ? "button" : undefined}
+            tabIndex={takeoverOpen ? 0 : undefined}
+            onClick={() => takeoverOpen && onToggle(titleSlot)}
+            onKeyDown={(e) => {
+              if (!takeoverOpen) return;
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onToggle(titleSlot);
+              }
+            }}
+            onMouseEnter={() => onHover(TITLE_TAKEOVER_ID)}
+            onMouseLeave={() => onHover(null)}
+            className={`grid grid-cols-[28px_1fr_auto] items-center gap-3 border-b border-zinc-100 px-5 py-3.5 text-sm transition-colors sm:px-6 ${
+              takeoverOpen ? "cursor-pointer" : "cursor-default opacity-60"
+            } ${
+              titleSelected
+                ? "bg-emerald-50"
+                : hoveredId === TITLE_TAKEOVER_ID
+                  ? "bg-zinc-50"
+                  : "bg-transparent"
+            }`}
+          >
+            <span className="font-mono text-[10px] text-zinc-400">TS</span>
+            <span className="min-w-0">
+              <span className="block truncate text-zinc-800">
+                Title Sponsor / Whole Shirt
+              </span>
+              <SoldAddonHints slot={titleSlot} />
+            </span>
+            <span
+              className={`font-mono text-[13px] tabular-nums ${
+                titleSelected
+                  ? "font-medium text-emerald-700"
+                  : takeoverOpen
+                    ? "text-zinc-900"
+                    : "text-zinc-400"
+              }`}
+            >
+              {titleSlot.status === "sold"
+                ? "Sold"
+                : takeoverOpen
+                  ? `£${TITLE_TAKEOVER.price_gbp.toLocaleString("en-GB")}`
+                  : "Locked"}
+            </span>
+          </div>
+        )}
         {ordered.map(({ zone, slot }) => {
           const available = slot.status === "available";
           const selected = selectedIds.has(slot.id);
@@ -84,7 +149,12 @@ export default function RateCardSidebar({
               <span className="font-mono text-[10px] text-zinc-400">
                 {zone.num}
               </span>
-              <span className="truncate text-zinc-800">{slot.slot_name}</span>
+              <span className="min-w-0">
+                <span className="block truncate text-zinc-800">
+                  {slot.slot_name}
+                </span>
+                <SoldAddonHints slot={slot} />
+              </span>
               <span
                 className={`font-mono text-[13px] tabular-nums ${
                   selected
@@ -95,7 +165,7 @@ export default function RateCardSidebar({
                 }`}
               >
                 {available
-                  ? `£${slot.price_gbp}`
+                  ? `£${slot.price_gbp.toLocaleString("en-GB")}`
                   : sold
                     ? "Sold"
                     : "Pending"}
@@ -122,5 +192,17 @@ export default function RateCardSidebar({
         </button>
       </div>
     </aside>
+  );
+}
+
+function SoldAddonHints({ slot }: { slot: SponsorshipSlot }) {
+  if (slot.status !== "sold" && slot.status !== "pending") return null;
+  const labels = addonLabels(slot);
+  if (labels.length === 0) return null;
+
+  return (
+    <span className="mt-0.5 block truncate font-mono text-[10px] text-emerald-700">
+      {labels.join(" · ")}
+    </span>
   );
 }

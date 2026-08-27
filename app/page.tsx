@@ -4,155 +4,87 @@
  * Server Component: fetches live slot inventory from Supabase,
  * then hydrates the split-screen sponsorship experience.
  */
+import PaymentSuccessBanner from "@/components/PaymentSuccessBanner";
 import SponsorExperience from "@/components/SponsorExperience";
+import TakenBanner from "@/components/TakenBanner";
+import VisitorCounter from "@/components/VisitorCounter";
+import {
+  applyCanonicalPrices,
+  getKitPositions,
+  POSITION_META,
+  POSITION_PRICES,
+  TITLE_TAKEOVER,
+  type PositionId,
+} from "@/lib/positions";
 import { getSponsorshipSlots } from "@/lib/slots";
 import type { SponsorshipSlot } from "@/types/sponsorship";
 
 /** Demo inventory used when Supabase is not yet configured. */
 const FALLBACK_SLOTS: SponsorshipSlot[] = [
   {
-    id: "chest_center",
-    slot_name: "Chest Center",
-    category: "shirt",
-    price_gbp: 350,
+    id: TITLE_TAKEOVER.id,
+    slot_name: TITLE_TAKEOVER.slot_name,
+    category: TITLE_TAKEOVER.category,
+    price_gbp: TITLE_TAKEOVER.price_gbp,
     status: "available",
     sponsor_name: null,
     sponsor_url: null,
     sponsor_logo_url: null,
     x_position: 50,
-    y_position: 52,
+    y_position: 50,
     dodo_product_id: null,
   },
-  {
-    id: "left_chest",
-    slot_name: "Left Chest / Heart",
-    category: "shirt",
-    price_gbp: 250,
-    status: "available",
-    sponsor_name: null,
-    sponsor_url: null,
-    sponsor_logo_url: null,
-    x_position: 32,
-    y_position: 40,
-    dodo_product_id: null,
-  },
-  {
-    id: "upper_back",
-    slot_name: "Upper Back",
-    category: "shirt",
-    price_gbp: 200,
-    status: "available",
+  ...(Object.keys(POSITION_PRICES) as PositionId[]).map((id) => ({
+    id,
+    slot_name: POSITION_META[id].slot_name,
+    category: POSITION_META[id].category,
+    price_gbp: POSITION_PRICES[id],
+    status: "available" as const,
     sponsor_name: null,
     sponsor_url: null,
     sponsor_logo_url: null,
     x_position: 50,
-    y_position: 34,
+    y_position: 50,
     dodo_product_id: null,
-  },
-  {
-    id: "lower_back",
-    slot_name: "Lower Back",
-    category: "shirt",
-    price_gbp: 150,
-    status: "available",
-    sponsor_name: null,
-    sponsor_url: null,
-    sponsor_logo_url: null,
-    x_position: 50,
-    y_position: 62,
-    dodo_product_id: null,
-  },
-  {
-    id: "cap_front",
-    slot_name: "Cap Front",
-    category: "headwear",
-    price_gbp: 100,
-    status: "available",
-    sponsor_name: null,
-    sponsor_url: null,
-    sponsor_logo_url: null,
-    x_position: 48,
-    y_position: 38,
-    dodo_product_id: null,
-  },
-  {
-    id: "shorts_left",
-    slot_name: "Shorts Left Leg",
-    category: "shorts",
-    price_gbp: 90,
-    status: "available",
-    sponsor_name: null,
-    sponsor_url: null,
-    sponsor_logo_url: null,
-    x_position: 36,
-    y_position: 48,
-    dodo_product_id: null,
-  },
-  {
-    id: "right_sleeve",
-    slot_name: "Right Sleeve",
-    category: "shirt",
-    price_gbp: 75,
-    status: "available",
-    sponsor_name: null,
-    sponsor_url: null,
-    sponsor_logo_url: null,
-    x_position: 14,
-    y_position: 28,
-    dodo_product_id: null,
-  },
-  {
-    id: "left_sleeve",
-    slot_name: "Left Sleeve",
-    category: "shirt",
-    price_gbp: 75,
-    status: "available",
-    sponsor_name: null,
-    sponsor_url: null,
-    sponsor_logo_url: null,
-    x_position: 86,
-    y_position: 28,
-    dodo_product_id: null,
-  },
-  {
-    id: "left_sock",
-    slot_name: "Left Sock",
-    category: "socks",
-    price_gbp: 50,
-    status: "available",
-    sponsor_name: null,
-    sponsor_url: null,
-    sponsor_logo_url: null,
-    x_position: 26,
-    y_position: 36,
-    dodo_product_id: null,
-  },
-  {
-    id: "right_sock",
-    slot_name: "Right Sock",
-    category: "socks",
-    price_gbp: 50,
-    status: "available",
-    sponsor_name: null,
-    sponsor_url: null,
-    sponsor_logo_url: null,
-    x_position: 74,
-    y_position: 36,
-    dodo_product_id: null,
-  },
+  })),
 ];
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
+function firstParam(
+  value: string | string[] | undefined,
+): string | null {
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) return value[0] ?? null;
+  return null;
+}
+
+export default async function HomePage({
+  searchParams,
+}: PageProps<"/">) {
+  const params = await searchParams;
+  const taken = firstParam(params.taken);
+  const payment = firstParam(params.payment);
+  const successSlotId = firstParam(params.slot);
+
   const fetched = await getSponsorshipSlots();
-  const slots = fetched.length > 0 ? fetched : FALLBACK_SLOTS;
-  const claimed = slots.filter(
+  const slots = applyCanonicalPrices(
+    fetched.length > 0 ? fetched : FALLBACK_SLOTS,
+  );
+  const kitPositions = getKitPositions(slots);
+  const claimed = kitPositions.filter(
     (s) => s.status === "sold" || s.status === "pending",
   ).length;
 
+  const successSlot =
+    payment === "success" && successSlotId
+      ? slots.find((s) => s.id === successSlotId) ?? null
+      : null;
+
   return (
     <main className="min-h-screen bg-[#F9F9FB]">
+      <PaymentSuccessBanner slot={successSlot} />
+      <TakenBanner taken={taken} />
       <header className="border-b border-[#E4E4E7] bg-white/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
           <div className="flex items-baseline gap-3">
@@ -165,8 +97,9 @@ export default async function HomePage() {
           </div>
           <div className="flex items-center gap-6">
             <div className="hidden items-center gap-4 text-xs text-zinc-500 sm:flex">
+              <VisitorCounter />
               <span>
-                <span className="font-medium text-zinc-800">{slots.length}</span>{" "}
+                <span className="font-medium text-zinc-800">{kitPositions.length}</span>{" "}
                 placements
               </span>
               <span className="h-3 w-px bg-zinc-200" />

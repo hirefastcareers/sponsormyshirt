@@ -1,6 +1,7 @@
 /**
  * Browser / Server Component Supabase client (anon key).
- * Used for public reads of sponsorship_slots and client-side logo uploads.
+ * Used for public reads of sponsorship_slots only.
+ * Logo uploads go through POST /api/upload (service role) — never this client.
  */
 import { createClient } from "@supabase/supabase-js";
 

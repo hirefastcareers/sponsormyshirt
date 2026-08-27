@@ -1,0 +1,99 @@
+/**
+ * Canonical kit placements, premium GBP pricing, and title-takeover helpers.
+ * Prices here are the source of truth for the rate card UI.
+ */
+import type { SponsorshipSlot, SlotCategory } from "@/types/sponsorship";
+
+/** Whole-kit title sponsorship — sells every placement in one purchase. */
+export const TITLE_TAKEOVER_ID = "title_takeover" as const;
+
+export const TITLE_TAKEOVER = {
+  id: TITLE_TAKEOVER_ID,
+  slot_name: "Title Sponsor / Whole Kit Takeover",
+  category: "takeover" as const,
+  price_gbp: 1200,
+} as const;
+
+/** Premium rate card — individual placement prices (GBP). */
+export const POSITION_PRICES = {
+  chest_center: 1200,
+  left_chest: 650,
+  upper_back: 500,
+  lower_back: 350,
+  cap_front: 300,
+  shorts_left: 250,
+  shorts_right: 250,
+  right_sleeve: 200,
+  left_sleeve: 200,
+  left_sock: 100,
+  right_sock: 100,
+} as const;
+
+export type PositionId = keyof typeof POSITION_PRICES;
+
+export const POSITION_META: Record<
+  PositionId,
+  { slot_name: string; category: SlotCategory }
+> = {
+  chest_center: { slot_name: "Chest Center", category: "shirt" },
+  left_chest: { slot_name: "Left Chest / Heart", category: "shirt" },
+  upper_back: { slot_name: "Upper Back", category: "shirt" },
+  lower_back: { slot_name: "Lower Back", category: "shirt" },
+  cap_front: { slot_name: "Cap Front", category: "headwear" },
+  shorts_left: { slot_name: "Shorts Left Leg", category: "shorts" },
+  shorts_right: { slot_name: "Shorts Right Leg", category: "shorts" },
+  right_sleeve: { slot_name: "Right Sleeve", category: "shirt" },
+  left_sleeve: { slot_name: "Left Sleeve", category: "shirt" },
+  left_sock: { slot_name: "Left Sock", category: "socks" },
+  right_sock: { slot_name: "Right Sock", category: "socks" },
+};
+
+export function getPositionPrice(slotId: string): number | undefined {
+  if (isTitleTakeover(slotId)) return TITLE_TAKEOVER.price_gbp;
+  if (slotId in POSITION_PRICES) {
+    return POSITION_PRICES[slotId as PositionId];
+  }
+  return undefined;
+}
+
+/**
+ * Overlay canonical GBP prices from this module onto live slot rows
+ * so the rate card / kit UI always show the current rate card.
+ */
+export function applyCanonicalPrices(
+  slots: SponsorshipSlot[],
+): SponsorshipSlot[] {
+  return slots.map((slot) => {
+    const price = getPositionPrice(slot.id);
+    return price === undefined ? slot : { ...slot, price_gbp: price };
+  });
+}
+
+export function isTitleTakeover(slotId: string): boolean {
+  return slotId === TITLE_TAKEOVER_ID;
+}
+
+/** Individual kit placements only (excludes the title takeover master slot). */
+export function getKitPositions(slots: SponsorshipSlot[]): SponsorshipSlot[] {
+  return slots.filter((s) => !isTitleTakeover(s.id));
+}
+
+/**
+ * Title Sponsor is only purchasable when every kit position is still available
+ * (and the takeover row itself is available). Any sold/pending slot blocks it.
+ */
+export function isTitleTakeoverPurchasable(slots: SponsorshipSlot[]): boolean {
+  const positions = getKitPositions(slots);
+  if (positions.length === 0) return false;
+
+  const allPositionsOpen = positions.every((s) => s.status === "available");
+  const takeover = slots.find((s) => isTitleTakeover(s.id));
+  const takeoverOpen = !takeover || takeover.status === "available";
+
+  return allPositionsOpen && takeoverOpen;
+}
+
+/** True when any single kit position has already been sold. */
+export function hasAnySoldPosition(slots: SponsorshipSlot[]): boolean {
+  return getKitPositions(slots).some((s) => s.status === "sold");
+}

@@ -11,10 +11,11 @@ export const ZONE_META = [
   { id: "lower_back", num: "04", garment: "Shirt" },
   { id: "cap_front", num: "05", garment: "Cap" },
   { id: "shorts_left", num: "06", garment: "Shorts" },
-  { id: "right_sleeve", num: "07", garment: "Shirt" },
-  { id: "left_sleeve", num: "08", garment: "Shirt" },
-  { id: "left_sock", num: "09", garment: "Socks" },
-  { id: "right_sock", num: "10", garment: "Socks" },
+  { id: "shorts_right", num: "07", garment: "Shorts" },
+  { id: "right_sleeve", num: "08", garment: "Shirt" },
+  { id: "left_sleeve", num: "09", garment: "Shirt" },
+  { id: "left_sock", num: "10", garment: "Socks" },
+  { id: "right_sock", num: "11", garment: "Socks" },
 ] as const;
 
 export type ZoneId = (typeof ZONE_META)[number]["id"];
@@ -35,7 +36,9 @@ export const MARKER_POS: Record<
   lower_back: { left: "50%", top: "66%", size: 32 },
   // Cap crown panel (above brim)
   cap_front: { left: "50%", top: "36%", size: 30 },
-  shorts_left: { left: "33%", top: "52%", size: 28 },
+  // Wearer's left leg = viewer's right; right leg = viewer's left
+  shorts_left: { left: "67%", top: "52%", size: 28 },
+  shorts_right: { left: "33%", top: "52%", size: 28 },
   left_sock: { left: "25%", top: "32%", size: 26 },
   right_sock: { left: "75%", top: "32%", size: 26 },
 };

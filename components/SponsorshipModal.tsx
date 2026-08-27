@@ -2,9 +2,14 @@
 
 /**
  * Sponsorship checkout modal:
- * collect brand details → upload logo to Supabase Storage → create Dodo session.
+ * collect brand details → optional upsells → upload logo → create Dodo session.
  */
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import {
+  calculateOrderTotalGbp,
+  DOFOLLOW_LINK_ADDON,
+  SOCIAL_POST_ADDON,
+} from "@/lib/addons";
 import type { SponsorshipSlot } from "@/types/sponsorship";
 
 interface SponsorshipModalProps {
@@ -23,6 +28,8 @@ export default function SponsorshipModal({
   const [sponsorName, setSponsorName] = useState("");
   const [sponsorUrl, setSponsorUrl] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [hasSocialPost, setHasSocialPost] = useState(false);
+  const [hasDofollowLink, setHasDofollowLink] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,6 +38,8 @@ export default function SponsorshipModal({
     setSponsorName("");
     setSponsorUrl("");
     setFile(null);
+    setHasSocialPost(false);
+    setHasDofollowLink(false);
     setError(null);
     setSubmitting(false);
     if (fileRef.current) fileRef.current.value = "";
@@ -44,6 +53,11 @@ export default function SponsorshipModal({
 
   if (!open || !slot) return null;
 
+  const orderTotal = calculateOrderTotalGbp(slot.price_gbp, {
+    hasSocialPost,
+    hasDofollowLink,
+  });
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!slot || !file) {
@@ -55,6 +69,7 @@ export default function SponsorshipModal({
     setError(null);
 
     try {
+      // Upload via server route (service role) — never browser → Storage directly
       const formData = new FormData();
       formData.append("file", file);
 
@@ -62,10 +77,27 @@ export default function SponsorshipModal({
         method: "POST",
         body: formData,
       });
-      const uploadJson = await uploadRes.json();
+
+      let uploadJson: { path?: string; error?: string } = {};
+      try {
+        uploadJson = (await uploadRes.json()) as {
+          path?: string;
+          error?: string;
+        };
+      } catch {
+        throw new Error(
+          uploadRes.ok
+            ? "Logo upload returned an invalid response"
+            : `Logo upload failed (HTTP ${uploadRes.status})`,
+        );
+      }
 
       if (!uploadRes.ok) {
         throw new Error(uploadJson.error ?? "Logo upload failed");
+      }
+
+      if (!uploadJson.path) {
+        throw new Error("Logo upload succeeded but no storage path was returned");
       }
 
       const checkoutRes = await fetch("/api/checkout", {
@@ -75,12 +107,23 @@ export default function SponsorshipModal({
           slotId: slot.id,
           sponsorName: sponsorName.trim(),
           sponsorUrl: sponsorUrl.trim(),
-          logoPath: uploadJson.path as string,
+          logoPath: uploadJson.path,
+          hasSocialPost,
+          hasDofollowLink,
         }),
       });
       const checkoutJson = await checkoutRes.json();
 
       if (!checkoutRes.ok) {
+        if (
+          checkoutRes.status === 400 &&
+          checkoutJson.code === "slot_taken"
+        ) {
+          window.location.href =
+            (checkoutJson.redirect as string) ??
+            `/?taken=${encodeURIComponent(slot.id)}`;
+          return;
+        }
         throw new Error(checkoutJson.error ?? "Checkout failed");
       }
 
@@ -109,7 +152,7 @@ export default function SponsorshipModal({
         onClick={onClose}
       />
 
-      <div className="relative z-10 w-full max-w-md rounded-t-2xl border border-slate-200 bg-white shadow-xl sm:mx-4 sm:rounded-2xl">
+      <div className="relative z-10 max-h-[92vh] w-full max-w-md overflow-y-auto rounded-t-2xl border border-slate-200 bg-white shadow-xl sm:mx-4 sm:rounded-2xl">
         <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-5 py-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
@@ -178,6 +221,27 @@ export default function SponsorshipModal({
             />
           </label>
 
+          <fieldset className="space-y-2.5">
+            <legend className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
+              Boost Your Reach (Optional Add-ons)
+            </legend>
+
+            <AddonCheckbox
+              checked={hasSocialPost}
+              onChange={setHasSocialPost}
+              title={SOCIAL_POST_ADDON.title}
+              price={`+£${SOCIAL_POST_ADDON.price_gbp}`}
+              subtitle={SOCIAL_POST_ADDON.subtitle}
+            />
+            <AddonCheckbox
+              checked={hasDofollowLink}
+              onChange={setHasDofollowLink}
+              title={DOFOLLOW_LINK_ADDON.title}
+              price={`+£${DOFOLLOW_LINK_ADDON.price_gbp}`}
+              subtitle={DOFOLLOW_LINK_ADDON.subtitle}
+            />
+          </fieldset>
+
           {error && (
             <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-medium text-red-700">
               {error}
@@ -189,7 +253,9 @@ export default function SponsorshipModal({
             disabled={submitting}
             className="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
           >
-            {submitting ? "Redirecting to payment…" : "Proceed to Payment"}
+            {submitting
+              ? "Redirecting to payment…"
+              : `Pay £${orderTotal} via Dodo`}
           </button>
 
           <p className="text-center text-[11px] text-slate-400">
@@ -198,5 +264,47 @@ export default function SponsorshipModal({
         </form>
       </div>
     </div>
+  );
+}
+
+function AddonCheckbox({
+  checked,
+  onChange,
+  title,
+  price,
+  subtitle,
+}: {
+  checked: boolean;
+  onChange: (next: boolean) => void;
+  title: string;
+  price: string;
+  subtitle: string;
+}) {
+  return (
+    <label
+      className={`flex cursor-pointer items-start gap-3 rounded-xl border px-3.5 py-3 transition ${
+        checked
+          ? "border-emerald-300 bg-emerald-50/70"
+          : "border-slate-200 bg-white hover:border-slate-300"
+      }`}
+    >
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+      />
+      <span className="min-w-0 flex-1">
+        <span className="flex items-baseline justify-between gap-3">
+          <span className="text-sm font-semibold text-slate-900">{title}</span>
+          <span className="shrink-0 font-mono text-xs font-semibold tabular-nums text-emerald-700">
+            {price}
+          </span>
+        </span>
+        <span className="mt-0.5 block text-xs leading-relaxed text-slate-500">
+          {subtitle}
+        </span>
+      </span>
+    </label>
   );
 }

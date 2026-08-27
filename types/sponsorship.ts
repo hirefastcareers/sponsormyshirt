@@ -5,7 +5,12 @@
 
 export type SlotStatus = "available" | "pending" | "sold";
 
-export type SlotCategory = "shirt" | "shorts" | "socks" | "headwear";
+export type SlotCategory =
+  | "shirt"
+  | "shorts"
+  | "socks"
+  | "headwear"
+  | "takeover";
 
 export interface SponsorshipSlot {
   id: string;
@@ -19,6 +24,8 @@ export interface SponsorshipSlot {
   x_position: number;
   y_position: number;
   dodo_product_id: string | null;
+  has_social_post?: boolean;
+  has_dofollow_link?: boolean;
 }
 
 /** Payload from the sponsorship modal → /api/checkout */
@@ -27,10 +34,13 @@ export interface CheckoutRequestBody {
   sponsorName: string;
   sponsorUrl: string;
   logoPath: string;
+  hasSocialPost?: boolean;
+  hasDofollowLink?: boolean;
 }
 
 export interface CheckoutResponse {
   checkout_url: string;
+  order_total_gbp?: number;
 }
 
 export interface UploadResponse {

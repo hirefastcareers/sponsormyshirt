@@ -6,6 +6,12 @@
  */
 import type { ReactNode } from "react";
 import type { SponsorshipSlot } from "@/types/sponsorship";
+import {
+  hasAnySoldPosition,
+  isTitleTakeoverPurchasable,
+  TITLE_TAKEOVER,
+  TITLE_TAKEOVER_ID,
+} from "@/lib/positions";
 import { MARKER_POS, ZONE_META, type ZoneId } from "@/lib/zones";
 
 const FILL = "#EFEFEA";
@@ -31,6 +37,26 @@ export default function KitVisualizer({
   onHover,
 }: KitVisualizerProps) {
   const byId = new Map(slots.map((s) => [s.id, s]));
+  const titleSlot =
+    byId.get(TITLE_TAKEOVER_ID) ??
+    ({
+      id: TITLE_TAKEOVER.id,
+      slot_name: TITLE_TAKEOVER.slot_name,
+      category: TITLE_TAKEOVER.category,
+      price_gbp: TITLE_TAKEOVER.price_gbp,
+      status: "available",
+      sponsor_name: null,
+      sponsor_url: null,
+      sponsor_logo_url: null,
+      x_position: 50,
+      y_position: 50,
+      dodo_product_id: null,
+    } satisfies SponsorshipSlot);
+
+  const takeoverOpen = isTitleTakeoverPurchasable(slots);
+  const anySold = hasAnySoldPosition(slots);
+  const titleSelected = selectedIds.has(TITLE_TAKEOVER_ID);
+  const titleDisabled = !takeoverOpen || titleSlot.status !== "available";
 
   function node(id: ZoneId) {
     const slot = byId.get(id);
@@ -116,6 +142,64 @@ export default function KitVisualizer({
         </h2>
       </div>
 
+      {/* Title Sponsor / Whole Shirt — only when every position is open */}
+      <div className="mb-6">
+        <button
+          type="button"
+          disabled={titleDisabled}
+          aria-pressed={titleSelected}
+          aria-label="Title Sponsor / Whole Shirt takeover"
+          title={
+            titleDisabled
+              ? anySold || titleSlot.status === "sold"
+                ? "Title Sponsor unavailable — a placement has already been sold"
+                : "Title Sponsor unavailable — every position must still be open"
+              : `${TITLE_TAKEOVER.slot_name} — £${TITLE_TAKEOVER.price_gbp}`
+          }
+          onClick={() => !titleDisabled && onToggle(titleSlot)}
+          onMouseEnter={() => onHover(TITLE_TAKEOVER_ID)}
+          onMouseLeave={() => onHover(null)}
+          className={`flex w-full items-center justify-between gap-4 rounded-xl border px-4 py-3.5 text-left transition ${
+            titleDisabled
+              ? "cursor-not-allowed border-zinc-100 bg-zinc-50 opacity-60"
+              : titleSelected
+                ? "border-emerald-300 bg-emerald-50 ring-2 ring-emerald-100"
+                : hoveredId === TITLE_TAKEOVER_ID
+                  ? "border-zinc-300 bg-zinc-50"
+                  : "border-zinc-200 bg-white hover:border-zinc-300"
+          }`}
+        >
+          <div className="min-w-0">
+            <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
+              Master package
+            </p>
+            <p className="mt-0.5 text-sm font-medium text-zinc-900">
+              Title Sponsor / Whole Shirt
+            </p>
+            <p className="mt-0.5 text-xs text-zinc-500">
+              {titleDisabled
+                ? "Unavailable — every kit position must still be open"
+                : "Claim every placement in one purchase"}
+            </p>
+          </div>
+          <span
+            className={`shrink-0 font-mono text-sm tabular-nums ${
+              titleDisabled
+                ? "text-zinc-400"
+                : titleSelected
+                  ? "font-medium text-emerald-700"
+                  : "font-medium text-zinc-900"
+            }`}
+          >
+            {titleSlot.status === "sold"
+              ? "Sold"
+              : titleDisabled
+                ? "Locked"
+                : `£${TITLE_TAKEOVER.price_gbp.toLocaleString("en-GB")}`}
+          </span>
+        </button>
+      </div>
+
       <div className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center gap-8">
         {/* Uniform block: shirts then shorts directly underneath */}
         <div className="grid grid-cols-2 gap-x-8 gap-y-6">
@@ -138,6 +222,7 @@ export default function KitVisualizer({
             className="col-span-2 mx-auto w-full max-w-[200px]"
           >
             <Shorts />
+            {node("shorts_right")}
             {node("shorts_left")}
           </GarmentPanel>
         </div>
@@ -363,6 +448,7 @@ function Shorts() {
         fill="none"
       />
       <AdZone x={48} y={58} w={36} h={48} />
+      <AdZone x={116} y={58} w={36} h={48} />
     </svg>
   );
 }
