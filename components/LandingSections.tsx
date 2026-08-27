@@ -110,11 +110,10 @@ const STEPS = [
 ] as const;
 
 const RACE_STATS = [
-  { label: "Event", value: "Great North Run (World's Largest Half Marathon)" },
-  { label: "Date", value: "September 13, 2026" },
-  { label: "Distance", value: "13.1 Miles (Newcastle → South Shields)" },
-  { label: "Target Time", value: "~2:05" },
-  { label: "Field", value: "60,000+ Runners & Televised Broadcast" },
+  { label: "Field", value: "60,000+ runners" },
+  { label: "Route", value: "Newcastle → South Shields" },
+  { label: "Distance", value: "13.1 Miles" },
+  { label: "Target", value: "~2:05" },
 ] as const;
 
 const FAQ_ITEMS = [
@@ -248,19 +247,19 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
           Three rules. No partnership fog. No soft inventory.
         </p>
 
-        <ol className="mt-8 grid gap-4 sm:grid-cols-3 lg:grid-cols-12">
+        <ol className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
           {DIVISION_RULES.map((rule) => (
             <li
               key={rule.num}
-              className="rounded-xl border border-[#E4E4E7] bg-white px-5 py-6 sm:px-6 lg:col-span-4 lg:px-8"
+              className="rounded-xl border border-[#E4E4E7] bg-white px-5 py-6 sm:px-6 lg:px-8"
             >
-              <span className="font-mono text-xs font-medium tabular-nums text-zinc-400">
+              <span className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-zinc-900">
                 Rule {rule.num}
               </span>
-              <h3 className="mt-3 text-base font-medium tracking-tight text-zinc-900">
+              <h3 className="mt-4 text-lg font-medium tracking-tight text-zinc-900">
                 {rule.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-zinc-500">
+              <p className="mt-3 text-sm leading-relaxed text-zinc-500">
                 {rule.body}
               </p>
             </li>
@@ -318,14 +317,23 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
         <SectionHeading>
           <span id="race-heading">The race</span>
         </SectionHeading>
-        <div className="mt-8 rounded-xl border border-[#E4E4E7] bg-white px-5 py-8 sm:px-8 sm:py-10 lg:px-10">
-          <dl className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-5">
+        <div className="mt-8 grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-12">
+          <p className="max-w-xl text-[15px] leading-relaxed text-zinc-500 sm:text-base lg:col-span-5">
+            I&apos;m running the Great North Run on September 13th — the
+            world&apos;s largest half marathon. Newcastle to South Shields,
+            13.1 miles, targeting ~2:05. Your logo runs the full course in front
+            of a 60,000+ field and televised coverage.
+          </p>
+          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-zinc-800 bg-zinc-800 lg:col-span-7">
             {RACE_STATS.map((stat) => (
-              <div key={stat.label}>
-                <dt className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-400">
+              <div
+                key={stat.label}
+                className="bg-zinc-900 px-5 py-6 sm:px-6 sm:py-8"
+              >
+                <dt className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-zinc-500">
                   {stat.label}
                 </dt>
-                <dd className="mt-1.5 text-base font-medium tracking-tight text-zinc-900 sm:text-lg">
+                <dd className="mt-2 text-lg font-medium tracking-tight text-white sm:text-xl">
                   {stat.value}
                 </dd>
               </div>

@@ -125,11 +125,32 @@ export default async function HomePage({
       </section>
 
       <footer className="border-t border-[#E4E4E7] bg-zinc-900 text-zinc-100">
-        <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-3 px-6 py-8 lg:px-12">
-          <span className="text-sm font-semibold">GNR Kit Sponsorships</span>
-          <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-zinc-500">
-            Newcastle → South Shields · 13.1 miles
-          </span>
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-start sm:justify-between sm:gap-10 lg:px-12">
+          <p className="text-sm text-zinc-300">
+            GNR Kit Sponsorships — Independent project.
+          </p>
+          <div className="max-w-md space-y-3 sm:text-right">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm sm:justify-end">
+              <a
+                href="mailto:hello@sponsormyshirt.app"
+                className="text-zinc-100 underline-offset-4 transition hover:underline"
+              >
+                hello@sponsormyshirt.app
+              </a>
+              <a
+                href="https://x.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-zinc-100 underline-offset-4 transition hover:underline"
+              >
+                X
+              </a>
+            </div>
+            <p className="text-xs leading-relaxed text-zinc-500">
+              Not affiliated with or endorsed by the Great North Run or its
+              official organizers.
+            </p>
+          </div>
         </div>
       </footer>
     </main>
