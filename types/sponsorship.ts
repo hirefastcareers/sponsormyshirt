@@ -21,11 +21,13 @@ export interface SponsorshipSlot {
   sponsor_name: string | null;
   sponsor_url: string | null;
   sponsor_logo_url: string | null;
+  destination_url?: string | null;
   x_position: number;
   y_position: number;
   dodo_product_id: string | null;
   has_social_post?: boolean;
   has_dofollow_link?: boolean;
+  has_backlink?: boolean;
   /** When false, slot is hidden from UI and excluded from Title Sponsor totals. */
   active?: boolean;
 }

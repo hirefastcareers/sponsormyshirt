@@ -4,7 +4,8 @@
  * Split-screen sponsorship experience:
  * 65% kit blueprint · 35% rate card / cart
  */
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import KitVisualizer from "@/components/KitVisualizer";
 import LandingSections from "@/components/LandingSections";
 import RateCardSidebar from "@/components/RateCardSidebar";
@@ -20,11 +21,19 @@ interface SponsorExperienceProps {
 }
 
 export default function SponsorExperience({ slots }: SponsorExperienceProps) {
+  const router = useRouter();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [checkoutSlot, setCheckoutSlot] = useState<SponsorshipSlot | null>(
     null,
   );
+
+  // Refresh slot inventory when the tab regains focus (e.g. after Dodo checkout).
+  useEffect(() => {
+    const refreshSlots = () => router.refresh();
+    window.addEventListener("focus", refreshSlots);
+    return () => window.removeEventListener("focus", refreshSlots);
+  }, [router]);
 
   /** Click kit node or rate-card row → highlight + open Claim Placement modal. */
   function claimSlot(slot: SponsorshipSlot) {

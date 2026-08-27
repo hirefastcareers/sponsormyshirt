@@ -142,9 +142,11 @@ export async function POST(request: Request) {
       slot_id: slotId,
       sponsor_name: name,
       sponsor_url: url,
+      customer_url: url,
       logo_path: logoPath,
       has_social_post: addons.hasSocialPost,
       has_dofollow_link: addons.hasDofollowLink,
+      has_backlink: addons.hasDofollowLink,
       order_total_gbp: orderTotalGbp,
     };
 
@@ -277,9 +279,11 @@ export async function POST(request: Request) {
         status: "pending",
         sponsor_name: name,
         sponsor_url: url,
+        destination_url: url,
         sponsor_logo_url: logoPath,
         has_social_post: addons.hasSocialPost,
         has_dofollow_link: addons.hasDofollowLink,
+        has_backlink: addons.hasDofollowLink,
       })
       .eq("id", slotId)
       .eq("status", "available")

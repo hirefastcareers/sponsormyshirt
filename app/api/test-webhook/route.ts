@@ -65,9 +65,11 @@ export async function POST(request: Request) {
     slot_id: body.slot_id,
     sponsor_name: body.sponsor_name ?? "Test Sponsor",
     sponsor_url: body.sponsor_url ?? "https://example.com",
+    customer_url: body.customer_url ?? body.sponsor_url ?? "https://example.com",
     logo_path: body.logo_path,
     has_social_post: body.has_social_post ?? false,
     has_dofollow_link: body.has_dofollow_link ?? false,
+    has_backlink: body.has_backlink ?? body.has_dofollow_link ?? false,
   };
 
   try {

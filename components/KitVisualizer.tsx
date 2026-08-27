@@ -14,7 +14,7 @@ import {
   TITLE_TAKEOVER_ID,
 } from "@/lib/positions";
 import {
-  normalizeSponsorUrl,
+  getSponsorLinkProps,
   resolveSponsorLogoUrl,
 } from "@/lib/sponsor-display";
 import { MARKER_POS, getActiveDisplayNums, type ZoneId } from "@/lib/zones";
@@ -77,7 +77,7 @@ export default function KitVisualizer({
     const isPending = slot.status === "pending";
     const available = slot.status === "available";
     const logoUrl = resolveSponsorLogoUrl(slot.sponsor_logo_url);
-    const sponsorHref = normalizeSponsorUrl(slot.sponsor_url);
+    const { href: sponsorHref, rel: sponsorRel } = getSponsorLinkProps(slot);
     const showLogo = Boolean(logoUrl) && (isSold || isPending);
 
     let bg = "#FFFFFF";
@@ -145,13 +145,13 @@ export default function KitVisualizer({
       const shellClass =
         "absolute block overflow-hidden rounded-full border-2 transition-all duration-150";
 
-      if (sponsorHref) {
+      if (sponsorHref && sponsorRel && slot.has_backlink === true) {
         return (
           <a
             key={id}
             href={sponsorHref}
             target="_blank"
-            rel="noopener noreferrer"
+            rel={sponsorRel}
             title={title}
             aria-label={`${displayNum} ${slot.slot_name} — ${slot.sponsor_name ?? "sponsor"}`}
             onMouseEnter={() => onHover(id)}

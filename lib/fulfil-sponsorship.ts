@@ -17,14 +17,31 @@ export type PaymentMetadata = {
   product_id?: string;
   sponsor_name?: string;
   sponsor_url?: string;
+  customer_url?: string;
   logo_path?: string;
   has_social_post?: boolean | string;
   has_dofollow_link?: boolean | string;
+  has_backlink?: boolean | string;
   order_total_gbp?: number | string;
 };
 
 export function asBool(value: boolean | string | undefined): boolean {
   return value === true || value === "true";
+}
+
+/** Sponsor destination URL from checkout / payment metadata. */
+export function extractCustomerUrl(
+  metadata: PaymentMetadata | null | undefined,
+): string | null {
+  const raw = metadata?.customer_url ?? metadata?.sponsor_url;
+  return typeof raw === "string" && raw.trim() ? raw.trim() : null;
+}
+
+/** Dofollow backlink add-on flag from metadata (supports legacy keys). */
+export function extractHasBacklink(
+  metadata: PaymentMetadata | null | undefined,
+): boolean {
+  return asBool(metadata?.has_backlink) || asBool(metadata?.has_dofollow_link);
 }
 
 type PaymentLineItem = { product_id: string; quantity?: number };
@@ -161,9 +178,11 @@ type SoldUpdate = {
   status: "sold";
   sponsor_name: string | null;
   sponsor_url: string | null;
+  destination_url: string | null;
   sponsor_logo_url: string | null;
   has_social_post: boolean;
   has_dofollow_link: boolean;
+  has_backlink: boolean;
 };
 
 /**
@@ -180,30 +199,32 @@ export async function fulfilSponsorship(
   }
 
   const sponsor_name = metadata?.sponsor_name ?? null;
-  const sponsor_url = metadata?.sponsor_url ?? null;
+  const customerUrl = extractCustomerUrl(metadata);
   const logo_path = metadata?.logo_path ?? null;
   const hasSocialPost = asBool(metadata?.has_social_post);
-  const hasDofollowLink = asBool(metadata?.has_dofollow_link);
+  const hasBacklink = extractHasBacklink(metadata);
   const logoUrl = logo_path ? getSponsorLogoPublicUrl(logo_path) : null;
   const admin = getSupabaseAdmin();
 
   const soldPatch: SoldUpdate = {
     status: "sold",
     sponsor_name,
-    sponsor_url,
+    sponsor_url: customerUrl,
+    destination_url: customerUrl,
     sponsor_logo_url: logoUrl,
     has_social_post: hasSocialPost,
-    has_dofollow_link: hasDofollowLink,
+    has_dofollow_link: hasBacklink,
+    has_backlink: hasBacklink,
   };
 
   // Title Sponsor / whole-kit purchase — mark every row sold in one transaction.
   if (slotIds.some((id) => isTitleTakeover(id))) {
     const { error } = await admin.rpc("sell_title_takeover", {
       p_sponsor_name: sponsor_name,
-      p_sponsor_url: sponsor_url,
+      p_sponsor_url: customerUrl,
       p_sponsor_logo_url: logoUrl,
       p_has_social_post: hasSocialPost,
-      p_has_dofollow_link: hasDofollowLink,
+      p_has_dofollow_link: hasBacklink,
     });
 
     if (error) {

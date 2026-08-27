@@ -1,6 +1,7 @@
 /**
  * Client-safe helpers for displaying sold/pending sponsor branding.
  */
+import type { SponsorshipSlot } from "@/types/sponsorship";
 
 /** Resolve `sponsor_logo_url` (public URL or storage path) to a loadable URL. */
 export function resolveSponsorLogoUrl(
@@ -20,4 +21,38 @@ export function normalizeSponsorUrl(
   if (!trimmed) return null;
   if (/^https?:\/\//i.test(trimmed)) return trimmed;
   return `https://${trimmed}`;
+}
+
+/** Prefer destination_url; fall back to sponsor_url for legacy rows. */
+export function resolveDestinationUrl(
+  slot: Pick<SponsorshipSlot, "destination_url" | "sponsor_url">,
+): string | null {
+  return normalizeSponsorUrl(slot.destination_url ?? slot.sponsor_url);
+}
+
+/** Dofollow when backlink add-on purchased; otherwise nofollow + sponsored. */
+export function getSponsorLinkRel(
+  hasBacklink: boolean | null | undefined,
+): string {
+  if (hasBacklink === true) {
+    return "noopener noreferrer";
+  }
+  return "nofollow sponsored noopener noreferrer";
+}
+
+export function getSponsorLinkProps(
+  slot: Pick<
+    SponsorshipSlot,
+    "destination_url" | "sponsor_url" | "has_backlink"
+  >,
+): { href: string | null; rel: string | null } {
+  const href = resolveDestinationUrl(slot);
+  if (!href) {
+    return { href: null, rel: null };
+  }
+
+  return {
+    href,
+    rel: getSponsorLinkRel(slot.has_backlink),
+  };
 }

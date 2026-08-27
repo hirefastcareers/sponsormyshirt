@@ -70,9 +70,12 @@ export function resolveAddonProductIds(addons: CheckoutAddons): {
 export function addonLabels(addons: {
   has_social_post?: boolean | null;
   has_dofollow_link?: boolean | null;
+  has_backlink?: boolean | null;
 }): string[] {
   const labels: string[] = [];
   if (addons.has_social_post) labels.push(SOCIAL_POST_ADDON.title);
-  if (addons.has_dofollow_link) labels.push(DOFOLLOW_LINK_ADDON.title);
+  if (addons.has_dofollow_link || addons.has_backlink) {
+    labels.push(DOFOLLOW_LINK_ADDON.title);
+  }
   return labels;
 }

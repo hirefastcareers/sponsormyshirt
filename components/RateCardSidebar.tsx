@@ -9,7 +9,7 @@ import {
   isTitleTakeoverPurchasable,
   TITLE_TAKEOVER_ID,
 } from "@/lib/positions";
-import { normalizeSponsorUrl } from "@/lib/sponsor-display";
+import { getSponsorLinkProps } from "@/lib/sponsor-display";
 import { orderSlots } from "@/lib/zones";
 
 interface RateCardSidebarProps {
@@ -211,14 +211,14 @@ function SlotStatusValue({
   if (available) return availableLabel;
 
   const name = slot.sponsor_name?.trim();
-  const href = normalizeSponsorUrl(slot.sponsor_url);
+  const { href, rel } = getSponsorLinkProps(slot);
 
-  if (name && href) {
+  if (name && href && rel) {
     return (
       <a
         href={href}
         target="_blank"
-        rel="noopener noreferrer"
+        rel={rel}
         onClick={(e) => e.stopPropagation()}
         className="max-w-[9rem] truncate font-sans text-[13px] text-zinc-700 underline-offset-2 hover:text-zinc-900 hover:underline"
         title={name}
