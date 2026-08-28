@@ -6,6 +6,7 @@
  */
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import CharityOrderBreakdown from "@/components/CharityOrderBreakdown";
+import { ContentPolicyNotice } from "@/components/ContentPolicy";
 import {
   calculateOrderTotalGbp,
   DOFOLLOW_LINK_ADDON,
@@ -300,6 +301,8 @@ export default function SponsorshipModal({
               ? "Redirecting to payment…"
               : `Pay £${orderTotal} via Dodo`}
           </button>
+
+          <ContentPolicyNotice />
 
           <p className="text-center text-[11px] text-slate-400">
             Secure checkout via Dodo Payments · Merchant of Record

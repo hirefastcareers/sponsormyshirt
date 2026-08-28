@@ -4,6 +4,7 @@
  * Streamlined £5 micro-sponsor checkout modal.
  */
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { ContentPolicyNotice } from "@/components/ContentPolicy";
 import { MICRO_SPONSOR_PRICE_GBP } from "@/lib/micro-sponsors";
 
 interface MicroSponsorModalProps {
@@ -217,6 +218,8 @@ export default function MicroSponsorModal({
               ? "Redirecting to payment…"
               : `Pay £${MICRO_SPONSOR_PRICE_GBP} via Dodo`}
           </button>
+
+          <ContentPolicyNotice />
 
           <p className="text-center text-[11px] text-slate-400">
             Secure checkout via Dodo Payments · Merchant of Record

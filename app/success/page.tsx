@@ -5,6 +5,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import BrandMark from "@/components/BrandMark";
+import { ContentPolicyFooterLine } from "@/components/ContentPolicy";
 import { confirmSlotSoldFromSuccessRedirect } from "@/lib/confirm-slot-sold";
 import { resolvePurchasedSlot } from "@/lib/resolve-success-slot";
 
@@ -115,6 +116,7 @@ export default async function SuccessPage({
             Not affiliated with or endorsed by the Great North Run or its
             official organizers.
           </p>
+          <ContentPolicyFooterLine />
         </div>
       </footer>
     </main>

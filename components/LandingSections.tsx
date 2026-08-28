@@ -5,6 +5,8 @@
  * race context, FAQ, and claim CTA.
  */
 import { useId, useState, type ReactNode } from "react";
+import { ContentPolicyNotice } from "@/components/ContentPolicy";
+import { CONTENT_POLICY_FAQ } from "@/lib/content-policy";
 import {
   getActivePositionIds,
   POSITION_META,
@@ -143,6 +145,7 @@ const FAQ_ITEMS = [
     q: "Who isn't allowed to sponsor?",
     a: "To keep everything compliant with race regulations and family-friendly event guidelines, we cannot accept sponsorships from adult content, gambling, illegal substances, or hate speech brands. If a purchase is made that violates these terms, the order will be canceled and fully refunded immediately.",
   },
+  CONTENT_POLICY_FAQ,
   {
     q: "Are there any hidden recurring fees or subscriptions?",
     a: "None at all. Every slot is a one-off, single payment for the 2026 Great North Run campaign. Once the race finishes on September 13th, the deliverable is 100% complete with no subscription or surprise commitments.",
@@ -459,6 +462,7 @@ export default function LandingSections({ onClaim }: LandingSectionsProps) {
         >
           View open placements
         </button>
+        <ContentPolicyNotice className="mx-auto mt-4 max-w-sm text-center text-[11px] leading-relaxed text-zinc-500" />
       </section>
     </div>
   );

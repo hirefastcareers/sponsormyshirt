@@ -5,6 +5,7 @@
  * then hydrates the split-screen sponsorship experience.
  */
 import BrandMark from "@/components/BrandMark";
+import { ContentPolicyFooterLine } from "@/components/ContentPolicy";
 import CharityPledgeCallout from "@/components/CharityPledgeCallout";
 import CharityTransparency from "@/components/CharityTransparency";
 import MicroSponsorShell, {
@@ -172,6 +173,9 @@ export default async function HomePage({
                   Not affiliated with or endorsed by the Great North Run or its
                   official organizers.
                 </p>
+                <div className="sm:text-right">
+                  <ContentPolicyFooterLine />
+                </div>
               </div>
             </div>
             <CharityTransparency slots={slots} />

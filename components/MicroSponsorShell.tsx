@@ -14,6 +14,7 @@ import {
 import MicroSponsorGutters from "@/components/MicroSponsorGutters";
 import MicroSponsorMarquee from "@/components/MicroSponsorMarquee";
 import MicroSponsorModal from "@/components/MicroSponsorModal";
+import { ContentPolicyNotice } from "@/components/ContentPolicy";
 import { MICRO_SPONSOR_PRICE_GBP } from "@/lib/micro-sponsors";
 import type { MicroSponsor } from "@/types/micro-sponsor";
 
@@ -96,6 +97,7 @@ export function MicroSponsorHeroCTA() {
         (£{MICRO_SPONSOR_PRICE_GBP} gets your logo &amp; backlink on our
         Supporter Wall)
       </p>
+      <ContentPolicyNotice className="mt-2 max-w-sm text-center text-[11px] leading-relaxed text-zinc-400" />
     </div>
   );
 }

@@ -4,6 +4,7 @@
  * Right-rail selection / rate card: totals, inventory list, claim CTA.
  */
 import CharityOrderBreakdown from "@/components/CharityOrderBreakdown";
+import { ContentPolicyNotice } from "@/components/ContentPolicy";
 import { addonLabels } from "@/lib/addons";
 import type { SponsorshipSlot } from "@/types/sponsorship";
 import {
@@ -197,6 +198,7 @@ export default function RateCardSidebar({
         >
           Claim your spot
         </button>
+        <ContentPolicyNotice className="mt-3 text-center text-[11px] leading-relaxed text-zinc-400" />
       </div>
     </aside>
   );

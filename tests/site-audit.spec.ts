@@ -101,6 +101,11 @@ test.describe("GNR site audit", () => {
     await expect(modal.locator('input[type="file"]')).toBeVisible();
 
     await expect(modal.getByRole("button", { name: /Pay £.*via Dodo/i })).toBeVisible();
+    await expect(
+      modal.getByText(
+        /By sponsoring, you agree that your logo and link contain no adult, explicit, or illegal content/i,
+      ),
+    ).toBeVisible();
   });
 
   test("top navigation smooth-scroll anchors & Claim a Slot", async ({
@@ -132,5 +137,36 @@ test.describe("GNR site audit", () => {
       collector.errors,
       `Unexpected console errors:\n${collector.errors.join("\n")}`,
     ).toEqual([]);
+  });
+
+  test("content policy FAQ, footer, and modal", async ({ page }) => {
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.goto("/", { waitUntil: "networkidle" });
+
+    const faq = page.locator("#faq");
+    await faq.scrollIntoViewIfNeeded();
+    const faqButton = faq.getByRole("button", {
+      name: /What content or websites are allowed on the kit and Supporter Wall/i,
+    });
+    await expect(faqButton).toBeVisible();
+    await faqButton.click();
+    await expect(
+      faq.getByText(/All submissions must be brand-appropriate/i),
+    ).toBeVisible();
+
+    const footer = page.locator("footer");
+    const policyTrigger = footer.getByRole("button", {
+      name: /Content Policy: No adult or illegal content permitted/i,
+    });
+    await expect(policyTrigger).toBeVisible();
+    await policyTrigger.click();
+
+    const policyModal = page.getByRole("dialog", {
+      name: /Acceptable Use Policy/i,
+    });
+    await expect(policyModal).toBeVisible();
+    await expect(
+      policyModal.getByText(/adult, explicit, or sexually suggestive content/i),
+    ).toBeVisible();
   });
 });
