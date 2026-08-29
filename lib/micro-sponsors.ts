@@ -13,8 +13,19 @@ export const MICRO_SPONSOR_PRODUCT_ENV = "DODO_PRODUCT_MICRO_SPONSOR";
 /** Metadata flag written to Dodo checkout sessions for webhook routing. */
 export const MICRO_SPONSOR_CHECKOUT_TYPE = "micro_sponsor";
 
+/** Dodo catalogue entry — keep in sync with scripts/sync-dodo-micro-sponsor.js */
+export const MICRO_SPONSOR_PRODUCT = {
+  name: "Micro-Sponsor Wall Placement",
+  description:
+    "£5 logo placement on the Supporter Wall — visible in page gutters (desktop) and marquee (mobile).",
+} as const;
+
+/** Read configured product id from the server environment (no auto-provision). */
 export function getMicroSponsorProductId(): string | null {
-  return process.env[MICRO_SPONSOR_PRODUCT_ENV]?.trim() || null;
+  const raw = process.env[MICRO_SPONSOR_PRODUCT_ENV];
+  if (typeof raw !== "string") return null;
+  const trimmed = raw.trim();
+  return trimmed.length > 0 ? trimmed : null;
 }
 
 /** Fetch all micro sponsors, newest first. */

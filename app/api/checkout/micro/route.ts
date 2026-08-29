@@ -11,7 +11,10 @@
 import { NextResponse } from "next/server";
 import { assertDodoPaymentsConfigured, getDodoClient } from "@/lib/dodo";
 import {
-  getMicroSponsorProductId,
+  MicroSponsorProductConfigError,
+  resolveMicroSponsorProductId,
+} from "@/lib/ensure-micro-sponsor-product";
+import {
   MICRO_SPONSOR_CHECKOUT_TYPE,
   MICRO_SPONSOR_PRICE_GBP,
 } from "@/lib/micro-sponsors";
@@ -45,15 +48,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: message }, { status: 503 });
     }
 
-    const productId = getMicroSponsorProductId();
-    if (!productId) {
-      return NextResponse.json(
-        {
-          error:
-            "Micro-sponsor product is not configured. Set DODO_PRODUCT_MICRO_SPONSOR in the server environment (run npm run sync:dodo-micro).",
-        },
-        { status: 422 },
-      );
+    let productId: string;
+    try {
+      productId = await resolveMicroSponsorProductId();
+    } catch (err) {
+      const message =
+        err instanceof MicroSponsorProductConfigError
+          ? err.message
+          : "Micro-sponsor checkout is temporarily unavailable. Please try again shortly.";
+      const status =
+        err instanceof MicroSponsorProductConfigError ? 503 : 500;
+      console.error("[checkout/micro] Product resolution failed:", err);
+      return NextResponse.json({ error: message }, { status });
     }
 
     try {
