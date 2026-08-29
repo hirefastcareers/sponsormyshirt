@@ -10,11 +10,25 @@ export const MICRO_SPONSOR_PRICE_GBP = 5;
 /** Dodo product env var for the £5 micro-sponsor checkout. */
 export const MICRO_SPONSOR_PRODUCT_ENV = "DODO_PRODUCT_MICRO_SPONSOR";
 
+/** Default Dodo product id when DODO_PRODUCT_MICRO_SPONSOR is unset. */
+export const MICRO_SPONSOR_PRODUCT_ID_DEFAULT = "pdt_0NmQP9S7EqgCWWOCmvBNT";
+
 /** Metadata flag written to Dodo checkout sessions for webhook routing. */
 export const MICRO_SPONSOR_CHECKOUT_TYPE = "micro_sponsor";
 
-export function getMicroSponsorProductId(): string | null {
-  return process.env[MICRO_SPONSOR_PRODUCT_ENV]?.trim() || null;
+/** Dodo catalogue entry — keep in sync with scripts/sync-dodo-micro-sponsor.js */
+export const MICRO_SPONSOR_PRODUCT = {
+  name: "Micro-Sponsor Wall Placement",
+  description:
+    "£5 logo placement on the Supporter Wall — visible in page gutters (desktop) and marquee (mobile).",
+} as const;
+
+/** Read product id from env, falling back to the default Dodo product. */
+export function getMicroSponsorProductId(): string {
+  const raw = process.env[MICRO_SPONSOR_PRODUCT_ENV];
+  if (raw === undefined) return MICRO_SPONSOR_PRODUCT_ID_DEFAULT;
+  const trimmed = raw.trim();
+  return trimmed.length > 0 ? trimmed : MICRO_SPONSOR_PRODUCT_ID_DEFAULT;
 }
 
 /** Fetch all micro sponsors, newest first. */
